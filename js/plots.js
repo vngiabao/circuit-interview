@@ -184,8 +184,8 @@
     const mi = tot.reduce((m, p) => (p[1] < m[1] ? p : m));
     let body = F.g + line(pts.map((v) => [v, Edyn(v)]), F, 'pa') + line(pts.map((v) => [v, Eleak(v)]), F, 'pc') + line(tot, F, 'pb');
     body += vline(0.35, F) + note(0.35, 1.02, 'VT', F, 4, 0);
-    body += dot(mi[0], mi[1], F, 'pdot hot') + note(mi[0], mi[1], `minimum-energy point ≈ ${mi[0].toFixed(2)} V, ${Math.round(mi[1] * 100)}% of the 1 V energy`, F, 10, -12);
-    body += note(0.62, 0.62, 'above VT: dynamic energy dominates', F) + note(0.17, 0.2, 'below: delay explodes,', F) + note(0.17, 0.27, 'leakage per op wins', F);
+    body += dot(mi[0], mi[1], F, 'pdot hot') + note(mi[0], mi[1], `minimum-energy point ≈ ${mi[0].toFixed(2)} V, ${Math.round(mi[1] * 100)}% of the 1 V energy`, F, 12, 22);
+    body += note(0.62, 0.62, 'above VT: dynamic energy dominates', F) + note(0.18, 0.72, 'below VT: delay explodes,', F) + note(0.18, 0.65, 'so leakage per op wins', F);
     body += legend([['pa', 'Dynamic α·C·VDD²'], ['pc', 'Leakage × cycle time'], ['pb', 'Total']]);
     return svg(body, 'Energy per operation versus supply voltage showing a minimum-energy point just below threshold');
   };

@@ -1,5 +1,5 @@
 /* Hallmark · macrostructure: Instrument Panel (custom, bespoke) · nav: N3 side-rail + N4 hidden cmd-K · footer: Ft2 inline rule
- * theme: custom "Instrument" · paper-band: dark (light variant) · display: grotesk-sans, condensed width axis · accent hue: chromatic-other (yellow 95)
+ * theme: custom "Instrument / Oura" · paper-band: dark (light variant) · display: grotesk-sans, condensed width axis · accent hue: cool (periwinkle 278), Oura-like pastel set
  * genre: atmospheric-technical · tone: precise, calm, engineer-to-engineer
  * dials (taste): VARIANCE 4 · MOTION 3 · DENSITY 6
  * Hallmark · pre-emit critique: P5 H4 E4 S5 R4 V5
@@ -12,52 +12,56 @@
 @font-face { font-family: "Plex Mono"; src: url("../vendor/fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 @font-face { font-family: "Plex Mono"; src: url("../vendor/fonts/ibm-plex-mono-latin-600-normal.woff2") format("woff2"); font-weight: 600 700; font-display: swap; }
 
-/* Dark is the instrument's native state. */
+/* Dark is the native state: deep navy-black, warm off-white type, soft pastel signals (Oura-like). */
 :root, :root[data-theme="dark"] {
   color-scheme: dark;
   --font-ui: "Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Plex Mono", ui-monospace, "Cascadia Mono", monospace;
 
-  --bg: oklch(0.165 0.006 250);
-  --rail: oklch(0.145 0.006 250);
-  --panel: oklch(0.2 0.007 250);
-  --panel-2: oklch(0.235 0.008 250);
-  --panel-3: oklch(0.275 0.009 250);
-  --line: oklch(0.3 0.008 250);
-  --line-strong: oklch(0.42 0.01 250);
-  --ink: oklch(0.94 0.004 250);
-  --ink-2: oklch(0.78 0.008 250);
-  --ink-3: oklch(0.63 0.01 250);
-  --hi: oklch(1 0 0 / 0.04);
+  --bg: oklch(0.155 0.022 268);
+  --rail: oklch(0.14 0.02 268);
+  --panel: oklch(0.195 0.026 268);
+  --panel-2: oklch(0.225 0.03 268);
+  --panel-3: oklch(0.265 0.032 268);
+  --line: oklch(0.29 0.03 268);
+  --line-strong: oklch(0.4 0.035 268);
+  --ink: oklch(0.95 0.01 85);
+  --ink-2: oklch(0.8 0.018 268);
+  --ink-3: oklch(0.65 0.022 268);
+  --hi: oklch(1 0 0 / 0.05);
+  --glow: linear-gradient(180deg, oklch(0.235 0.032 268), oklch(0.195 0.026 268) 70%);
 
-  /* One accent: oscilloscope channel-1 yellow */
-  --accent: oklch(0.87 0.165 96);
-  --accent-ink: oklch(0.88 0.15 96);
-  --accent-dim: oklch(0.87 0.165 96 / 0.14);
-  --on-accent: oklch(0.2 0.03 96);
+  /* One accent: soft periwinkle (Oura sleep) */
+  --accent: oklch(0.79 0.1 278);
+  --accent-ink: oklch(0.82 0.09 278);
+  --accent-dim: oklch(0.79 0.1 278 / 0.16);
+  --on-accent: oklch(0.2 0.04 278);
 
-  /* Channel-2 cyan: second trace and equations only */
-  --ch2: oklch(0.8 0.1 210);
-  --ch2-dim: oklch(0.8 0.1 210 / 0.12);
+  /* Second trace: readiness teal */
+  --ch2: oklch(0.82 0.085 190);
+  --ch2-dim: oklch(0.82 0.085 190 / 0.13);
 
-  --ok: oklch(0.8 0.15 152);
-  --ok-dim: oklch(0.8 0.15 152 / 0.13);
-  --bad: oklch(0.72 0.17 25);
-  --bad-dim: oklch(0.72 0.17 25 / 0.14);
-  --warn: oklch(0.8 0.13 70);
-  --warn-dim: oklch(0.8 0.13 70 / 0.12);
+  --ok: oklch(0.83 0.11 160);
+  --ok-dim: oklch(0.83 0.11 160 / 0.14);
+  --bad: oklch(0.76 0.12 20);
+  --bad-dim: oklch(0.76 0.12 20 / 0.15);
+  --warn: oklch(0.83 0.1 60);
+  --warn-dim: oklch(0.83 0.1 60 / 0.13);
   --focus: var(--accent);
 
-  --plot-bg: oklch(0.185 0.007 250);
+  --plot-bg: oklch(0.18 0.024 268);
   --plot-a: var(--accent);
   --plot-b: var(--ch2);
-  --plot-c: oklch(0.72 0.01 250);
-  --plot-grid: oklch(0.3 0.008 250);
-  --plate: oklch(0.97 0.003 250);
+  --plot-c: oklch(0.83 0.1 60);
+  --plot-grid: oklch(0.28 0.028 268);
+  --plate: oklch(0.97 0.005 85);
+  --scrim: oklch(0.1 0.02 268 / 0.6);
 
   --shadow-pop: 0 1px 0 var(--hi) inset, 0 4px 10px -4px oklch(0 0 0 / 0.5);
 
-  --r: 6px;
+  --r: 14px;
+  --r-sm: 10px;
+  --r-pill: 999px;
   --rail-w: 240px;
   --measure: 72ch;
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 72px;
@@ -68,34 +72,35 @@
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: oklch(0.975 0.003 250);
-  --rail: oklch(0.955 0.004 250);
-  --panel: oklch(0.995 0.001 250);
-  --panel-2: oklch(0.965 0.004 250);
-  --panel-3: oklch(0.935 0.006 250);
-  --line: oklch(0.88 0.006 250);
-  --line-strong: oklch(0.72 0.01 250);
-  --ink: oklch(0.2 0.012 255);
-  --ink-2: oklch(0.4 0.014 255);
-  --ink-3: oklch(0.52 0.012 255);
-  --hi: oklch(1 0 0 / 0.6);
-  --accent: oklch(0.84 0.16 95);
-  --accent-ink: oklch(0.48 0.1 85);
-  --accent-dim: oklch(0.84 0.16 95 / 0.22);
-  --on-accent: oklch(0.2 0.03 96);
-  --ch2: oklch(0.5 0.1 220);
-  --ch2-dim: oklch(0.5 0.1 220 / 0.09);
-  --ok: oklch(0.48 0.13 152);
-  --ok-dim: oklch(0.48 0.13 152 / 0.1);
-  --bad: oklch(0.52 0.18 25);
-  --bad-dim: oklch(0.52 0.18 25 / 0.09);
-  --warn: oklch(0.55 0.12 70);
-  --warn-dim: oklch(0.7 0.13 70 / 0.14);
-  --focus: oklch(0.5 0.15 250);
-  --plot-bg: oklch(0.995 0.001 250);
-  --plot-a: oklch(0.5 0.11 80);
-  --plot-b: oklch(0.5 0.1 220);
-  --plot-c: oklch(0.55 0.01 250);
-  --plot-grid: oklch(0.9 0.006 250);
-  --shadow-pop: 0 1px 2px oklch(0.3 0.02 255 / 0.08), 0 4px 10px -4px oklch(0.3 0.02 255 / 0.2);
+  --bg: oklch(0.975 0.006 85);
+  --rail: oklch(0.955 0.008 85);
+  --panel: oklch(0.995 0.003 85);
+  --panel-2: oklch(0.965 0.008 268);
+  --panel-3: oklch(0.935 0.012 268);
+  --line: oklch(0.89 0.01 268);
+  --line-strong: oklch(0.75 0.018 268);
+  --ink: oklch(0.22 0.03 268);
+  --ink-2: oklch(0.42 0.03 268);
+  --ink-3: oklch(0.54 0.025 268);
+  --hi: oklch(1 0 0 / 0.7);
+  --glow: linear-gradient(180deg, oklch(0.995 0.003 85), oklch(0.975 0.008 268));
+  --accent: oklch(0.62 0.13 278);
+  --accent-ink: oklch(0.5 0.14 278);
+  --accent-dim: oklch(0.62 0.13 278 / 0.12);
+  --on-accent: oklch(0.99 0.005 85);
+  --ch2: oklch(0.52 0.09 200);
+  --ch2-dim: oklch(0.52 0.09 200 / 0.1);
+  --ok: oklch(0.5 0.11 160);
+  --ok-dim: oklch(0.5 0.11 160 / 0.1);
+  --bad: oklch(0.55 0.15 20);
+  --bad-dim: oklch(0.55 0.15 20 / 0.09);
+  --warn: oklch(0.58 0.11 60);
+  --warn-dim: oklch(0.75 0.1 60 / 0.15);
+  --focus: oklch(0.55 0.14 278);
+  --plot-bg: oklch(0.995 0.003 85);
+  --plot-a: oklch(0.55 0.13 278);
+  --plot-b: oklch(0.52 0.09 200);
+  --plot-c: oklch(0.6 0.11 60);
+  --plot-grid: oklch(0.9 0.008 268);
+  --shadow-pop: 0 1px 2px oklch(0.3 0.03 268 / 0.08), 0 4px 10px -4px oklch(0.3 0.03 268 / 0.2);
 }
