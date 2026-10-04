@@ -104,6 +104,12 @@ function run() {
  assert.ok(T.schematic('sram6t').includes('M170,195 L200,195 L200,45 L350,45 L350,195 L370,195'),'SRAM Q feedback must route around PMOS source/drain, not along its channel');
  assert.ok(T.schematic('sram6t').includes('M450,195 L470,195 L470,375 L50,375 L50,225 L90,225'),'SRAM Qb feedback stays below BL access wire at y=195');
  assert.ok(!T.schematic('sram6t').includes('L50,195 L90,195'),'Qb feedback may not overlap the BL net');
+ // The final column's passive labels must fit the 640-unit viewBox. Estimate
+ // text at a conservative 8 units per character and account for SVG anchoring.
+ const rcLabels=[...T.schematic('rc-pi').matchAll(/<text x="([\d.]+)" y="([\d.]+)" class="sg-note" text-anchor="([^"]+)">(Cwire \/ 2|Rwire)<\/text>/g)];
+ assert.equal(rcLabels.length,3,'RC pi model must label both shunt capacitances and the series resistance');
+ for(const [,x,y,anchor,label] of rcLabels){const width=label.length*8,right=Number(x)+(anchor==='end'?0:anchor==='middle'?width/2:width),left=Number(x)-(anchor==='end'?width:anchor==='middle'?width/2:0);assert.ok(left>=0&&right<=640,'Passive value '+label+' must remain inside the viewBox');}
+ assert.ok(rcLabels.some(([,x,y,anchor])=>Number(x)>500&&anchor==='end'),'Rightmost RC capacitor label must face inward');
  const meta=T.schematicModel('timing-metastability').spec;
  assert.ok(meta.signals[0].points.some(([time,value])=>time===7&&value===1),'Second synchronizer capture must have a rising edge at 7 ns');
  assert.throws(()=>T.schematic('block-diagram',{nodes:['A'],edges:[['A','MISSING']]}),/Unknown block endpoint/);

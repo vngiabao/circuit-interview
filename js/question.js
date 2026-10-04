@@ -77,7 +77,7 @@
     host.innerHTML = `<article class="qcard" data-q="${q.id}">
       ${meta(q)}
       <div class="qprompt md">${T.md(prompt)}</div>
-      ${q.fig ? `<figure class="fig">${q.fig.startsWith('plot:') ? T.plot(q.fig.slice(5)) : `<img src="${T.esc(q.fig)}" alt="Figure for this question" loading="lazy">`}</figure>` : ''}
+      ${opts.sketchFirst && T.questionFigures(q).length ? `<details class="sketch-compare"><summary>Sketch first, then compare the diagram</summary>${T.figures(T.questionFigures(q))}</details>` : T.figures(T.questionFigures(q))}
       <div class="qinput">${inputArea(q, shuffle, drafts)}</div>
       <div class="fb"></div>
       <div class="row qbtns">
@@ -148,6 +148,7 @@
       done = true;
       card.querySelectorAll('[data-act="check"],[data-act="giveup"],[data-act="reveal"],[data-act="hint"]').forEach((b) => b.remove());
       const parts = [];
+      if (q.afig) parts.push(`<section class="answer-figures"><h4>Trace the solution</h4>${T.figures(q.afig)}</section>`);
       if (q.ex) parts.push(`<section><h4>Why</h4><div class="md">${T.md(q.ex)}</div></section>`);
       if (q.a && !q.vault) parts.push(`<section><h4>Model answer</h4><div class="md">${T.md(q.a)}</div></section>`);
       if (q.say) parts.push(`<section><h4>Say it like this (≈30 s)</h4><p class="say">${T.md(q.say, { inline: true })}</p></section>`);

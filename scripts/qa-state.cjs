@@ -29,6 +29,7 @@ function environment(initial = null) {
   vm.createContext(c);
   c.load = f => vm.runInContext(read(f), c, { filename: f });
   c.load('js/core.js');
+  c.load('js/figures.js');
   c.T.toast = () => {};
   return c;
 }
@@ -74,6 +75,24 @@ function sessionHost() {
     assert(html.includes('$x$'));
     assert(T.md('    ```latex\n    x=1\n    ```').includes('katex-display'));
     assert(T.md('```latex\n\\notARealMacro{x}\n```').includes('math-error'));
+  });
+  check('legacy and array figures coexist; solution annotations remain answer-only', () => {
+    T.plot = () => '<svg role="img" aria-label="legacy plot"></svg>';
+    T.schematic = name => `<svg role="img" aria-label="${name}"></svg>`;
+    const q = {id:'figure-test',d:'seq',f:'mcq',q:'Read the circuit',opts:['one','two'],ans:0,
+      fig:'plot:legacy',figs:[{schematic:'question-structure',cap:'Question structure'}],
+      afig:[{schematic:'solution-structure',cap:'Answer-only annotation'}]};
+    const h = questionHost();
+    const card = T.renderQuestion(h,q);
+    assert.equal(T.questionFigures(q).length,2);
+    assert(h.innerHTML.includes('legacy plot') && h.innerHTML.includes('question-structure'));
+    assert(!h.innerHTML.includes('Answer-only annotation'));
+    card._check();
+    assert(h.rv.innerHTML.includes('Answer-only annotation'));
+    const hidden = questionHost();
+    T.renderQuestion(hidden,q,{sketchFirst:true});
+    assert(hidden.innerHTML.includes('sketch-compare'));
+    assert(!hidden.innerHTML.includes('class="sketch-compare" open'));
   });
   T.addQ([{ id: 'new-q', legacyId: 'old-q', d: 'seq', f: 'mcq' }]);
   T.addUnits([{ id: 'new-u', legacyId: 'old-u' }]);

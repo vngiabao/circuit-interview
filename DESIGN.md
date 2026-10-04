@@ -60,5 +60,10 @@ Hallmark: custom bespoke "Instrument Panel" macrostructure, N3 side rail with N4
 ## Components
 Today dashboard (next-lesson panel with lesson anatomy chips, readout strip, today's loop list, domain tiles with segmented meters), lesson reader (sectioned with periwinkle dot markers), question card (keyed options, per-option explanations, rubric checklist, four-step self-grade), drill and mock runners (progress bar of result segments, timer), code lab (teaching column plus editor and console).
 
+## Visual learning components
+Inline vector figures share one renderer across lessons, questions, drills, mocks and labs. Every plate opens with a keyboard-accessible zoom button; captions explain what to inspect. SVGs use the same periwinkle, teal and semantic-state tokens as the app. Key gates, the mirror and the 6T bitcell use conventional connected drawings; complex circuits use explicit named nets. All model plots state their assumptions.
+
+Questions preserve the attempt-first flow: solution annotations enter the DOM only after reveal. Contextual mock diagrams sit behind a native sketch-first disclosure; figure-reading exercises remain visible. Domain strips link to printable figure sheets. Printing temporarily uses the existing light theme, then restores the selected theme.
+
 ## Verification
 `impeccable detect` is clean on all UI files. Every lesson, question (with answers revealed), lab and page renders without JS errors, KaTeX errors, visible dashes, or horizontal overflow at 375px and desktop widths.

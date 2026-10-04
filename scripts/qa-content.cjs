@@ -17,11 +17,15 @@ const c = { console, URL, URLSearchParams, Blob, Map, Set, Date,
   katex: require(path.join(ROOT, 'vendor/katex/katex.min.js')) };
 c.window = c; vm.createContext(c);
 vm.runInContext(read('js/core.js'), c, {filename:'js/core.js'});
+for (const f of ['js/plots.js','js/schematics.js','js/figures.js']) vm.runInContext(read(f),c,{filename:f});
 const dataFiles = [...read('index.html').matchAll(/<script\s+src="(data\/[^"?]+\.js)"/g)].map(m=>m[1]);
 for (const f of dataFiles) vm.runInContext(read(f), c, {filename:f});
 const T = c.T;
 T.state.settings.hideCompany = false;
 const questions = T.allQ(), units = T.units, labs = T.labs;
+const figureCoverage = require('./figure-coverage.cjs').audit(c);
+for(const failure of figureCoverage.failures) test(false,'Figure coverage: '+failure);
+for(const failure of figureCoverage.unresolved) test(false,'Figure '+failure.owner+': '+failure.message);
 function unique(xs, label) { test(new Set(xs.map(x=>x.id)).size === xs.length, label+' IDs are not unique'); }
 unique(questions,'Question'); unique(units,'Lesson'); unique(labs,'Lab');
 test(questions.length >= 600, 'Expected at least 600 total questions');
@@ -113,7 +117,12 @@ const result={pass:failures.length===0, questions:questions.length, mcqs:questio
   legacyQuestions:old.size, legacyMCQs:[...old.values()].filter(q=>q.f==='mcq').length,
   lessons:units.length,labs:labs.length,referenceBooks:refs.length,referenceChapters:78,
   imageAssetsChecked:assets.size,stringFields,renderedFields,mathMarkupCount,maxParagraph,
-  unavailableArchivalFigureNames:missingNames.length,mathErrors,failures,warnings};
+  unavailableArchivalFigureNames:missingNames.length,
+  figureCoverage:{lessons:figureCoverage.lessonsMeetingTarget,totalLessons:figureCoverage.totalLessons,
+    generatedQuestions:figureCoverage.questionsWithGeneratedFigure,totalQuestions:figureCoverage.totalQuestions,
+    questionShare:figureCoverage.questionGeneratedShare,newQuestions:figureCoverage.newFigureDrivenTotal,
+    newPerDomain:figureCoverage.newFigureDrivenPerDomain,labs:figureCoverage.labsWithDiagram,
+    priorityWithoutFigures:figureCoverage.priorityWithoutFigures},mathErrors,failures,warnings};
 fs.mkdirSync(path.join(ROOT,'.qa'),{recursive:true});
 fs.writeFileSync(path.join(ROOT,'.qa/content.json'),JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify(result,null,2));

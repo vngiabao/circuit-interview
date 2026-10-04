@@ -188,7 +188,7 @@
         <p class="faint small" style="margin-top:16px">Grade yourself after the answer to move on.</p></div>`;
       el.querySelector('#quit').addEventListener('click', (e) => { e.preventDefault(); finish(); });
       const currentIndex = i;
-      const card = T.renderQuestion(el.querySelector('#qhost'), q, { oral: mock, drafts: mock ? session.responses : T.state.drafts, onDone: (r) => {
+      const card = T.renderQuestion(el.querySelector('#qhost'), q, { oral: mock, sketchFirst: mock && !q.figureDriven, drafts: mock ? session.responses : T.state.drafts, onDone: (r) => {
         if (disposed || finished || i !== currentIndex) return;
         results.push({ id: raw.id, correct: r.correct, grade: r.grade }); i++; session.index = i; T.save();
         transitionId = setTimeout(show, 160);

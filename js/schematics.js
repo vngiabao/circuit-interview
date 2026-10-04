@@ -38,6 +38,7 @@
   function deviceGlyph(d,x,y,spec) {
     const hot = (net) => (spec.highlight || []).includes(net) ? 'sg-wire sg-highlight' : 'sg-wire';
     let out='';
+    const valueLabel=(offset=35)=>tx(x>540?x-25:x+offset,y+40,d.value || d.id,'sg-note',x>540?'end':'start');
     if (['n','p'].includes(d.type)) {
       // D at upper right, S at lower right. Gate is insulated; circle means PMOS.
       out+=path([[x+10,y],[x+10,y+15],[x,y+15],[x,y+55],[x+10,y+55],[x+10,y+70]],'sg-device',`data-device="${esc(d.id)}"`);
@@ -49,14 +50,14 @@
       if (spec.bulk) out+=ln(x,y+35,x+20,y+35,'sg-wire')+tx(x+25,y+25,d.b,'sg-note');
     } else if(d.type==='cap') {
       out+=ln(x+10,y,x+10,y+25)+ln(x-10,y+25,x+30,y+25,'sg-device')+ln(x-10,y+40,x+30,y+40,'sg-device')+ln(x+10,y+40,x+10,y+70);
-      out+=tx(x+35,y+40,d.value || d.id,'sg-note');
+      out+=valueLabel();
     } else if(d.type==='res') {
       out+=path([[x+10,y],[x+10,y+10],[x,y+15],[x+20,y+25],[x,y+35],[x+20,y+45],[x,y+55],[x+10,y+60],[x+10,y+70]],'sg-device');
-      out+=tx(x+35,y+40,d.value || d.id,'sg-note');
+      out+=valueLabel();
     } else if(d.type==='inductor') {
-      out+=ln(x+10,y,x+10,y+10)+`<path d="M${x+10} ${y+10} c-15 0 -15 15 0 15 c-15 0 -15 15 0 15 c-15 0 -15 15 0 15" class="sg-device"/>`+ln(x+10,y+55,x+10,y+70)+tx(x+35,y+40,d.value || d.id,'sg-note');
+      out+=ln(x+10,y,x+10,y+10)+`<path d="M${x+10} ${y+10} c-15 0 -15 15 0 15 c-15 0 -15 15 0 15 c-15 0 -15 15 0 15" class="sg-device"/>`+ln(x+10,y+55,x+10,y+70)+valueLabel();
     } else if(d.type==='current') {
-      out+=ln(x+10,y,x+10,y+15)+`<circle cx="${x+10}" cy="${y+35}" r="20" class="sg-device"/>`+ln(x+10,y+55,x+10,y+70)+ln(x+10,y+20,x+10,y+50,'sg-device')+path([[x+5,y+40],[x+10,y+50],[x+15,y+40]],'sg-device')+tx(x+40,y+40,d.value || d.id,'sg-note');
+      out+=ln(x+10,y,x+10,y+15)+`<circle cx="${x+10}" cy="${y+35}" r="20" class="sg-device"/>`+ln(x+10,y+55,x+10,y+70)+ln(x+10,y+20,x+10,y+50,'sg-device')+path([[x+5,y+40],[x+10,y+50],[x+15,y+40]],'sg-device')+valueLabel(40);
     } else if(d.type==='bjt') {
       out+=ln(x+10,y,x+10,y+15)+ln(x-10,y+20,x-10,y+50,'sg-device')+ln(x-50,y+35,x-10,y+35)+ln(x-10,y+25,x+10,y+15,'sg-device')+ln(x-10,y+45,x+10,y+55,'sg-device')+ln(x+10,y+55,x+10,y+70);
       out+=path([[x+2,y+53],[x+10,y+55],[x+5,y+47]],'sg-device')+tx(x-55,y+30,d.base,'sg-label','end')+tx(x+25,y+40,d.value || d.id,'sg-note');

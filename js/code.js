@@ -70,6 +70,7 @@
       <header class="head"><h1>${T.esc(l.title)}</h1><p class="lede">${T.esc(l.goal)}</p></header>
       <div class="lab-grid">
         <article class="md">
+          ${T.figures(l.figs)}
           ${T.md(l.teach)}
           ${l.task ? `<div class="co co-key"><p class="co-t">Your task</p>${T.md(l.task)}</div>` : ''}
           ${l.hints && l.hints.length ? `<div class="hints"></div><button class="btn ghost sm" id="hint">Show a hint (${l.hints.length})</button>` : ''}

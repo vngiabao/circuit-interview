@@ -57,6 +57,7 @@
         <section class="panel next" aria-label="Next lesson">
           <span class="label">Next lesson</span>
           ${u ? `<span class="dom">${T.esc(T.domain(u.d).code)} · ${u.mins || 15} min</span><h2>${T.esc(u.title)}</h2><p>${T.esc(u.goal || '')}</p>
+          ${u.figs && u.figs.find(f => f.schematic && !f.schematic.startsWith('timing-')) ? `<div class="next-figure">${T.figure(u.figs.find(f => f.schematic && !f.schematic.startsWith('timing-')))}</div>` : ''}
           <ul class="anatomy">${[u.model && 'Mental model', (u.eq || []).length && `${u.eq.length} equation${u.eq.length > 1 ? 's' : ''}`, (u.figs || []).length && `${u.figs.length} figure${u.figs.length > 1 ? 's' : ''}`, u.worked && 'Worked example', (u.traps || []).length && `${u.traps.length} traps`, u.say && '30-second answer', (u.checks || []).length && `${u.checks.length} checks`].filter(Boolean).map((x) => `<li>${x}</li>`).join('')}</ul>
           <div class="row"><a class="btn accent" href="#/unit/${u.id}">Open lesson</a><a class="btn ghost" href="#/plan">Weekly plan</a></div>` : `<h2>Every lesson is marked solid.</h2><p>Keep the knowledge warm with reviews and a mock interview.</p><div class="row"><a class="btn accent" href="#/mock">Start a mock</a></div>`}
         </section>
@@ -107,6 +108,7 @@
       <div class="status-row"><span><b>${TIER[T.tierOf(d)]}</b> for ${T.esc(window.TAPEOUT_LENSES.find((l) => l.id === T.lens()).name)}</span><span>${s.total} questions</span><span>${s.seen} attempted</span><span>review success ${T.fmtPct(s.acc)}</span><span>${s.due} due</span>
         <span class="spacer"></span><a class="btn accent sm" href="#/drill?mode=domain&d=${id}">Drill this domain</a><a class="btn ghost sm" href="#/bank?d=${id}">Browse questions</a></div>
       <div class="co co-why"><p class="co-t">Why interviewers ask</p><p>${T.esc(d.why)}</p></div>
+      ${T.domainFigures && T.domainFigures[id] ? `<section class="sec"><h2>Trace the mechanisms</h2><div class="figure-strip">${T.figures(T.domainFigures[id])}</div><a class="btn ghost sm" href="#/figures/${id}">Open printable figure sheet</a></section>` : ''}
       <section class="sec"><h2>Lessons</h2>
         ${us.length ? `<ul class="ulist panel">${us.map((u) => `<li class="${ustatus(u) === 'solid' ? 'done' : ''}"><a href="#/unit/${u.id}"><span class="t">${T.esc(u.title)}</span><span class="m">${TIER[u.tier || 2]} · ${u.mins || 15} min</span><span class="s">${T.esc(u.goal || '')}</span></a></li>`).join('')}</ul>` : `<div class="empty-state"><h3>No lessons here yet</h3><p>The question bank still covers this domain.</p></div>`}
       </section>
@@ -115,10 +117,7 @@
     </div>`;
   };
 
-  function figHTML(f) {
-    if (f.plot) return `<figure class="fig">${T.plot(f.plot)}<figcaption>${T.md(f.cap || '', { inline: true })} <span class="src">Computed teaching model</span></figcaption></figure>`;
-    return `<figure class="fig"><img src="${T.esc(f.src)}" alt="${T.esc(f.alt || f.cap || 'Figure')}" loading="lazy"><figcaption>${T.md(f.cap || '', { inline: true })}${f.from ? ` <span class="src">${T.esc(f.from)}</span>` : ''}</figcaption></figure>`;
-  }
+  const figHTML = f => T.figure(f);
 
   V.unit = (el, id) => {
     const u = T.unit(id);
@@ -185,11 +184,19 @@
     const doms = D().slice().sort((a, b) => T.tierOf(a) - T.tierOf(b));
     el.innerHTML = `<div class="page">
       <header class="head"><h1>Sheets</h1><p class="lede">Equation keycards for the night before, and a glossary for the words you must define in one breath. Print-friendly.</p>
-        <div class="row no-print"><a class="btn ghost sm" href="#/sheets" data-k="eq">Keycards</a><a class="btn ghost sm" href="#/sheets" data-k="gl">Glossary</a><button class="btn ghost sm" onclick="window.print()">Print</button></div></header>
+        <div class="row no-print"><a class="btn ghost sm" href="#/sheets" data-k="eq">Keycards</a><a class="btn ghost sm" href="#/sheets" data-k="gl">Glossary</a><a class="btn ghost sm" href="#/sheets" data-k="fig">Figure sheets</a><button class="btn ghost sm" onclick="window.print()">Print</button></div></header>
       <section id="sh-eq"><h2 style="margin-bottom:16px">Keycards</h2><div class="keycards">${doms.map((d) => { const eqs = unitsOf(d.id).flatMap((u) => u.eq || []); if (!eqs.length) return ''; return `<div class="keycard"><h3><span class="code">${d.code}</span>${T.esc(d.name)}</h3>${eqs.map((e) => `<div class="eq-row" style="grid-template-columns:1fr"><div class="tex">${T.tex(e[0], true)}</div><div class="note">${T.md(e[1] || '', { inline: true })}</div></div>`).join('')}</div>`; }).join('')}</div></section>
+      <section class="sec" id="sh-fig"><h2>Figure sheets</h2><p class="sub">Open one domain to print its circuits, timing diagrams and model plots together.</p><ul class="ulist panel">${doms.map(d => `<li><a href="#/figures/${d.id}"><span class="t">${T.esc(d.name)}</span><span class="m">${(T.domainFigures[d.id] || []).length} diagrams</span></a></li>`).join('')}</ul></section>
       <section class="sec" id="sh-gl"><h2>Glossary</h2><dl class="glossary">${T.glossary.slice().sort((a, b) => a[0].localeCompare(b[0])).map(([t, def]) => `<div><dt>${T.esc(t)}</dt><dd>${T.md(def, { inline: true })}</dd></div>`).join('')}</dl></section>
     </div>`;
     el.querySelectorAll('[data-k]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('sh-' + a.dataset.k).scrollIntoView({ behavior: 'smooth' }); }));
+  };
+
+  V.figureSheet = (el, id) => {
+    const d = T.domain(id);
+    if (!d) return V.notFound(el);
+    el.innerHTML = `<div class="page figure-sheet"><nav class="crumbs no-print"><a href="#/sheets">Sheets</a><span>/</span><a href="#/learn/${id}">${T.esc(d.name)}</a></nav><header class="head"><h1>${T.esc(d.name)}: figure sheet</h1><p class="lede">Trace each path, explain the changing state, then state the model assumptions.</p><button class="btn ghost sm no-print" data-print-figures>Print this domain</button></header><div class="figure-strip">${T.figures(T.domainFigures[id] || [])}</div></div>`;
+    el.querySelector('[data-print-figures]').addEventListener('click', () => window.print());
   };
 
   const STORY_SLOTS = [

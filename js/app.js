@@ -24,6 +24,8 @@
   };
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', T.applyTheme);
   T.applyTheme();
+  window.addEventListener('beforeprint', () => { document.documentElement.dataset.theme = 'light'; });
+  window.addEventListener('afterprint', T.applyTheme);
 
   T.refreshCounts = () => {
     T._all = null;
@@ -49,12 +51,13 @@
     [/^\/code$/, () => V.code(main)],
     [/^\/lab\/([\w-]+)$/, (m) => V.lab(main, m[1])],
     [/^\/sheets$/, () => V.sheets(main)],
+    [/^\/figures\/([\w-]+)$/, (m) => V.figureSheet(main, m[1])],
     [/^\/stories$/, () => V.stories(main)],
     [/^\/sources$/, () => V.sources(main)],
     [/^\/slides\/([\w-]+)$/, (m) => V.slides(main, m[1])],
     [/^\/settings$/, () => V.settings(main)],
   ];
-  const navKey = (path) => (path.match(/^\/(\w+)/) || [, 'home'])[1].replace(/^(unit)$/, 'learn').replace(/^q$/, 'bank').replace(/^lab$/, 'code').replace(/^slides$/, 'sources');
+  const navKey = (path) => (path.match(/^\/(\w+)/) || [, 'home'])[1].replace(/^(unit)$/, 'learn').replace(/^q$/, 'bank').replace(/^lab$/, 'code').replace(/^slides$/, 'sources').replace(/^figures$/, 'sheets');
 
   function route() {
     const raw = location.hash.replace(/^#/, '') || '/';
@@ -117,11 +120,22 @@
   /* ---------- figure zoom ---------- */
   const zoom = T.$('#zoom');
   document.addEventListener('click', (e) => {
-    const img = e.target.closest('.md img, .fig img, .slides img');
-    if (!img) return;
-    const zi = T.$('img', zoom) || zoom.insertBefore(document.createElement('img'), zoom.firstChild);
-    zi.src = img.src; zi.alt = img.alt;
-    T.$('.zcap', zoom).textContent = img.alt || '';
+    const media = e.target.closest('[data-figure-zoom]')?.querySelector('svg,img') || e.target.closest('.md img, .fig img, .slides img');
+    if (!media) return;
+    zoom.querySelectorAll('.zoom-media').forEach(x => x.remove());
+    const clone = media.cloneNode(true);
+    clone.classList.add('zoom-media');
+    if (clone.tagName.toLowerCase() === 'svg') {
+      const prefix = `zoom-${Date.now()}-`, ids = new Map();
+      clone.querySelectorAll('[id]').forEach(x => { ids.set(x.id, prefix + x.id); x.id = prefix + x.id; });
+      clone.querySelectorAll('*').forEach(x => [...x.attributes].forEach(a => {
+        let v = a.value;
+        ids.forEach((next, old) => { v = v.replaceAll(`url(#${old})`, `url(#${next})`); if (v === `#${old}`) v = `#${next}`; if (a.name === 'aria-labelledby') v = v.split(' ').map(t => t === old ? next : t).join(' '); });
+        if (v !== a.value) x.setAttribute(a.name, v);
+      }));
+    }
+    zoom.insertBefore(clone, zoom.firstChild);
+    T.$('.zcap', zoom).textContent = media.closest('figure')?.querySelector('figcaption')?.textContent || media.getAttribute('aria-label') || media.alt || '';
     zoom.showModal();
   });
   zoom.addEventListener('click', () => zoom.close());
