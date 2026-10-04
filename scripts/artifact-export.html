@@ -1,0 +1,10 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Local screenshot export</title></head><body><h1>Local screenshot export</h1><p>This test helper saves supplied JPEG screenshot bytes locally. It is excluded from the published app.</p><label for="bytes">JPEG bytes in base64</label><textarea id="bytes"></textarea><button id="save">Save screenshot</button><script>
+document.querySelector('#save').addEventListener('click', () => {
+  const s = atob(document.querySelector('#bytes').value.trim());
+  const data = Uint8Array.from(s,c => c.charCodeAt(0));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([data],{type:'image/jpeg'}));
+  a.download = 'gbvirtuoso-figures-proof.jpg'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href),1000);
+});
+</script></body></html>
