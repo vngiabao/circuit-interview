@@ -450,7 +450,7 @@ dialog[open] { animation: pop 180ms var(--ease-out); }
 /* ---------- computed plots + schematics ---------- */
 svg.plot { font-family: var(--font-ui); }
 svg.plot .pg { stroke: var(--plot-grid); stroke-width: 1; }
-svg.plot .pax { stroke: var(--ink-3); stroke-width: 1.2; }
+svg.plot .pax { fill: none; stroke: var(--ink-3); stroke-width: 1.2; }
 svg.plot .pt { fill: var(--ink-3); font-size: 11px; font-family: var(--font-mono); }
 svg.plot .pl { fill: var(--ink-2); font-size: 12.5px; font-weight: 550; }
 svg.plot .pn { fill: var(--ink); font-size: 12px; }
@@ -539,3 +539,49 @@ svg.sch .sn { fill: var(--ink-2); font-size: 12.5px; }
 
 .mode, .tier, .keycard, .qlist, .eqs, .status-row, .unit-nav a, details.deeper, details.source-notes { background: var(--glow); }
 .opt { border-radius: var(--r-sm); }
+/* Shared vector plates. Signal colors come exclusively from the existing palette. */
+.figure-open { display: block; width: 100%; padding: 0; border: 0; background: none; text-align: left; cursor: zoom-in; border-radius: var(--r); }
+.figure-open:hover { outline: 1px solid var(--line-strong); }
+.figure-open:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.fig svg, .zoom svg { display: block; width: 100%; height: auto; background: var(--plot-bg); border-radius: var(--r); font-family: var(--font-ui); }
+.figure-strip { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5); }
+.figure-strip .fig { min-width: 0; margin-bottom: 0; }
+.next-figure { max-width: 380px; margin-block: var(--s4); }
+.next-figure .fig { margin: 0; }
+.next-figure figcaption { display: none; }
+.sketch-compare { margin-block: var(--s4); }
+.sketch-compare summary { cursor: pointer; color: var(--accent-ink); padding-block: var(--s3); }
+.zoom { overflow: auto; }
+.zoom svg { min-width: 680px; }
+svg .sg-wire, svg .sg-device { fill: none; stroke: var(--ink-2); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+svg .sg-label { fill: var(--ink); font-size: 14px; }
+svg .sg-title { fill: var(--ink); font-size: 19px; font-weight: 600; }
+svg .sg-note { fill: var(--ink-2); font-size: 13px; }
+svg .sg-dot { fill: var(--ink-2); }
+svg .sg-panel { fill: var(--panel-2); stroke: var(--line); }
+svg .sg-highlight { fill: none; stroke: var(--accent); stroke-width: 3; }
+svg .sg-ch2 { fill: none; stroke: var(--ch2); stroke-width: 2; }
+svg .sg-warn { fill: none; stroke: var(--warn); stroke-width: 2; }
+svg .sg-region { fill: var(--accent-dim); stroke: var(--accent); }
+svg .sg-x { fill: none; stroke: var(--bad); stroke-width: 2; }
+svg .sg-layer-well { fill: var(--panel-2); stroke: var(--ink-3); stroke-dasharray: 5 4; }
+svg .sg-layer-diff { fill: var(--ok-dim); stroke: var(--ok); }
+svg .sg-layer-poly { fill: var(--warn-dim); stroke: var(--warn); }
+svg .sg-layer-m1 { fill: var(--accent-dim); stroke: var(--accent); }
+svg .sg-layer-m2 { fill: var(--ch2-dim); stroke: var(--ch2); }
+svg .sg-layer-contact { fill: var(--ink); stroke: var(--plot-bg); }
+svg.plot .pfill-a { fill: var(--plot-a); stroke: none; }
+svg.plot .pfill-b { fill: var(--plot-b); stroke: none; }
+svg.plot .pfail { fill: var(--bad); stroke: none; }
+svg.plot .ppass { fill: var(--ok); stroke: none; }
+svg.plot-expanded .pt { font-size: 14px; }
+svg.plot-expanded .pl { font-size: 15px; }
+svg.plot-expanded .pn { font-size: 14px; }
+@media (max-width: 760px) { .figure-strip { grid-template-columns: minmax(0, 1fr); } }
+@media print {
+
+  .figure-sheet .fig { break-inside: avoid; }
+  .figure-sheet .figure-strip { display: block; }
+  .figure-sheet .figure-open { max-width: 680px; }
+}
+

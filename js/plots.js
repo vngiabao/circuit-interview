@@ -29,7 +29,9 @@
     if (log) { const out = []; for (let e = Math.ceil(Math.log10(a)); e <= Math.floor(Math.log10(b)); e++) out.push(10 ** e); return out; }
     const span = b - a, raw = span / 5, mag = 10 ** Math.floor(Math.log10(raw));
     const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => span / s <= 6);
-    const out = []; for (let v = Math.ceil(a / step) * step; v <= b + 1e-9; v += step) out.push(+v.toFixed(10)); return out;
+    // Relative tolerance is essential for seconds-scale axes: an absolute 1 ns
+    // tolerance used to generate ticks far beyond a 700 ps or 1 ns endpoint.
+    const out = []; for (let v = Math.ceil(a / step) * step; v <= b + span * 1e-10; v += step) out.push(+v.toPrecision(12)); return out;
   }
   const path = (pts, fx, fy) => 'M' + pts.filter((p) => isFinite(p[1])).map((p) => `${fx(p[0]).toFixed(1)},${fy(p[1]).toFixed(1)}`).join('L');
   const line = (pts, F, cls = 'pa', extra = '') => `<path d="${path(pts, F.fx, F.fy)}" class="${cls}" clip-path="url(#plot-clip-${plotSerial})" ${extra}/>`;
@@ -162,7 +164,7 @@
     const F = frame({ x0: 0, x1: 40, y0: 0, y1: 50, xl: 'Wire length (normalised)', yl: 'Delay (normalised)' });
     let body = F.g + line(range(0, 40, 80).map((L) => [L, unrep(L)]), F, 'pa') + line(range(0, 40, 80).map((L) => [L, rep(L)]), F, 'pb');
     const cross = range(1, 40, 390).find((L) => rep(L) < unrep(L));
-    body += dot(cross, rep(cross), F) + note(cross, rep(cross), `repeaters win beyond ≈ ${cross.toFixed(0)}`, F, 8, 14);
+    body += dot(cross, rep(cross), F) + note(cross, rep(cross), `repeaters win beyond ≈ ${cross.toFixed(0)}`, F, -8, 18, 'end');
     body += legend([['pa', 'Unrepeated: grows ∝ L²'], ['pb', 'Fixed-size repeaters: ∝ L']]);
     return svg(body, 'Unrepeated wire delay grows quadratically while repeated wire delay grows linearly');
   };
@@ -333,10 +335,172 @@
     return S(640, 290, b, 'Five transistor operational transconductance amplifier');
   };
 
+  /* Expanded figure library. SI units inside models; plot labels state conversions.
+   * Constants are teaching assumptions, never extracted PDK or measured data. */
+  Object.assign(models, {
+    mosCurrent: ids,
+    inverter(vin) {
+      let lo=0, hi=1;
+      for(let i=0;i<60;i++){ const v=(lo+hi)/2;
+        if(ids(vin,v,.3,200e-6,.08)>ids(1-vin,1-v,.3,200e-6,.08)) hi=v; else lo=v;
+      }
+      return (lo+hi)/2;
+    },
+    gmId(ic) { const s=Math.sqrt(ic); return -Math.expm1(-s)/(1.4*.02585*s); },
+    loop(f) { return {gain:1e4/Math.hypot(1,f/1e3)/Math.hypot(1,f/1e7),phase:-(Math.atan(f/1e3)+Math.atan(f/1e7))*180/Math.PI}; },
+    step(t,z=.2) { const w=2*Math.PI*1e8,d=Math.sqrt(1-z*z); return 1-Math.exp(-z*w*t)*(Math.cos(w*d*t)+z/d*Math.sin(w*d*t)); },
+    fo4(v) { return 30e-12*v*(.7/(v-.3))**1.3; },
+    leakage(vt,celsius) { const temp=celsius+273.15,ref=298.15,k=8.617333262e-5,n=1.4; return (temp/ref)**2*Math.exp(-vt/(n*k*temp)+.3/(n*k*ref)); },
+    crosstalk(t,tau=100e-12) { const tr=50e-12,k=.2; return t<=tr?k*tau/tr*(-Math.expm1(-t/tau)):k*tau/tr*(-Math.expm1(-tr/tau))*Math.exp(-(t-tr)/tau); },
+    rail(n=10) { return Array.from({length:n+1},(_,i)=>({node:i,one:1-.1*.001*(i*(n+1)-i*(i+1)/2),two:1-.1*.001*i*(n-i)/2})); },
+    em(j,celsius=85) { return j**-2*Math.exp(.7/8.617333262e-5*(1/(celsius+273.15)-1/358.15)); },
+    gaussianSamples(n=1000) { let seed=427627; const u=()=>{seed=(Math.imul(1664525,seed)+1013904223)>>>0;return(seed+.5)/4294967296;}; return Array.from({length:n},()=>.015*Math.sqrt(-2*Math.log(u()))*Math.cos(2*Math.PI*u())); },
+    arrayYield(z,n=1048576) { return Math.exp(n*Math.log1p(-.5*erfc(z/Math.SQRT2))); },
+    liberty(slew,load) { return 10+.06*slew+.4*load+.0008*slew*load; },
+    ladder(t) { const tau=1e-11,a=(3-Math.sqrt(5))/(2*tau),b=(3+Math.sqrt(5))/(2*tau),e1=Math.exp(-a*t),e2=Math.exp(-b*t); const v2=1-(b*e1-a*e2)/(b-a);return {near:v2+tau*a*b*(e1-e2)/(b-a),far:v2}; },
+    fmax(v) { return 1/(20*models.fo4(v)); },
+    dvfs(fGHz) { const v=.45+.275*fGHz; return {v,fixed:.1*1e-9*fGHz*1e9,scaled:.1*1e-9*v*v*fGHz*1e9}; },
+  });
+  const bisect=(fn,a,b)=>{for(let i=0;i<60;i++){const m=(a+b)/2;if(fn(m)>0)b=m;else a=m;}return(a+b)/2;};
+  const invSlope=x=>(models.inverter(x+1e-5)-models.inverter(x-1e-5))/2e-5;
+  models.noiseMargins=()=>{const vil=bisect(x=>-invSlope(x)-1,.3,.49),vih=1-vil,voh=models.inverter(vil),vol=models.inverter(vih);return{vil,vih,voh,vol,nml:vil-vol,nmh:voh-vih};};
+  let snmCache;
+  models.snm=()=>{
+    if(snmCache)return snmCache;
+    const inverse=y=>bisect(x=>y-models.inverter(x),0,1);
+    let best={side:0,x:0,y:0};
+    for(let i=1;i<500;i++) { const x=i/1000,y=inverse(x); if(models.inverter(x)<=y)continue;
+      const s=bisect(d=>d+y-models.inverter(x+d),0,.5-x);
+      if(s>best.side)best={side:s,x,y};
+    }
+    return snmCache=best;
+  };
+
+  // A slightly taller canvas reserves distinct rows for legend, result and assumptions.
+  const E={w:600,h:440,l:76,r:570,t:30,b:296};
+  const tx=(x,y,text,cls='pn',anchor='start')=>`<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor}">${T.esc(text)}</text>`;
+  function chart(o){
+    const id='expanded-'+(++plotSerial);
+    const left=o.square?190:E.l,right=o.square?456:E.r;
+    const scale=(x,a,b,log)=>log?Math.log(x/a)/Math.log(b/a):(x-a)/(b-a);
+    const X=x=>left+(right-left)*scale(x,o.x0,o.x1,o.logx),Y=y=>E.b-(E.b-E.t)*scale(y,o.y0,o.y1,o.logy);
+    let g='';
+    (o.xt||ticks(o.x0,o.x1,o.logx)).forEach(x=>g+=`<path d="M${X(x)} ${E.t} V${E.b}" class="pg" fill="none"/>`+tx(X(x),E.b+20,o.xf?o.xf(x):fmt(x),'pt','middle'));
+    (o.yt||ticks(o.y0,o.y1,o.logy)).forEach(y=>g+=`<path d="M${left} ${Y(y)} H${right}" class="pg" fill="none"/>`+tx(left-9,Y(y)+4,o.yf?o.yf(y):fmt(y),'pt','end'));
+    g+=`<path d="M${left} ${E.t} V${E.b} H${right}" class="pax" fill="none"/>`+tx((left+right)/2,338,o.xl,'pl','middle')+`<text transform="translate(${o.square?135:20} ${(E.t+E.b)/2}) rotate(-90)" class="pl" text-anchor="middle">${T.esc(o.yl)}</text>`;
+    return{X,Y,id,g,curve(pts,c='pa',extra=''){return `<path d="${path(pts,X,Y)}" class="${c}" fill="none" clip-path="url(#${id})" ${extra}/>`;},mark(x,y,label,dx=9,dy=-9){return `<circle cx="${X(x)}" cy="${Y(y)}" r="4" class="pdot hot"/>`+(label?tx(X(x)+dx,Y(y)+dy,label):'');},vertical(x){return `<path d="M${X(x)} ${E.t} V${E.b}" class="pref" fill="none"/>`;},horizontal(y){return `<path d="M${left} ${Y(y)} H${right}" class="pref" fill="none"/>`;}};
+  }
+  function expanded(F,body,label,items,insight,model){
+    const leg=(items||[]).map(([c,s],i)=>{const x=76+i*(494/items.length);return`<path d="M${x} 360 h22" class="${c}" fill="none"/>`+tx(x+28,364,s);}).join('');
+    return `<svg class="plot plot-expanded" viewBox="0 0 600 440" role="img" aria-label="${T.esc(label)}" xmlns="http://www.w3.org/2000/svg"><title>${T.esc(label)}</title><desc>${T.esc(insight+' '+model+' Computed teaching model, not PDK data.')}</desc><defs><clipPath id="${F.id}"><rect x="76" y="30" width="494" height="266"/></clipPath></defs>${F.g}${body}${leg}${tx(76,388,insight)}${tx(76,411,model,'pt')}${tx(76,432,'Computed teaching model','pt')}</svg>`;
+  }
+  T.plotInfo=T.plotInfo||{};
+  const register=(id,title,caption,fn)=>{P[id]=fn;T.plotInfo[id]={title,caption,model:'Computed teaching model; not PDK simulation or measurement.'};};
+
+  register('id-vgs','Drain current versus gate voltage','A low drain voltage enters the linear region earlier; the gate threshold is unchanged in this square-law model.',()=>{
+    const F=chart({x0:0,x1:1,y0:0,y1:55,xl:'VGS (V)',yl:'ID (µA)'});let b=F.vertical(.3);
+    [.05,.3,.8].forEach((vd,i)=>b+=F.curve(range(0,1,240).map(v=>[v,ids(v,vd,.3,200e-6,.08)*1e6]),['pc','pa','pb'][i]));
+    return expanded(F,b,'Square-law ID versus VGS at three drain voltages',[['pc','VD 0.05 V'],['pa','VD 0.3 V'],['pb','VD 0.8 V']],'Threshold VT = 0.30 V; below-threshold current omitted.','k = 200 µA/V²; lambda = 0.08 /V; no DIBL.');
+  });
+  register('id-vds','Drain current versus drain voltage','The knee follows VDS = VGS - VT; finite output slope comes from channel-length modulation.',()=>{
+    const F=chart({x0:0,x1:1,y0:0,y1:42,xl:'VDS (V)',yl:'ID (µA)'});let b='';
+    [.5,.7,.9].forEach((vg,i)=>{b+=F.curve(range(0,1,180).map(v=>[v,ids(vg,v,.3,200e-6,.08)*1e6]),['pc','pa','pb'][i]);b+=F.mark(vg-.3,ids(vg,vg-.3,.3,200e-6,.08)*1e6,'');});
+    return expanded(F,b,'MOSFET output curves with saturation knees',[['pc','VG 0.5 V'],['pa','VG 0.7 V'],['pb','VG 0.9 V']],'Dots: VDS = VGS - VT. Saturation is not zero slope.','VT = 0.30 V; k = 200 µA/V²; lambda = 0.08 /V.');
+  });
+  register('vtc-noise','Inverter noise margins','Unity-gain boundaries define input limits; noise margins compare those limits with output guarantees.', (spec={})=>{
+    const F=chart({x0:0,x1:1,y0:0,y1:1,square:true,xl:'Input voltage (V)',yl:'Output voltage (V)'}),n=models.noiseMargins();
+    const rect=(x,y,s,c)=>`<rect x="${F.X(x)}" y="${F.Y(y+s)}" width="${F.X(x+s)-F.X(x)}" height="${F.Y(y)-F.Y(y+s)}" class="${c}" opacity=".14"/>`;
+    let b=rect(n.vol,n.vol,n.nml,'pfill-a')+rect(n.vih,n.vih,n.nmh,'pfill-b')+F.curve(range(0,1,500).map(x=>[x,models.inverter(x)]))+F.vertical(n.vil)+F.vertical(n.vih)+F.horizontal(n.voh)+F.horizontal(n.vol);
+    b+=F.mark(n.vil,n.voh,'VIL',-34,23)+F.mark(n.vih,n.vol,'VIH',7,-9);
+    return expanded(F,b,'Inverter VTC with low and high noise-margin squares',[['pa','NML square'],['pb','NMH square']],spec.solution?`NML = NMH = ${n.nml.toFixed(3)} V (symmetric model).`:'NML = VIL - VOL; NMH = VOH - VIH.','1 V supply; matched square-law devices; VT = 0.3 V.');
+  });
+  register('butterfly-snm','Cross-coupled inverter static noise margin','The largest equal-sided square fitting one butterfly lobe measures hold SNM for this idealized inverter pair.',(spec={})=>{
+    const F=chart({x0:0,x1:1,y0:0,y1:1,square:true,xl:'Storage node Q (V)',yl:'Storage node QB (V)'}),s=models.snm();
+    let b=F.curve(range(0,1,700).map(x=>[x,models.inverter(x)]))+F.curve(range(0,1,700).map(x=>[models.inverter(x),x]),'pb');
+    b+=`<rect x="${F.X(s.x)}" y="${F.Y(s.y+s.side)}" width="${F.X(s.x+s.side)-F.X(s.x)}" height="${F.Y(s.y)-F.Y(s.y+s.side)}" class="pfill-a" opacity=".18"/>`+F.curve([[s.x,s.y],[s.x+s.side,s.y],[s.x+s.side,s.y+s.side],[s.x,s.y+s.side],[s.x,s.y]],'pc');
+    return expanded(F,b,'Butterfly curves and largest inscribed hold noise-margin square',[['pa','QB = f(Q)'],['pb','Q = f(QB)']],spec.solution?`Square side = ${s.side.toFixed(3)} V hold SNM.`:'Square side measures SNM; it is not the VTC trip point.','Matched 1 V inverters; no access-device read disturbance.');
+  });
+  register('gm-id','Transconductance efficiency across inversion','Weak inversion approaches a finite gm/ID limit; increasing inversion lowers efficiency.',()=>{
+    const F=chart({x0:.001,x1:1000,y0:0,y1:30,logx:true,xl:'Inversion coefficient IC (dimensionless)',yl:'gm / ID (1/V)'});
+    return expanded(F,F.curve(range(-3,3,200).map(e=>[10**e,models.gmId(10**e)]))+F.horizontal(1/(1.4*.02585)),'Continuous inversion model for transconductance efficiency',[['pa','gm / ID'],['pref','Weak limit']],'Weak-inversion limit = 1/(n UT) = 27.6 /V.','IC = ln²(1 + exp(Vov / 2nUT)); n = 1.4, UT = 25.85 mV.');
+  });
+  register('bode-margin','Two-pole loop gain and phase margin','Read phase at the unity loop-gain crossing, not at a pole frequency.',(spec={})=>{
+    const F=chart({x0:1e3,x1:1e9,y0:-100,y1:180,yt:[-100,-50,0,50,100,150,180],logx:true,xl:'Frequency (Hz, logarithmic)',yl:'Gain dB; phase offset °'}),fu=bisect(f=>1-models.loop(f).gain,1e3,1e9),pm=180+models.loop(fu).phase;
+    let b=F.curve(range(3,9,300).map(e=>[10**e,20*Math.log10(models.loop(10**e).gain)]))+F.curve(range(3,9,300).map(e=>[10**e,180+models.loop(10**e).phase]),'pb')+F.horizontal(0)+F.vertical(fu)+F.mark(fu,pm,'PM');
+    return expanded(F,b,'Two-pole Bode plot with shifted phase axis explicitly labeled',[['pa','Gain dB'],['pb','Phase + 180°']],spec.solution?`Unity = ${(fu/1e6).toFixed(2)} MHz; PM = ${pm.toFixed(1)} degrees.`:'Phase trace is shifted by +180°; its unity-crossing height is PM.','L = 10,000 / [(1 + jf/1 kHz)(1 + jf/10 MHz)].');
+  });
+  register('step-ringing','Second-order step settling','Lower damping increases overshoot and extends ringing even at the same natural frequency.',(spec={})=>{
+    const F=chart({x0:0,x1:40,y0:0,y1:1.6,xl:'Time (ns)',yl:'Normalized output (V/V)'});let b=F.horizontal(1);
+    [.2,.7].forEach((z,i)=>b+=F.curve(range(0,40,500).map(t=>[t,models.step(t*1e-9,z)]),i?'pb':'pa'));
+    return expanded(F,b,'Unit step responses for damping ratios 0.2 and 0.7',[['pa','Damping 0.2'],['pb','Damping 0.7']],spec.solution?'Overshoot: 52.7% at 0.2 damping; 4.6% at 0.7.':'Same natural frequency; different pole damping and settling.','H(s) = wn² / (s² + 2 zeta wn s + wn²); fn = 100 MHz.');
+  });
+  register('fo4-vdd','FO4-like delay versus supply','As overdrive shrinks, lower voltage costs progressively more delay.',(spec={})=>{
+    const F=chart({x0:.4,x1:1.1,y0:0,y1:170,xl:'Supply VDD (V)',yl:'Stage delay (ps)'});
+    return expanded(F,F.curve(range(.4,1.1,200).map(v=>[v,models.fo4(v)*1e12]))+F.mark(1,30,'30 ps reference',-125,-14),'Normalized alpha-power delay versus supply',[['pa','Delay']],spec.solution?`At 0.6 V: ${(models.fo4(.6)*1e12).toFixed(1)} ps.`:'Delay grows rapidly near threshold; FO4 is process-dependent.','t = K VDD / (VDD - 0.3 V)^1.3; set t(1 V) = 30 ps.');
+  });
+  register('leakage-vt-temp','Leakage versus threshold and temperature','Increasing threshold suppresses leakage; heating weakens that exponential suppression in this model.',()=>{
+    const F=chart({x0:.2,x1:.5,y0:.001,y1:200,logy:true,xl:'Threshold VT (V)',yl:'Leakage / Iref (dimensionless)'});let b='';
+    [25,85,125].forEach((temp,i)=>b+=F.curve(range(.2,.5,200).map(v=>[v,models.leakage(v,temp)]),['pa','pb','pc'][i]));
+    return expanded(F,b,'Temperature and threshold sensitivity of subthreshold leakage',[['pa','25°C'],['pb','85°C'],['pc','125°C']],'Iref is leakage at VT = 0.30 V and 25°C.','I ∝ T² exp[-VT/(n kT/q)]; n = 1.4; VT held fixed vs T.');
+  });
+  register('crosstalk-glitch','Capacitively coupled victim glitch','A restoring driver drains injected charge; the floating-node divider is only an upper limit here.',(spec={})=>{
+    const F=chart({x0:0,x1:400,y0:0,y1:.22,xl:'Time (ps)',yl:'Victim voltage (V)'});let b=F.horizontal(.2)+F.vertical(50);
+    [100,20].forEach((tau,i)=>b+=F.curve(range(0,400,400).map(t=>[t,models.crosstalk(t*1e-12,tau*1e-12)]),i?'pb':'pa'));
+    return expanded(F,b,'Victim voltage following a finite aggressor ramp',[['pa','RC = 100 ps'],['pb','RC = 20 ps']],spec.solution?'Peak: 157 mV for 100 ps RC; 73 mV for 20 ps RC.':'Stronger victim restoration reduces the peak and its duration.','Cc = 10 fF, Cg = 40 fF; aggressor rises 1 V in 50 ps.');
+  });
+  register('ir-heatstrip','Distributed rail resistance and voltage drop','Current accumulates toward the feed; adding a second ideal feed changes the drop profile.',(spec={})=>{
+    const F=chart({x0:0,x1:10,y0:0,y1:6,xl:'Tap index along rail',yl:'DC voltage drop (mV)'}),r=models.rail();let b='';
+    r.slice(1).forEach(p=>b+=`<rect x="${F.X(p.node-.45)}" y="${F.Y(5.9)}" width="${F.X(.8)-F.X(0)}" height="18" class="pfill-a" opacity="${.15+.8*(1-p.one)/.0055}"/>`);
+    b+=F.curve(r.map(p=>[p.node,(1-p.one)*1000]))+F.curve(r.map(p=>[p.node,(1-p.two)*1000]),'pb');
+    return expanded(F,b,'Rail droop curves and intensity strip for a ten segment resistive rail',[['pa','Left feed'],['pb','Both ends']],spec.solution?'Worst drops: 5.50 mV left-fed; 1.25 mV dual-fed.':'Top strip intensity shows left-fed drop, not temperature.','0.1 ohm/segment; 1 mA/tap; ideal feed = 1 V.');
+  });
+  register('em-lifetime','Electromigration lifetime scaling','Current density and temperature enter different acceleration terms in Black’s empirical model.',(spec={})=>{
+    const F=chart({x0:.5,x1:3,y0:.01,y1:10,logy:true,xl:'Current density J / Jref',yl:'Lifetime / reference (dimensionless)'});let b='';
+    [85,125].forEach((temp,i)=>b+=F.curve(range(.5,3,200).map(j=>[j,models.em(j,temp)]),i?'pb':'pa'));
+    return expanded(F,b,'Normalized Black electromigration lifetime versus current density',[['pa','85°C'],['pb','125°C']],spec.solution?'At 85°C, doubling J reduces model lifetime to one quarter.':'Normalize at Jref and 85°C; this does not predict service life.','Lifetime ∝ J^-2 exp(Ea/kT); assumed Ea = 0.7 eV.');
+  });
+  register('mc-histogram','Mismatch Monte Carlo histogram','A finite random sample fluctuates around the assumed distribution; sigma is not a hard bound.',(spec={})=>{
+    const samples=models.gaussianSamples(),bins=Array(20).fill(0),width=.006;
+    samples.forEach(v=>{const i=Math.floor((v+.06)/width);if(i>=0&&i<20)bins[i]++;});
+    const F=chart({x0:-60,x1:60,y0:0,y1:180,xl:'Offset voltage (mV)',yl:'Samples per 6 mV bin'});let b='';
+    bins.forEach((n,i)=>b+=`<rect x="${F.X(-60+i*6)+1}" y="${F.Y(n)}" width="${F.X(6)-F.X(0)-2}" height="${F.Y(0)-F.Y(n)}" class="pfill-a" opacity=".45"/>`);
+    b+=F.curve(range(-60,60,220).map(x=>[x,1000*.006/(.015*Math.sqrt(2*Math.PI))*Math.exp(-.5*(x/15)**2)]),'pb')+F.vertical(-15)+F.vertical(15);
+    const avg=samples.reduce((a,b)=>a+b,0)/samples.length,sd=Math.sqrt(samples.reduce((a,b)=>a+(b-avg)**2,0)/(samples.length-1));
+    return expanded(F,b,'Seeded Gaussian mismatch samples and expected normal density',[['pa','1000 samples'],['pb','Expected shape']],spec.solution?`Sample mean ${(avg*1000).toFixed(2)} mV; sample SD ${(sd*1000).toFixed(2)} mV.`:'Dashed lines: assumed ±1 sigma, or ±15 mV.','Independent normal offsets; fixed seed 427627; not silicon.');
+  });
+  register('sigma-yield','Array yield versus per-bit margin','The same per-bit tail probability produces very different yields as the population grows.',(spec={})=>{
+    const F=chart({x0:3,x1:7,y0:0,y1:1,xl:'One-sided margin (sigma)',yl:'Probability all bits pass'});let b=F.horizontal(.9);
+    [1024,1048576,16777216].forEach((n,i)=>b+=F.curve(range(3,7,250).map(z=>[z,models.arrayYield(z,n)]),['pa','pb','pc'][i]));
+    return expanded(F,b,'Independent Gaussian tail array yield versus sigma margin',[['pa','1024 bits'],['pb','1 Mibit'],['pc','16 Mibit']],spec.solution?`At 5 sigma, 1 Mibit yield = ${(100*models.arrayYield(5)).toFixed(1)}%.`:'Redundancy and correlated/global variation are excluded.','Yield = [1 - Q(z)]^N; Q is a one-sided Gaussian tail.');
+  });
+  register('liberty-surface','Delay table as a two-input surface','Delay depends on both input slew and output load; interpolation must use both coordinates.',(spec={})=>{
+    const F=chart({x0:20,x1:120,y0:0,y1:22,xl:'Input slew (ps)',yl:'Output load (fF)'});let b='';
+    for(let i=0;i<5;i++)for(let j=0;j<5;j++){const s=20+i*20,l=j*4,d=models.liberty(s+10,l+2);b+=`<rect x="${F.X(s)}" y="${F.Y(l+4)}" width="${F.X(s+20)-F.X(s)}" height="${F.Y(l)-F.Y(l+4)}" class="pfill-a" opacity="${.12+.75*(d-10)/20}"/>`+tx(F.X(s+10),F.Y(l+2)+5,d.toFixed(1),'pn','middle');}
+    b+=F.mark(70,10,'');
+    return expanded(F,b,'Delay surface shown as labeled heatmap over slew and load',[],spec.solution?'At slew 70 ps and load 10 fF, delay = 18.76 ps.':'Cell labels are delay in ps; intensity increases with delay.','d(ps) = 10 + 0.06 s + 0.4 C + 0.0008 sC; synthetic LUT.');
+  });
+  register('elmore-response','Two-section RC ladder transient','The far-node Elmore moment is a useful delay metric, but it is not the exact 50% crossing.',(spec={})=>{
+    const F=chart({x0:0,x1:120,y0:0,y1:1.05,xl:'Time (ps)',yl:'Voltage / step amplitude'});let b=F.horizontal(.5)+F.vertical(30);
+    ['near','far'].forEach((k,i)=>b+=F.curve(range(0,120,300).map(t=>[t,models.ladder(t*1e-12)[k]]),i?'pb':'pa'));
+    const t50=bisect(t=>models.ladder(t).far-.5,0,1e-9)*1e12;
+    return expanded(F,b,'Exact two-section RC ladder response and Elmore first moment',[['pa','Near node'],['pb','Far node']],spec.solution?`Far-node t50 = ${t50.toFixed(2)} ps; Elmore moment = 30 ps.`:'Dashed vertical: R1(C1 + C2) + R2 C2 = 30 ps.','R1 = R2 = 1 kohm; C1 = C2 = 10 fF; ideal input step.');
+  });
+  register('shmoo','Voltage-frequency pass map','Separate timing failure from an explicit low-voltage retention limit.',()=>{
+    const F=chart({x0:.35,x1:1.05,y0:0,y1:2.2,xl:'Supply VDD (V)',yl:'Clock frequency (GHz)'});let b='';
+    range(.4,1,12).forEach(v=>range(.1,2.1,10).forEach(f=>{const pass=v>=.45&&f*1e9<=models.fmax(v);b+=`<circle cx="${F.X(v)}" cy="${F.Y(f)}" r="7" class="${pass?'ppass':'pfail'}" opacity=".75"/>`;}));
+    b+=F.curve(range(.4,1.05,200).map(v=>[v,models.fmax(v)/1e9]))+F.vertical(.45);
+    return expanded(F,b,'Computed voltage frequency shmoo with timing and retention constraints',[['pa','Timing limit']],'Dots pass only below the curve and at or above 0.45 V.','20-stage path; alpha-power delay; assumed 0.45 V floor.');
+  });
+  register('dvfs-power','Dynamic power under a voltage-frequency schedule','Scaling voltage with frequency reduces switching power more than frequency scaling alone.',(spec={})=>{
+    const F=chart({x0:.2,x1:2,y0:0,y1:210,xl:'Clock frequency (GHz)',yl:'Dynamic power (mW)'});let b='';
+    ['fixed','scaled'].forEach((k,i)=>b+=F.curve(range(.2,2,200).map(f=>[f,models.dvfs(f)[k]*1000]),i?'pb':'pa'));
+    return expanded(F,b,'Dynamic power for fixed voltage and a chosen DVFS schedule',[['pa','Fixed 1 V'],['pb','DVFS']],spec.solution?'At 1 GHz: fixed 100 mW; DVFS 52.6 mW at 0.725 V.':'Dynamic power only; leakage and regulator loss excluded.','P = alpha C V² f; alpha C = 0.1 nF; V = 0.45 + 0.275 fGHz.');
+  });
+
   T.plots = P;
-  T.plot = (name) => {
+  T.plot = (name, spec = {}) => {
     const fn = P[name];
     if (!fn) return `<p class="faint small">Figure "${T.esc(name)}" is not available.</p>`;
-    try { return fn(); } catch (e) { console.error(e); return `<p class="faint small">Figure "${T.esc(name)}" failed to render.</p>`; }
+    try { return T.plotInfo[name] ? fn(spec) : fn(); } catch (e) { console.error(e); return `<p class="faint small">Figure "${T.esc(name)}" failed to render.</p>`; }
   };
 })();
