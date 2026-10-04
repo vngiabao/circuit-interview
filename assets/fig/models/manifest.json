@@ -1,0 +1,337 @@
+{
+  "figures": [
+    {
+      "id": "cmos-sizing",
+      "topicId": "cmos-sizing",
+      "title": "NAND3 sizing: drive and input load",
+      "file": "figures/models/cmos-sizing.svg",
+      "png": "figures/models/cmos-sizing.png",
+      "caption": "Equal-length inverse-width resistance and width-proportional gate C; stack bias, layout and legal fins are excluded.",
+      "alt": "NAND3 sizing: drive and input load. Width 3 matches the reference falling resistance while increasing each input load to 1.667×.",
+      "takeaway": "Width 3 matches the reference falling resistance while increasing each input load to 1.667×.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 24,
+          "label": "EECS427: matched-resistance gate sizing"
+        },
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 64,
+          "label": "Current guide: CMOS mechanism and sizing tradeoffs"
+        }
+      ]
+    },
+    {
+      "id": "nand-layout",
+      "topicId": "nand-layout",
+      "title": "NAND output capacitance comparison",
+      "file": "figures/models/nand-layout.svg",
+      "png": "figures/models/nand-layout.png",
+      "caption": "Capacitances are illustrative, not extraction results. Curves use the exact exponential; the stated estimate rounds ln(2) to 0.69.",
+      "alt": "NAND output capacitance comparison. Output diffusion reduction can reduce delay, but DRC/LVS alone cannot prove which layout wins.",
+      "takeaway": "Output diffusion reduction can reduce delay, but DRC/LVS alone cannot prove which layout wins.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 26,
+          "label": "EECS427: shared output diffusion and fingering"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 23,
+          "label": "EECS427: input-pattern and ordering effects"
+        }
+      ]
+    },
+    {
+      "id": "logical-effort",
+      "topicId": "logical-effort",
+      "title": "Discrete stage-count candidates",
+      "file": "figures/models/logical-effort.svg",
+      "png": "figures/models/logical-effort.png",
+      "caption": "Continuous sizing within each integer candidate; no wire RC or legal-cell restrictions. Gray bars invert polarity.",
+      "alt": "Discrete stage-count candidates. The N=4 and N=5 candidates are close; polarity, actual cells and routing can decide the useful solution.",
+      "takeaway": "The N=4 and N=5 candidates are close; polarity, actual cells and routing can decide the useful solution.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 32,
+          "label": "EECS427: path effort and equal-stage minimization"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 37,
+          "label": "EECS427: measured-model limitations"
+        }
+      ]
+    },
+    {
+      "id": "setup-hold-skew",
+      "topicId": "setup-hold-skew",
+      "title": "Setup and hold compete for skew",
+      "file": "figures/models/setup-hold-skew.svg",
+      "png": "figures/models/setup-hold-skew.png",
+      "caption": "Same-edge flip-flops, independent setup/hold uncertainty budgets. Negative slack fails that specific check.",
+      "alt": "Setup and hold compete for skew. Positive capture-minus-launch skew buys setup time by spending hold margin; frequency reduction does not fix this hold deficit.",
+      "takeaway": "Positive capture-minus-launch skew buys setup time by spending hold margin; frequency reduction does not fix this hold deficit.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 131,
+          "label": "EECS427: setup/hold derivation and skew"
+        },
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 74,
+          "label": "Current guide: timing constraints and characterization"
+        }
+      ]
+    },
+    {
+      "id": "latch-flop",
+      "topicId": "latch-flop",
+      "title": "Latch transparency and the closing deadline",
+      "file": "figures/models/latch-flop.svg",
+      "png": "figures/models/latch-flop.png",
+      "caption": "An illustrative two-phase timing boundary. Downstream budgets must include actual arrival plus latch D-to-Q delay.",
+      "alt": "Latch transparency and the closing deadline. Borrowing is allowed only inside the capture window; it shifts the actual arrival downstream instead of creating free time.",
+      "takeaway": "Borrowing is allowed only inside the capture window; it shifts the actual arrival downstream instead of creating free time.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 125,
+          "label": "EECS427: latch and master–slave storage"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 129,
+          "label": "EECS427: pulse-triggered register tradeoffs"
+        },
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 73,
+          "label": "Current guide: sequential operation"
+        }
+      ]
+    },
+    {
+      "id": "sram",
+      "topicId": "sram",
+      "title": "SRAM bitline development and sense threshold",
+      "file": "figures/models/sram.svg",
+      "png": "figures/models/sram.png",
+      "caption": "Constant current and fixed companion BL over a small swing. Chosen threshold represents offset/noise allowance, not a universal sense limit.",
+      "alt": "SRAM bitline development and sense threshold. Only one line moves in this model: do not double the capacitance, and do not enable sensing before the required differential develops.",
+      "takeaway": "Only one line moves in this model: do not double the capacitance, and do not enable sensing before the required differential develops.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 105,
+          "label": "EECS427: read path and storage-node bump"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 112,
+          "label": "EECS427: bitline conditioning and sensing"
+        },
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 78,
+          "label": "Current guide: operation-specific SRAM failure modes"
+        }
+      ]
+    },
+    {
+      "id": "rom",
+      "topicId": "rom",
+      "title": "ROM selected and unselected bitline trajectories",
+      "file": "figures/models/rom.svg",
+      "png": "figures/models/rom.png",
+      "caption": "Constant-current teaching model, clamped at Vpre for retention. Actual keeper feedback, voltage dependence and code pattern require SPICE.",
+      "alt": "ROM selected and unselected bitline trajectories. A keeper must preserve an unselected high while allowing a selected low to develop before the sense deadline.",
+      "takeaway": "A keeper must preserve an unselected high while allowing a selected low to develop before the sense deadline.",
+      "sourceRefs": [
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 81,
+          "label": "Current guide: ROM sequence, keeper and leakage direction"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 65,
+          "label": "EECS427: leakage and dynamic keeper"
+        }
+      ]
+    },
+    {
+      "id": "liberty-characterization",
+      "topicId": "liberty-characterization",
+      "title": "Bilinear interpolation of a delay table",
+      "file": "figures/models/liberty-characterization.svg",
+      "png": "figures/models/liberty-characterization.png",
+      "caption": "Synthetic table and explicit bilinear surface. A transistor-level midpoint check tests model error; interpolation alone cannot validate it.",
+      "alt": "Bilinear interpolation of a delay table. At40 ps input slew and20 fF load the table predicts62.5 ps; it does not prove the physical circuit has that delay.",
+      "takeaway": "At40 ps input slew and20 fF load the table predicts62.5 ps; it does not prove the physical circuit has that delay.",
+      "sourceRefs": [
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 85,
+          "label": "Current guide: characterization contract and QA"
+        },
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 88,
+          "label": "Current guide: circuit spot checks and variation distinction"
+        }
+      ]
+    },
+    {
+      "id": "leakage-sampling",
+      "topicId": "leakage-sampling",
+      "title": "Pilot compute and worst-state miss probability",
+      "file": "figures/models/leakage-sampling.svg",
+      "png": "figures/models/leakage-sampling.png",
+      "caption": "Probability applies only to uniform random state selection. A deterministic pilot has no such guarantee; use justified coverage, holdouts and fallback.",
+      "alt": "Pilot compute and worst-state miss probability. A75% pilot-run reduction can coexist with a75% worst-state miss chance under this stated sampling model.",
+      "takeaway": "A75% pilot-run reduction can coexist with a75% worst-state miss chance under this stated sampling model.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 100,
+          "label": "EECS427: efficient leakage characterization proposal"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 101,
+          "label": "EECS427: sampling and composition heuristics to validate"
+        },
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 85,
+          "label": "Current guide: justified state probabilities"
+        }
+      ]
+    },
+    {
+      "id": "spice-diagnosis",
+      "topicId": "spice-diagnosis",
+      "title": "RC threshold crossings with an analytic reference",
+      "file": "figures/models/spice-diagnosis.svg",
+      "png": "figures/models/spice-diagnosis.png",
+      "caption": "Analytical reference, not a transistor simulation. Declare threshold, direction, crossing index and measurement window before parsing.",
+      "alt": "RC threshold crossings with an analytic reference. A zero or absent delay here is a measurement failure; preserve that status instead of coercing it to zero.",
+      "takeaway": "A zero or absent delay here is a measurement failure; preserve that status instead of coercing it to zero.",
+      "sourceRefs": [
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 88,
+          "label": "Current guide: testbench setup and measurement contract"
+        },
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 90,
+          "label": "Current guide: empty/zero measurement diagnosis"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 26,
+          "label": "EECS427: RC crossing derivation"
+        }
+      ]
+    },
+    {
+      "id": "em-ir",
+      "topicId": "em-ir",
+      "title": "Current waveform and stress metrics",
+      "file": "figures/models/em-ir.svg",
+      "png": "figures/models/em-ir.png",
+      "caption": "Ideal pulse, zero baseline. Qualified EM rules define applicable metrics/windows; dynamic rail behavior can also include capacitance and inductance.",
+      "alt": "Current waveform and stress metrics. Do not use5 mA average in place of10 mA RMS for an I²R heating calculation, or treat either as a universal EM rule.",
+      "takeaway": "Do not use5 mA average in place of10 mA RMS for an I²R heating calculation, or treat either as a universal EM rule.",
+      "sourceRefs": [
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 90,
+          "label": "Current guide: activity-to-conductor reliability reasoning"
+        },
+        {
+          "sourceId": "eecs627-lecture-packet",
+          "page": 76,
+          "label": "EECS627: electromigration mechanism and waveform limits"
+        }
+      ]
+    },
+    {
+      "id": "variation-yield",
+      "topicId": "variation-yield",
+      "title": "Array yield and zero-failure confidence",
+      "file": "figures/models/variation-yield.svg",
+      "png": "figures/models/variation-yield.png",
+      "caption": "Exact binomial bound under independent identical trials; correlation, repair and model bias need different treatment. This is not measured yield.",
+      "alt": "Array yield and zero-failure confidence. A small clean Monte Carlo run cannot establish the extremely low per-bit risk required by a large unrepaired array.",
+      "takeaway": "A small clean Monte Carlo run cannot establish the extremely low per-bit risk required by a large unrepaired array.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs627-lecture-packet",
+          "page": 73,
+          "label": "EECS627: corrected global/local correlation math"
+        },
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 110,
+          "label": "Current guide: array yield and statistical confidence"
+        }
+      ]
+    },
+    {
+      "id": "cmos-vtc",
+      "topicId": "cmos-sizing",
+      "title": "Square-law CMOS VTC from current balance",
+      "file": "figures/models/cmos-vtc.svg",
+      "png": "figures/models/cmos-vtc.png",
+      "caption": "Saturation uses I=β(VGS−VT)²(1+λVDS)/2. No subthreshold, DIBL or PDK fit; curves illustrate mechanism, not a modern process.",
+      "alt": "Square-law CMOS VTC from current balance. Changing relative pull-up strength moves the transfer curve; the operating output is where pull-up and pull-down currents balance.",
+      "takeaway": "Changing relative pull-up strength moves the transfer curve; the operating output is where pull-up and pull-down currents balance.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 24,
+          "label": "EECS427: matched-resistance gate sizing"
+        },
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 64,
+          "label": "Current guide: CMOS mechanism and sizing tradeoffs"
+        }
+      ]
+    },
+    {
+      "id": "setup-hold-characterization",
+      "topicId": "latch-flop",
+      "title": "Separate setup and hold characterization sweeps",
+      "file": "figures/models/setup-hold-characterization.svg",
+      "png": "figures/models/setup-hold-characterization.png",
+      "caption": "Regeneration-inspired logarithmic model, not measured cell data. Fixed opposite margin avoids a joint-boundary claim;10% is chosen, not universal.",
+      "alt": "Separate setup and hold characterization sweeps. Setup and hold are measured with declared stimuli, opposite-margin conditions and an acceptance criterion; correct capture alone is insufficient.",
+      "takeaway": "Setup and hold are measured with declared stimuli, opposite-margin conditions and an acceptance criterion; correct capture alone is insufficient.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 125,
+          "label": "EECS427: latch and master–slave storage"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 129,
+          "label": "EECS427: pulse-triggered register tradeoffs"
+        },
+        {
+          "sourceId": "nvidia-intensive-interview-playbook",
+          "page": 73,
+          "label": "Current guide: sequential operation"
+        }
+      ]
+    }
+  ]
+}

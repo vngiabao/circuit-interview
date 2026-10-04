@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 850" role="img" aria-labelledby="title desc"><title id="title">6T SRAM: the read must leave the stored bit intact</title><desc id="desc">Shown reading Q = 0, Q̅ = 1. Both bitlines start precharged high; then WL rises.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 1 L7 4 L0 7" fill="none" stroke="context-stroke" stroke-width="1.4"/></marker></defs>
+<rect width="1120" height="850" fill="white"/>
+<text x="40" y="43" font-family="Arial, sans-serif" font-size="27" fill="#26364a" text-anchor="start" font-weight="600">6T SRAM: the read must leave the stored bit intact</text>
+<text x="40" y="74" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="start" font-weight="400">Shown reading Q = 0, Q̅ = 1. Both bitlines start precharged high; then WL rises.</text>
+<polyline points="332,147 418,147" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="375" y="133" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="middle" font-weight="400">VDD</text>
+<polyline points="375,147 375,187" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="375,187 375,207 360,207 360,247 375,247 375,267" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="352,204 352,250" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="344" cy="227" r="5" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="327,227 339,227" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="387" y="233" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">PU</text>
+<polyline points="375,267 375,427" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="375,427 375,447 360,447 360,487 375,487 375,507" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="352,444 352,490" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="327,467 352,467" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="387" y="473" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">PD</text>
+<polyline points="375,507 375,517" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="360,517 390,517" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="365,524 385,524" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="371,531 379,531" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="327,227 304,227 304,467 327,467" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="304,390 258,390" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="304" cy="390" r="4" fill="#26364a"/>
+<text x="253" y="396" font-family="Arial, sans-serif" font-size="20" fill="#235ca1" text-anchor="end" font-weight="600">Q̅</text>
+<circle cx="375" cy="347" r="4" fill="#26364a"/>
+<text x="388" y="335" font-family="Arial, sans-serif" font-size="20" fill="#087c77" text-anchor="start" font-weight="600">Q ≈ 0</text>
+<polyline points="702,147 788,147" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="745" y="133" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="middle" font-weight="400">VDD</text>
+<polyline points="745,147 745,187" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="745,187 745,207 730,207 730,247 745,247 745,267" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="722,204 722,250" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="714" cy="227" r="5" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="697,227 709,227" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="757" y="233" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">PU</text>
+<polyline points="745,267 745,427" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="745,427 745,447 730,447 730,487 745,487 745,507" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="722,444 722,490" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="697,467 722,467" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="757" y="473" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">PD</text>
+<polyline points="745,507 745,517" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="730,517 760,517" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="735,524 755,524" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="741,531 749,531" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="697,227 674,227 674,467 697,467" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="674,390 628,390" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="674" cy="390" r="4" fill="#26364a"/>
+<text x="623" y="396" font-family="Arial, sans-serif" font-size="20" fill="#235ca1" text-anchor="end" font-weight="600">Q</text>
+<circle cx="745" cy="347" r="4" fill="#26364a"/>
+<text x="758" y="335" font-family="Arial, sans-serif" font-size="20" fill="#235ca1" text-anchor="start" font-weight="600">Q̅ ≈ VDD</text>
+<g transform="translate(225,347) rotate(90)">
+<polyline points="0,-40 0,-20 -15,-20 -15,20 0,20 0,40" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="-23,-23 -23,23" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="-48,0 -23,0" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<polyline points="225,299 225,285" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="225" y="274" font-family="Arial, sans-serif" font-size="18" fill="#235ca1" text-anchor="middle" font-weight="600">WL</text>
+<text x="213" y="422" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="middle" font-weight="400">AX</text>
+<g transform="translate(895,347) rotate(90)">
+<polyline points="0,-40 0,-20 -15,-20 -15,20 0,20 0,40" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="-23,-23 -23,23" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="-48,0 -23,0" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<polyline points="895,299 895,285" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="895" y="274" font-family="Arial, sans-serif" font-size="18" fill="#235ca1" text-anchor="middle" font-weight="600">WL</text>
+<text x="883" y="422" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="middle" font-weight="400">AX</text>
+<polyline points="140,160 140,347 185,347" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="265,347 375,347" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="745,347 855,347" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="935,347 980,347 980,160" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="299" y="337" width="10" height="20" rx="0" fill="white" stroke="none"/>
+<path d="M304,338 Q288,347 304,356" fill="none" stroke="white" stroke-width="8"/><path d="M304,338 Q288,347 304,356" fill="none" stroke="#26364a" stroke-width="2.4"/>
+<text x="140" y="139" font-family="Arial, sans-serif" font-size="20" fill="#235ca1" text-anchor="middle" font-weight="600">BL</text>
+<text x="980" y="139" font-family="Arial, sans-serif" font-size="20" fill="#235ca1" text-anchor="middle" font-weight="600">BL̅</text>
+<polyline points="155,201 155,330 200,330" fill="none" stroke="#087c77" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="288,362 359,362 359,402" fill="none" stroke="#087c77" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="422,432 422,506" fill="none" stroke="#087c77" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<text x="163" y="224" font-family="Arial, sans-serif" font-size="17" fill="#087c77" text-anchor="start" font-weight="600">Iread</text>
+<rect x="40" y="578" width="1040" height="89" rx="8" fill="#fff5df" stroke="none"/>
+<text x="59" y="607" font-family="Arial, sans-serif" font-size="18" fill="#a36512" text-anchor="start" font-weight="600">READ DISTURB</text>
+<text x="59" y="634" font-family="Arial, sans-serif" font-size="18" fill="#26364a" text-anchor="start" font-weight="400">BL → access nMOS → Q → pull-down nMOS → ground. Q rises slightly above 0.</text>
+<text x="59" y="657" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">The pull-down must keep that bump below the opposite inverter’s trip region.</text>
+<rect x="40" y="688" width="1040" height="128" rx="8" fill="#eff7f6" stroke="none"/>
+<text x="58" y="716" font-family="Arial, sans-serif" font-size="18" fill="#087c77" text-anchor="start" font-weight="600">The two gates labeled Q connect to node Q; the two gates labeled Q̅ connect to Q̅.</text>
+<text x="58" y="742" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">Named nets provide cross-coupling; the bridged crossing is not a junction. Six transistors store and access one bit.</text>
+<text x="58" y="767" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">Read sizing: strengthen PD relative to AX. Write sizing: AX must still overcome the opposing PU.</text>
+<text x="58" y="792" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">This topology explains the tradeoff; read SNM and write margin must be measured across PVT and mismatch.</text>
+</svg>

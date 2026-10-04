@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 860" role="img" aria-labelledby="title desc"><title id="title">A precharged ROM bitline is a current competition</title><desc id="desc">Read-zero convention here means BL discharges. The shown inverter output Y has the opposite polarity.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 1 L7 4 L0 7" fill="none" stroke="context-stroke" stroke-width="1.4"/></marker></defs>
+<rect width="1120" height="860" fill="white"/>
+<text x="40" y="43" font-family="Arial, sans-serif" font-size="27" fill="#26364a" text-anchor="start" font-weight="600">A precharged ROM bitline is a current competition</text>
+<text x="40" y="74" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="start" font-weight="400">Read-zero convention here means BL discharges. The shown inverter output Y has the opposite polarity.</text>
+<polyline points="300,153 640,153" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="470" y="137" font-family="Arial, sans-serif" font-size="18" fill="#627185" text-anchor="middle" font-weight="400">VDD</text>
+<polyline points="335,153 335,185" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="335,185 335,205 320,205 320,245 335,245 335,265" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="312,202 312,248" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="304" cy="225" r="5" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="287,225 299,225" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="280" y="231" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">PRE̅</text>
+<polyline points="335,265 335,340" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="349" y="226" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">precharge</text>
+<polyline points="605,153 605,185" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="605,185 605,205 590,205 590,245 605,245 605,265" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="582,202 582,248" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="574" cy="225" r="5" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="557,225 569,225" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="605,265 605,340" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="619" y="226" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">weak keeper</text>
+<polyline points="335,340 820,340" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="470" cy="340" r="4" fill="#26364a"/>
+<circle cx="605" cy="340" r="4" fill="#26364a"/>
+<text x="452" y="323" font-family="Arial, sans-serif" font-size="21" fill="#235ca1" text-anchor="start" font-weight="600">BL</text>
+<path d="M820,317 L820,363 L862,340 Z" fill="white" stroke="#26364a" stroke-width="2.4"/>
+<circle cx="868" cy="340" r="6" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="874,340 1030,340" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1040" y="346" font-family="Arial, sans-serif" font-size="20" fill="#235ca1" text-anchor="start" font-weight="600">Y</text>
+<circle cx="942" cy="340" r="4" fill="#26364a"/>
+<polyline points="942,340 942,289 614,289" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M614,289 Q605,272 596,289" fill="none" stroke="white" stroke-width="8"/><path d="M614,289 Q605,272 596,289" fill="none" stroke="#26364a" stroke-width="2.4"/>
+<polyline points="596,289 530,289 530,225 557,225" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="763" y="279" font-family="Arial, sans-serif" font-size="16" fill="#235ca1" text-anchor="middle" font-weight="400">feedback: Y low → keeper ON</text>
+<polyline points="470,340 470,430" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="470,430 470,450 455,450 455,490 470,490 470,510" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="447,447 447,493" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="422,470 447,470" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="415" y="476" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">selected WL</text>
+<text x="482" y="476" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">cell present</text>
+<polyline points="470,510 470,520" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="455,520 485,520" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="460,527 480,527" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="466,534 474,534" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="730,340 730,434" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="711,434 749,434" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="711,446 749,446" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="730,446 730,511" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="730,511 730,521" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="715,521 745,521" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="720,528 740,528" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="726,535 734,535" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="764" y="447" font-family="Arial, sans-serif" font-size="19" fill="#627185" text-anchor="start" font-weight="400">CBL</text>
+<polyline points="623,284 623,323" fill="none" stroke="#a36512" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<text x="644" y="318" font-family="Arial, sans-serif" font-size="18" fill="#a36512" text-anchor="start" font-weight="400">Ik</text>
+<polyline points="490,363 490,423" fill="none" stroke="#087c77" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<text x="509" y="401" font-family="Arial, sans-serif" font-size="18" fill="#087c77" text-anchor="start" font-weight="400">Icell</text>
+<text x="64" y="447" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">Unselected cells add</text>
+<text x="64" y="472" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">ΣIoff and capacitance.</text>
+<rect x="40" y="580" width="504" height="120" rx="8" fill="#edf7f5" stroke="none"/>
+<text x="60" y="609" font-family="Arial, sans-serif" font-size="18" fill="#087c77" text-anchor="start" font-weight="600">DISCHARGE / READ ZERO</text>
+<text x="60" y="637" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">Icell &gt; Ik during the initial contention.</text>
+<text x="60" y="664" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">BL crosses VM → Y rises → keeper turns OFF.</text>
+<text x="60" y="688" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">Approximation: t ≈ CBL · ΔV / (Icell − Ik).</text>
+<rect x="562" y="580" width="518" height="120" rx="8" fill="#fff6e1" stroke="none"/>
+<text x="582" y="609" font-family="Arial, sans-serif" font-size="18" fill="#a36512" text-anchor="start" font-weight="600">RETAIN HIGH / READ ONE</text>
+<text x="582" y="637" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">Selected pulldown is absent or inactive.</text>
+<text x="582" y="664" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">Keeper replenishes the column’s total leakage.</text>
+<text x="582" y="688" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">Need Ik &gt; ΣIoff with noise / corner margin.</text>
+<rect x="40" y="722" width="1040" height="103" rx="8" fill="#eff7f6" stroke="none"/>
+<text x="58" y="750" font-family="Arial, sans-serif" font-size="18" fill="#087c77" text-anchor="start" font-weight="600">Sequence: PRE̅ = 0 precharges; PRE̅ = 1 evaluates. Do not fight an enabled precharge.</text>
+<text x="58" y="776" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">The inverter illustrates a decision threshold VM. A real ROM may use a separate reference / sense amplifier.</text>
+<text x="58" y="801" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">Check hold and discharge at their own worst corners. Constant-current timing is only a first-order estimate.</text>
+</svg>

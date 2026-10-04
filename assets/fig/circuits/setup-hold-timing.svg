@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 700" role="img" aria-labelledby="title desc"><title id="title">Setup and hold bracket the same capture edge</title><desc id="desc">Illustrative timing only: tsetup = 40 ps, thold = 20 ps, tCQ = 60 ps. Not a measured cell.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 1 L7 4 L0 7" fill="none" stroke="context-stroke" stroke-width="1.4"/></marker></defs>
+<rect width="1120" height="700" fill="white"/>
+<text x="40" y="43" font-family="Arial, sans-serif" font-size="27" fill="#26364a" text-anchor="start" font-weight="600">Setup and hold bracket the same capture edge</text>
+<text x="40" y="74" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="start" font-weight="400">Illustrative timing only: tsetup = 40 ps, thold = 20 ps, tCQ = 60 ps. Not a measured cell.</text>
+<rect x="450" y="115" width="180" height="392" rx="0" fill="#fff2cc" stroke="none"/>
+<polyline points="570,113 570,522" fill="none" stroke="#235ca1" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<text x="55" y="185" font-family="Arial, sans-serif" font-size="22" fill="#235ca1" text-anchor="start" font-weight="600">CLK</text>
+<text x="55" y="315" font-family="Arial, sans-serif" font-size="22" fill="#235ca1" text-anchor="start" font-weight="600">D</text>
+<text x="55" y="445" font-family="Arial, sans-serif" font-size="22" fill="#235ca1" text-anchor="start" font-weight="600">Q</text>
+<polyline points="150,210 570,210 570,157 1020,157" fill="none" stroke="#235ca1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="150,340 330,340 330,287 690,287 690,340 1020,340" fill="none" stroke="#087c77" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="150,470 750,470 750,417 1020,417" fill="none" stroke="#26364a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="450,244 450,258" fill="none" stroke="#235ca1" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="570,244 570,258" fill="none" stroke="#235ca1" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M452,251 H568" stroke="#235ca1" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<text x="510.0" y="239" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="middle" font-weight="600">40 ps setup</text>
+<polyline points="570,358 570,372" fill="none" stroke="#a36512" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="630,358 630,372" fill="none" stroke="#a36512" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M572,365 H628" stroke="#a36512" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<text x="600.0" y="353" font-family="Arial, sans-serif" font-size="17" fill="#a36512" text-anchor="middle" font-weight="600">20 ps hold</text>
+<polyline points="570,388 570,402" fill="none" stroke="#235ca1" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="750,388 750,402" fill="none" stroke="#235ca1" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M572,395 H748" stroke="#235ca1" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<text x="660.0" y="383" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="middle" font-weight="600">60 ps clock → Q</text>
+<text x="440" y="138" font-family="Arial, sans-serif" font-size="17" fill="#a36512" text-anchor="end" font-weight="600">D must be stable</text>
+<text x="640" y="138" font-family="Arial, sans-serif" font-size="17" fill="#a36512" text-anchor="start" font-weight="600">through this window</text>
+<text x="322" y="313" font-family="Arial, sans-serif" font-size="16" fill="#087c77" text-anchor="end" font-weight="400">D becomes 1</text>
+<text x="702" y="313" font-family="Arial, sans-serif" font-size="16" fill="#087c77" text-anchor="start" font-weight="400">D changes safely later</text>
+<polyline points="150,529 1020,529" fill="none" stroke="#627185" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="210,524 210,535" fill="none" stroke="#627185" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="210" y="560" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">-120</text>
+<polyline points="330,524 330,535" fill="none" stroke="#627185" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="330" y="560" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">-80</text>
+<polyline points="450,524 450,535" fill="none" stroke="#627185" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="450" y="560" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">-40</text>
+<polyline points="570,524 570,535" fill="none" stroke="#627185" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="570" y="560" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">0</text>
+<polyline points="630,524 630,535" fill="none" stroke="#627185" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="630" y="560" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">20</text>
+<polyline points="750,524 750,535" fill="none" stroke="#627185" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="750" y="560" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">60</text>
+<polyline points="870,524 870,535" fill="none" stroke="#627185" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="870" y="560" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">100</text>
+<polyline points="990,524 990,535" fill="none" stroke="#627185" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="990" y="560" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">140</text>
+<text x="1030" y="562" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="start" font-weight="400">ps</text>
+<rect x="40" y="583" width="1040" height="103" rx="8" fill="#eff7f6" stroke="none"/>
+<text x="58" y="611" font-family="Arial, sans-serif" font-size="18" fill="#087c77" text-anchor="start" font-weight="600">Read the picture: D is high at t = 0; Q becomes high at +60 ps.</text>
+<text x="58" y="637" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">D rises at −80 ps and falls at +40 ps, leaving 40 ps of setup slack and 20 ps of hold slack.</text>
+<text x="58" y="662" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">The delay is measured between 50% crossings. Real slew, load and PVT set the characterized numbers.</text>
+</svg>

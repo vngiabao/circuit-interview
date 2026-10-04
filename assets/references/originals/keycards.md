@@ -1,0 +1,1050 @@
+## Part 7 — Key cards from every document
+
+Every **Core idea**, **Equation card** and **Guardrail / Common trap** box from your four documents, in document order. Use this tonight as the final pass: if a card doesn't ring a bell, go back to that section.
+
+### Bible: Part R — Read this first
+
+!!! core "R.1 The interview, confirmed · The one-line shift"
+    TSMC asked "will he stay and own a fab loop?" NVIDIA asks "**can he reason at the transistor level, check his own work, and be honest about what he knows?**" Most of the 45 minutes is technical. Your résumé is the map Bo will use to decide where to push.
+
+!!! core "R.3 What the forums actually report (evidence, not rumor) · What this means for Friday"
+    **Expect: résumé project → fundamentals (hold time, sizing, latch/flop, stick diagram) → one practical "how would you do this task" problem.** Be ready to skip the intro entirely. The July 2026 leakage-characterization task is the closest thing to a real sample question; it's fully answered in Q10.
+
+
+### Bible: Part P — Bo Li: how to enter, what to show, what to ask
+
+!!! guard "P.4 Questions to ask him (pick two, based on the conversation) · Don't ask"
+    Confidential node or model details, compensation, or "how did I do?" Leave logistics (start date, relocation) for Chanel.
+
+!!! guard "P.4b Questions only Bo (or the team) can answer · Stay on the right side"
+    Frame anything about nodes, products or roadmap as "**at a level you can share**". Don't ask about unreleased products, compensation, or "how did I do?". If he says "I can't talk about that", smile and move on: "Totally fair."
+
+
+### Bible: Part N — NVIDIA: what to know about the company
+
+!!! core "N.2 The five values, and how to show each · Core memory"
+    **At NVIDIA, "intellectual honesty" is a named value. Precise scope is a strength, not a weakness.**
+
+
+### Bible: Part ROLE — What the job actually is
+
+!!! core "ROLE.3 The design flow: request to released IP · Core memory"
+    **Spec → circuit → sim → layout → DRC/LVS/PEX → post-layout sim → reliability → characterize → QA → support. Every change loops back.**
+
+!!! core "ROLE.4 The life of a new IP cell: the complete cycle · Core memory"
+    **Spec → baseline → topology → pre-layout (with margin) → layout → DRC/LVS in context → post-layout → reliability → characterize → QA → trial integration → release → silicon correlation. Every gate has a known "go back to."**
+
+!!! core "ROLE.6 Questions you'll face on the job (and in 'how would you…' inter · Core memory"
+    **Every day-to-day question follows one pattern: reproduce under identical conditions → find the physical cause → change one thing → recheck everything the change touches.**
+
+!!! guard "ROLE.9 Across a year: what you receive, what you ship, and who it's fo · Where this comes from"
+    I have **no inside information** about NVIDIA. This is built from the JD, public NVIDIA facts, and how foundation-IP teams at large chip companies usually run. **Confirm it with Bo**: "how is your time split right now?" is itself one of the best questions you can ask (P.4b).
+
+!!! core "ROLE.9 Across a year: what you receive, what you ship, and who it's fo · Core memory"
+    **Inputs:** PDK + library spec (new node), or a request + code file (per chip), or a bug report. **Outputs:** not a chip, but **released, verified IP views** (GDS, LEF, .lib, Verilog, netlist, datasheet) that chip teams drop into their designs. **You see "your" silicon months later.**
+
+
+### Bible: Part ROM — The ROM team inside NVIDIA
+
+!!! core "ROM.1 What ROM is for on a GPU or SoC · Core memory"
+    **ROM = fixed data the chip needs every time: boot and security code, microcode, constant tables. Densest and lowest power, and it can't be changed by software.**
+
+!!! core "ROM.3 The ROM workflow, request to silicon · Core memory"
+    **Spec + code in → compiler generates the macro → verify content, then electrical margin at worst pattern/PVT/sigma → DRC/LVS/EM → views to PD/STA/DFT → late code change via one mask → silicon readback.**
+
+!!! core "ROM.5 'Deep submicron': what it is and why ROM gets harder · Core memory"
+    **Deep submicron = FinFET/GAA nodes. For ROM: more leakage vs on-current, lower VDD, more variation, 1-fin cells, higher contact/wire resistance → fewer rows per bitline, tighter sense margin, high-sigma verification.**
+
+!!! core "ROM.7 ROM vs the alternatives · Core memory"
+    **ROM wins on density, power and security; loses on flexibility. Common pattern: ROM for the fixed core (boot, tables), OTP/eFuse for small per-chip data and patches, SRAM + flash for anything that must change.**
+
+!!! core "Gen 8 — What's next: GAA, backside power, CFET, and alternatives · Core memory"
+    **Diode matrix (passive, slow) → NOR (fast, 1T/bit, the embedded standard) → NAND (densest, slow) → dynamic self-timed compiled ROMs (precharge, keeper, sense, replica, via-programming) → low-power tricks (selective precharge, data inversion, hierarchy) → MLC/diode density experiments → FinFET (1-fin cell, fix margins with architecture) → GAA/backside power next.**
+
+!!! guard "ROM.9 The rest of the memory family: DRAM, flash, and new memories T3  · One word to avoid"
+    "Flash RAM" is loose usage: **flash is non-volatile storage, not RAM** (RAM = random-access, volatile, read/write: SRAM, DRAM). Say "flash" or "NOR/NAND flash".
+
+!!! core "ROM.9 The rest of the memory family: DRAM, flash, and new memories T3  · Core memory"
+    **ROM = never changes. SRAM = fastest working memory. DRAM = big working memory (needs refresh). Flash = keeps data with power off (NOR for code, NAND for storage). OTP = a few permanent bits per chip. MRAM/RRAM = the new embedded non-volatile option.** On an advanced GPU die you get **SRAM + ROM + OTP**; DRAM and flash live off the die.
+
+!!! eq "DRAM in five lines · DRAM signal: charge sharing"
+    **ΔV = (VDD/2) · Cs / (Cs + C_BL).** Illustrative numbers: Cs = 10 fF, C_BL = 80 fF, VDD/2 = 0.55 V → ΔV ≈ **61 mV**. **Memory trick:** "a thimble poured into a bucket": a small cell into a big bitline gives a small signal, so the sense amp does the real work. Compare with ROM: **ΔV = I_cell · t / C_BL** (a tap filling the bucket over time).
+
+
+### Bible: Part NODE — Your process node & your transition
+
+!!! guard "NODE.1 What node will you work on? · Guardrail"
+    Never say "I'll be working on 3nm." Ask: "At a level you can share, is the work mostly established FinFET libraries or newer device platforms? More new-node bring-up or improving existing libraries?"
+
+
+### Bible: Part SKILL — The skills that make someone excel in this job
+
+!!! core "The one-line answer"
+    **SPICE craft plus circuit intuition is #1**: set up the *right* simulation, predict the answer before you run it, and know when a number is lying. **Variation/margin thinking** and a **verification mindset** come next. **Scripting is a multiplier**: it turns one good simulation into 10,000 good simulations, but it can't fix a bad testbench.
+
+!!! guard "2b. Measurements that match the library · Measurement traps"
+    - **Wrong edge:** `RISE=1` vs `RISE=2` if the first edge is the reset glitch.
+    - **Sign of current:** SPICE usually reports current *into* the source's + terminal; supply current often comes out **negative**. Know your convention before reporting "negative power".
+    - **Window:** leakage measured before the circuit settles = a transient, not leakage.
+    - **Failed measure:** a `.meas` that never triggers prints "failed", and a script that doesn't check for it silently drops that corner.
+
+!!! eq "2e. Convergence and accuracy vs runtime · The accuracy rule"
+    **A number isn't real until it stops changing** when you tighten the timestep or tolerance. Do this check once per new testbench, then fix the settings.
+
+!!! guard "2h. Reading results like an expert (the sanity checklist) · Top 10 SPICE mistakes (each one has caused a respin somewhere)"
+    1 Ideal input step · 2 No load · 3 Ideal supply for a peak-current question · 4 Bistable node not initialized · 5 Measured before settling · 6 Thresholds don't match the .lib · 7 A failed `.meas` silently dropped · 8 Wrong model corner or missing mismatch flag · 9 Timestep too coarse to resolve the edge · 10 Pre-layout numbers used for sign-off.
+
+!!! eq "SKILL.4 Variation & margin thinking · The margin budget (write it on the whiteboard)"
+    **ΔV_available ≥ V_offset(6σ) + V_noise + V_aging + guard-band.** If it doesn't close: longer SAE delay, shorter bitlines (hierarchy), stronger cell, or a better sense amp.
+
+!!! guard "SKILL.11 How to show these skills in 45 minutes · Don't overclaim"
+    Say what you **did** and what you **know**, and say "I haven't done X in production, but here's how I'd approach it" for the rest. That sentence, followed by a correct approach, scores higher than a bluff.
+
+
+### Bible: Part Q — First-round rehearsal: the 21 most likely questions, answered
+
+!!! core "Q1. 'Tell me about yourself.' RÉSUMÉ · Core memory"
+    **Device physics → circuit design (WICS) → library user (Faraday) → this role builds the library.**
+
+!!! core "Q2. 'Walk me through your most relevant project.' (WICS) RÉSUMÉ · Core memory"
+    **Objective → my blocks → one decision → how I checked it → result.** Subthreshold = max gm/Id, but exponential sensitivity to Vt and temperature.
+
+!!! eq "Q4. 'What is hold time?' (reported Jun 2025) T1 · Hold and setup slack (S = capture clock arrival − launch clock arrival)"
+    ```latex
+    \text{Setup slack} = T + S - t_{cq,max} - t_{pd,max} - t_{setup}
+    \qquad
+    \text{Hold slack} = t_{cq,min} + t_{cd,min} - S - t_{hold}
+    ```
+    **Remember:** setup races the **next** edge (T is in it); hold protects the **same** edge (no T). **Later capture clock (S > 0) helps setup, hurts hold.**
+
+!!! core "Q4. 'What is hold time?' (reported Jun 2025) T1 · Core memory"
+    **Setup = old data arrives in time. Hold = new data stays away long enough. Period only helps setup.**
+
+!!! core "Q5. 'Size CMOS gates at 2:1 and 1:1.' (reported) T1 · Core memory"
+    **Series → multiply width by the stack count. Parallel → size for one. 2:1 means PMOS doubles.**
+
+!!! core "Q6. 'Draw the stick diagram of a NAND2.' (reported) T1 · Core memory"
+    **Rails outside, diffusion inside, one poly per input, Euler path for unbroken diffusion, output metal from p to n.**
+
+!!! core "Q7. 'Draw a transistor-level latch and a D flip-flop.' (reported) T1 · Core memory"
+    **Latch = TG in + two inverters + TG feedback. DFF = master (open on CLK low) + slave (open on CLK high). Captures at the rising edge.**
+
+!!! core "Q8. 'Why is PMOS slower than NMOS?' T1 · Core memory"
+    **Hole mobility ≈ ½ electron → PMOS ≈ 2× wider for equal drive (planar). FinFET strain narrows the gap.**
+
+!!! core "Q9. 'How would you reduce power? Timing and power optimization for low · Core memory"
+    **Dynamic = αCV²f. Leakage is exponential in Vt. Speed where it matters, low power everywhere else.**
+
+!!! core "Q10. 'How would you characterize the leakage of a standard-cell librar · Core memory"
+    **Clarify → leakage is DC (op-point, not transient) → enumerate states → batch → reuse only proven equivalences → worst = FF/hot → validate shortcuts → automated QA.**
+
+!!! core "Q11. 'Draw a 6T SRAM cell. How do read and write work?' T1 · Core memory"
+    **Read must not flip; write must flip. PD > PG > PU.**
+
+!!! core "Q12. 'How does a ROM read work? What does the keeper do?' T1 · Core memory"
+    **The keeper saves the 1 and fights the 0. Check both, at the worst code pattern and corner.**
+
+!!! core "Q12b. 'What is a ROM?' (answer it like an engineer talking to an engin · Core memory"
+    **"A bit is a via that's there or not. The cell is trivial; the design is the periphery; the job is verification across every size, code pattern, corner and sigma."**
+
+!!! guard "Q12b. 'What is a ROM?' (answer it like an engineer talking to an engin · Guardrail"
+    Don't claim you've **built** a ROM compiler or used column-inversion encoding. Say "**one technique I've read about** is…" or "**my understanding** is…". Depth with honesty beats depth with a false claim, especially at NVIDIA.
+
+!!! core "Q12c. 'What is a standard cell?' (same layered approach) T1 · Core memory"
+    **"A standard cell is a contract: circuit + layout + LEF + Verilog + .lib that all agree. A cell is only as good as its .lib."**
+
+!!! core "Q13. 'What's the difference between EM and IR? How do you know about i · Core memory"
+    **IR = voltage now (speed). EM = metal wear-out over years (reliability). Both start from the real current path.**
+
+!!! guard "Q13. 'What's the difference between EM and IR? How do you know about i · Guardrail"
+    Only use the Apple-friend story if it's true, and say it plainly as learning. Never imply you worked at Apple or used its tools. Then **prove it with reasoning** (T1.8): Black's equation, avg/RMS/peak, where cells fail, how fixes trade off.
+
+!!! eq "Q14. 'RC charging: how long to reach 50%? 90%?' T1 · RC step response"
+    ```latex
+    V(t) = V_{DD}\,(1 - e^{-t/RC}) \qquad t_{50\%} = 0.69\,RC \qquad t_{63\%} = RC \qquad t_{90\%} = 2.3\,RC
+    ```
+    **Remember:** "0.7 to half, 1 to 63, 2.3 to 90." From 10% to 90% ≈ **2.2 RC**.
+
+!!! core "Q15. 'DRC and LVS are clean. Is the cell done?' T1 · Core memory"
+    **DRC = legal shape. LVS = right circuit. Neither = works, fast enough, or reliable.**
+
+!!! guard "Q19b. 'Why the ROM team?' (and 'standard cells or ROM?') T1 · Guardrail"
+    Don't pick one so strongly that you sound disappointed by the other. Ask him which way the opening leans (Part P.4, question 1).
+
+!!! core "Q19c. 'Why are you a good fit for this role?' T1 · Core memory"
+    **Device physics underneath + library customer downstream + verify-and-automate habit. Name the one gap honestly, then show you're closing it.**
+
+!!! core "Q19d. 'Why go from analog design to a ROM team?' T1 · Core memory"
+    **"A ROM read is an analog problem in a digital box": keeper vs leakage vs sense timing. Same margin thinking as my subthreshold front end, at far bigger scale.**
+
+!!! core "Q19e. 'You started a PhD. Why did you leave, and why did your research · Core memory"
+    **PhD track → research moved from RF to implant front end (followed the work, went deeper into low-power margins) → realized I want circuits that ship → completed the MS → industry circuit design. Not a detour: it's where the margin thinking comes from.**
+
+!!! guard "Q19e. 'You started a PhD. Why did you leave, and why did your research · Guardrails"
+    1. **Never say "I have a PhD."** Say "I started on the PhD track and **completed my MS**."
+    2. Never "burned out," "lost interest," or anything negative about the lab, the research or your advisor.
+    3. Don't make **consulting** the reason you left, and don't imply it only started afterward (the dates overlap).
+    4. Keep it to **~45 seconds**, then stop. Let him ask more if he wants.
+    5. Bring up the grad-school overload/probation **only if he asks** about grades (Part A2, C3).
+
+!!! core "Q21. 'Write a SPICE measurement / a quick script.' (reported: 'Coding  · Core memory"
+    **Say the thresholds out loud (50% for delay, 20–80% for slew). A missing measurement is a failure, not a zero.**
+
+
+### Bible: Part X — Expert question bank (engineer to engineer)
+
+!!! core "The expert frame for any scenario"
+    **1. Clarify the spec and the failure. 2. Name the physical mechanism. 3. Give the trade-off (what the fix costs). 4. Say how you'd verify it: which sim, which corner, which sigma.**
+
+!!! eq "X2.2 'Wire resistance dominates at these nodes. How do you analyze and · Distributed RC"
+    ```latex
+    t_{50\%} \approx 0.38\,R_w C_w \;(+\; 0.69\,R_{drv} C_w) \qquad R_w C_w \propto L^2
+    ```
+    **Remember:** "**double the length → 4× the wire delay**." Halving a bitline into two segments cuts wire RC per segment by ~4×.
+
+!!! eq "X3.1 'For an AOI/OAI gate, how do you size for symmetric rise/fall and · Switching threshold"
+    ```latex
+    V_m = \frac{V_{tn} + r\,(V_{DD} - |V_{tp}|)}{1 + r} \qquad r = \sqrt{\frac{k_p}{k_n}}
+    ```
+    **Remember:** "equal currents at V_m." Stronger PMOS → V_m moves **up**. For V_m ≈ VDD/2 you need k_p ≈ k_n (with |Vtp| ≈ Vtn).
+
+!!! core "X5.8 'The sense amp passes fresh but fails after aging simulation.' · Core memory"
+    **Every scenario: mechanism → the corner it lives at → the fix → what the fix costs → how you'd re-verify.** That's how an experienced engineer answers.
+
+!!! core "X6.12 'How do you decide what goes in the library at all?' · Core memory"
+    **The MS-level skill is analysis: model it, bound it statistically, verify it against silicon, and explain the trade-off with data. Answer every question from that stance.**
+
+
+### Bible: Part F1 — Faraday, told honestly (scope it before he wanders)
+
+!!! core "F1.3 'What is MBIST? What faults does it catch?' (in your zone; memory · Core memory"
+    **Scope first → answer inside your zone → "here's how I understand the rest." You never need to inflate Faraday.**
+
+
+### Bible: Part D2 — The drills they may hit (locked-down answers)
+
+!!! core "Your master arc"
+    "I explored deliberately, research and then the business side, and it **converged on hands-on silicon**: where device physics becomes something every chip uses. A standard-cell and ROM library is exactly that."
+
+!!! guard "D2.3 'Why did you leave the PhD track?' · Guardrail"
+    Say "**I started on the PhD track and completed my MS.**" Never "I have a PhD." Never badmouth research, your advisor or the lab; never "burned out."
+
+
+### Bible: Part R2 — Your six stories (have these cold)
+
+!!! core "Rules for every story"
+    **45–70 seconds.** Situation in two sentences, most of the time on **your actions**, end on a **number or concrete result**, then one line of lesson. Engineering stories first; at most one consulting story.
+
+
+### Bible: Part CULT — NVIDIA culture: what the behavioral questions test
+
+!!! core "CULT.1 What NVIDIA's behavioral questions are really testing · Core memory"
+    **NVIDIA wants: tells the truth fast, takes blunt feedback well, moves at the speed of light, owns the mission beyond the job description, and influences with evidence.** Every story should show at least one.
+
+
+### Bible: Part CAREER — Your future & career plan
+
+!!! guard "'What do you want to learn in your first year?' · Guardrails for the career cluster"
+    1. **Keep the horizon inside NVIDIA and circuit design.** Don't volunteer longer-term ideas about strategy, consulting, a startup, or healthcare commercialization. They're real interests, but here they read as "he'll leave."
+    2. **No "stepping stone" language.** Never "this will give me a foundation to…"
+    3. **Specific beats grand.** "Own a flop family, then a node bring-up" is stronger than "become a leader in AI hardware."
+    4. **Consistent with Part D2:** exploring is over; it converged on hands-on silicon.
+
+!!! core "'What do you want to learn in your first year?' · Core memory"
+    **Year 1: reproduce, then own a bounded change. Years 2–3: own a cell family or ROM. Year 5: new-node bring-up, go-to for hard margins. Year 10: deep technical ownership of foundation IP. Technical track first.**
+
+
+### Bible: Tier 1 — Must conquer
+
+!!! eq "T1.1 The MOSFET: regions, leakage, temperature · E1 · MOSFET current (teaching model)"
+    ```latex
+    I_{D,sat} = \tfrac{\beta}{2}(V_{GS}-V_t)^2 \qquad I_{sub} \propto e^{(V_{GS}-V_t)/(n\,kT/q)}
+    ```
+    **Remember:** above Vt → **square law** (overdrive²). Below Vt → **exponential**: every ~60–100 mV of Vt changes leakage by **10×**. **Limit:** advanced nodes need the real compact models.
+
+!!! core "T1.1 The MOSFET: regions, leakage, temperature · Core memory"
+    **Above Vt: square law. Below Vt: exponential, 10× per ~80 mV. Hot = leaky. Low VDD: cold is slow. Stacks leak less.**
+
+!!! core "T1.2 CMOS gates, sizing & stick diagrams · Core memory"
+    **Series ↔ parallel duals. Series → wider. NAND > NOR. Euler path → unbroken diffusion. Upsizing loads the previous stage.**
+
+!!! eq "T1.3 Delay, power & leakage · E2 · Gate delay (RC model)"
+    ```latex
+    t_{pd} \approx 0.69\,R_{eff}\,(C_{self} + C_{load})
+    ```
+    **Remember:** "0.69 to half swing." Doubling width halves R but also doubles C_self and the input cap, so delay doesn't halve. **Limit:** effective R is an approximation.
+
+!!! eq "T1.3 Delay, power & leakage · E3 · Power"
+    ```latex
+    P_{dyn} = \alpha\,C\,V_{DD}^2\,f \qquad P_{leak} = V_{DD}\,I_{leak} \qquad E_{0\to1} = C\,V_{DD}^2
+    ```
+    **Remember:** "**a C V-squared f**": **voltage is squared**, so −10% VDD ≈ **−19%** dynamic power. The supply pays C·V² per charge: half stored, half burned in the PMOS.
+
+!!! core "T1.3 Delay, power & leakage · Core memory"
+    **Delay ≈ 0.69 RC. Power = αCV²f + V·I_leak. Voltage is the biggest lever. LVT buys speed with exponential leakage.**
+
+!!! eq "T1.4 Latches, flip-flops, setup & hold · E4 · Timing slack (S = capture clock − launch clock arrival)"
+    ```latex
+    \text{Setup: } T + S \ge t_{cq,max} + t_{pd,max} + t_{su} \qquad \text{Hold: } t_{cq,min} + t_{cd,min} \ge S + t_{h}
+    ```
+    **Remember:** "**Setup races the next edge; hold protects this edge.**" Positive skew (later capture) **helps setup, hurts hold**. Draw both edges; never memorize the sign.
+
+!!! core "T1.4 Latches, flip-flops, setup & hold · Core memory"
+    **Latch = TG + inverter loop. DFF = master + slave. Setup = old data in time. Hold = new data not too early. Slowing the clock never fixes hold.**
+
+!!! eq "T1.5 6T SRAM & the sense amplifier · E5 · Bitline development"
+    ```latex
+    \Delta V = \frac{I_{cell}\, t}{C_{BL}}
+    ```
+    **Remember:** "**I t over C**." More rows → more C_BL → less swing in the same time. 12 µA × 250 ps / 80 fF = **37.5 mV**.
+
+!!! core "T1.5 6T SRAM & the sense amplifier · Core memory"
+    **Read must not flip (PD > PG). Write must flip (PG > PU). Sense amp resolves a small swing; swing must beat offset.**
+
+!!! eq "T1.6 ROM: read path, keeper & margins · E6 · ROM read budget"
+    ```latex
+    t_{0} \approx \frac{C_{BL}\,\Delta V}{I_{sel} - I_{keeper}} \qquad \Delta V_{droop,1} \approx \frac{(N{-}1)\,I_{off} - I_{keeper}}{C_{BL}}\, t
+    ```
+    **Remember:** "**The keeper saves the 1 and fights the 0.**" Both must pass at the sense time, at the **worst corner and code**.
+
+!!! core "T1.6 ROM: read path, keeper & margins · Core memory"
+    **Precharge → WL → connected falls (0), unconnected holds (1). Keeper: saves the 1, fights the 0. Rows limited by leakage vs on-current at fast/hot. Code pattern is a variable.**
+
+!!! eq "T1.7 Characterization & Liberty (.lib) · E7 · Table interpolation"
+    ```latex
+    d(x,y) = (1{-}x)(1{-}y)\,d_{00} + x(1{-}y)\,d_{10} + (1{-}x)\,y\,d_{01} + x\,y\,d_{11}
+    ```
+    **Remember:** interpolate along **load**, then along **slew**. Outside the grid = **extrapolation**: treat it with suspicion.
+
+!!! core "T1.7 Characterization & Liberty (.lib) · Core memory"
+    **.lib = promise. Sensitize the arc; tables are slew × load; setup/hold by clk-Q pushout; leakage per state; spot-check against SPICE.**
+
+!!! eq "T1.8 EM & IR: Bo's home turf (go deep here) · E8 · Black's equation (EM lifetime)"
+    ```latex
+    \mathrm{MTTF} = A\, J^{-n}\, e^{E_a / kT} \qquad J = \frac{I}{w\,t}
+    ```
+    **Remember:** "**more current density or hotter → shorter life.**" n ≈ 1–2; Ea ≈ 0.7–0.9 eV for copper. Double the width at the same current and n = 2 → **4× lifetime**. **Limit:** calibrated per process; the foundry deck sets the real limits.
+
+!!! eq "T1.8 EM & IR: Bo's home turf (go deep here) · E9 · Pulse currents (duty d)"
+    ```latex
+    I_{avg} = I_p\, d \qquad I_{rms} = I_p \sqrt{d} \qquad \text{e.g. } 4\,\text{mA at } 25\% \Rightarrow 1\,\text{mA avg},\ 2\,\text{mA rms}
+    ```
+    **Remember:** "**average the current; RMS averages the square.**" A signal wire can average **≈ 0** and still have large RMS and peak.
+
+!!! eq "T1.8 EM & IR: Bo's home turf (go deep here) · E10 · Decap sizing"
+    ```latex
+    C_{decap} \approx \frac{I\,\Delta t}{\Delta V} \qquad \text{2 mA for 200 ps, 20 mV droop} \Rightarrow 20\,\text{pF}
+    ```
+    **Remember:** decap is a **charge budget**: it helps a short burst, not a sustained DC current or EM.
+
+!!! core "T1.8 EM & IR: Bo's home turf (go deep here) · Core memory"
+    **IR = voltage now → speed. EM = atoms move over years → opens/shorts. Rails = DC EM (average). Signals = RMS + peak. Load × frequency × slew drive cell EM. Vias are usually the weak point. Every timing fix → recheck EM.**
+
+!!! core "T1.9 SPICE testbenches & DRC / LVS / extraction · Core memory"
+    **Testbench: question → circuit → stimulus → analysis → measurement → look at one waveform. Missing ≠ zero. LVS: shorts first. Clean ≠ done.**
+
+!!! core "T1.10 Noise: crosstalk, supply and dynamic nodes · Core memory"
+    **Opposite-switching neighbor slows you, same-direction speeds you up. Static gates restore; dynamic nodes and sense amps don't, so they need keepers and margin.**
+
+
+### Bible: Tier 2 — How to excel
+
+!!! eq "T2.1 Logical effort, buffer chains & charge sharing · E11 · Path sizing"
+    ```latex
+    F = G\,B\,H \qquad N_{opt} \approx \log_4 F \qquad \hat{f} = F^{1/N} \approx 4
+    ```
+    **Remember:** "**fan-out of 4 per stage**." Driving 64× load from a unit inverter → log₄64 = **3 stages**, sizes **1, 4, 16**.
+
+!!! core "T2.1 Logical effort, buffer chains & charge sharing · Core memory"
+    **d = gh + p. Aim for ~4 per stage. Charge sharing = charge conserved: V = VDD·C₁/(C₁+C₂).**
+
+!!! core "T2.2 Level shifters, isolation & power domains · Core memory"
+    **Low→high shifter = cross-coupled PMOS + NMOS pull-downs. Failure = NMOS can't win the contention at low VDDL. Domain off → isolation cell, not a shifter.**
+
+!!! core "T2.3 Clock gating, power gating & retention · Core memory"
+    **Clock gating cuts dynamic power (keeps state); power gating cuts leakage (loses state, needs retention + isolation). ICG = latch + AND, glitch-free.**
+
+!!! eq "T2.4 Metastability & synchronizers · E12 · Synchronizer MTBF"
+    ```latex
+    \mathrm{MTBF} = \frac{e^{t_r/\tau}}{T_0\, f_{clk}\, f_{data}}
+    ```
+    **Remember:** "**exponential in resolution time**." One more flop of wait time multiplies MTBF enormously. τ is set by the regenerative loop's gm/C.
+
+!!! core "T2.5 Memory organization & self-timing · Core memory"
+    **Rows set bitline C and leakage; columns set wordline RC. Replica bitline tracks global PVT, not local mismatch.**
+
+!!! eq "T2.6 Variation, yield & high-sigma · E13 · Mismatch and array yield"
+    ```latex
+    \sigma(\Delta V_t) = \frac{A_{Vt}}{\sqrt{W L}} \qquad Y = (1-p)^N \approx e^{-Np} \qquad p_{max} \approx \frac{-\ln Y}{N}
+    ```
+    **Remember:** "**4× area → ½ sigma**." For 1 Mb at 99.9% yield → p ≈ 1e-9 per cell → about **6σ**.
+
+!!! core "T2.6 Variation, yield & high-sigma · Core memory"
+    **Corners = global; Monte Carlo = local. Yield ≈ e^(−Np). 1 Mb → ~6σ. Zero fails in n runs → p < 3/n.**
+
+!!! core "T2.9 Advanced-node transition: FinFET → GAA · Core memory"
+    **Physics transfers; legal device choices and parasitics must be relearned. FinFET = quantized width; GAA = all-around gate; contacts matter.**
+
+!!! core "T2.10 Register files · Core memory"
+    **Register file = 8T+ cells with many ports. Read port = precharged single-ended bitline + keeper, the same leakage-vs-on-current problem as ROM.**
+
+
+### Bible: Résumé defense — only because you claimed it
+
+!!! eq "RD.1 WICS: implantable auditory front end (TSMC 65nm) · E14 · Subthreshold efficiency"
+    ```latex
+    \frac{g_m}{I_D} \approx \frac{1}{n\,U_T} \qquad U_T = \frac{kT}{q} \approx 26\,\text{mV at 300 K}
+    ```
+    **Remember:** "**subthreshold = max gm per amp**", but gm ∝ I, so bandwidth ∝ current.
+
+!!! guard "RD.1 WICS: implantable auditory front end (TSMC 65nm) · Guardrail"
+    Know your numbers: supply, bias current or power, bandwidth, transimpedance/gain, integrated noise, phase margin, corner set, and schematic vs layout status. If you don't remember one: "I don't recall the exact number; it was measured as X."
+
+!!! guard "Facts you can state with confidence · Things the repo shows were NOT done: never imply them"
+    - **Only one corner** (TT, 1.2 V, 25 °C). The "best/worst" views all point at the typical library. **No SS/FF signoff, no derates.**
+    - **No IR-drop or EM analysis.** The power-estimate script was never adapted. The 1.16 W figure is a synthesis estimate.
+    - **No clock gating inside the NTT core**; LUT macros are always enabled.
+    - The on-chip **ring NoC was dropped**; don't describe it as part of the chip.
+    - The controller is **counter-based index generation, not a microcode ROM**.
+    - Don't claim ML-KEM compliance.
+    - Not taped out, no silicon.
+
+!!! eq "The low-DMA-frequency bug: now you have an answer · The physics first (say this, it's the circuit-designer answer)"
+    **A failure that appears only at *lower* frequency is not setup timing**: slowing the clock *adds* setup slack. **Hold doesn't depend on frequency.** So the cause must be a **rate or clock-ratio assumption**: something that only goes wrong when one side becomes the slower one.
+
+
+### Bible: Part A2 — Full answer library
+
+!!! guard "A0. 'Tell me about yourself.' (almost always the opener) · Guardrail"
+    Keep it to ~75 seconds. Give the arc and let them dig. Don't list consulting or case competitions here; let them come up later if they do.
+
+!!! guard "A3. 'Why this kind of circuit work, and not analog or process integrat · Guardrail"
+    Don't dismiss analog or process work; you may be asked by someone who loves it. Frame this role as where your interests meet, not as escaping something.
+
+!!! guard "A6. 'Where in ten years?' · Register note"
+    Rooted and specific, like TSMC. Not the expansive McKinsey energy. They're hiring an engineer to own cells, and they want someone who'll stay and get deep.
+
+!!! guard "B2.1 'Why did you quit the PhD?' · Do / Don't"
+    Do: frame as clarity. Don't: badmouth research or your advisor, or say "I burned out."
+
+!!! guard "B2.6 Owning the 'all-in, then redirect' pattern · Guardrail"
+    Don't name consulting as the reason you left the PhD track, and don't claim it only started afterward (the dates overlap). That's what made it read as drift at McKinsey. The destination was hands-on silicon; consulting was a test you ran.
+
+!!! guard "B2.7 'Tell me about the conversation with your advisor.' · Guardrail"
+    Say "broad across the system," never "unfocused." Don't volunteer that the door back was left open.
+
+!!! guard "C3. 'You were on academic probation in Fall 2025.' · Guardrail"
+    Two sentences of ownership, then the recovery. Don't over-explain or sound rattled.
+
+!!! guard "D16. 'Tell me about feedback you received and what you did with it.' · Guardrail"
+    Pick feedback that's real and that you've visibly acted on. Don't pick one that undermines the role ("I'm not detail-oriented").
+
+
+### Bible: Part CODE — Coding & scripting drills
+
+!!! core "Drill 4: SPICE parameter sweep (no script needed) · Core memory"
+    **Logic out loud first. Loop → run → parse → flag missing → summarize. Missing is a failure, never a zero.**
+
+### Scripting: Part 1 — The answer to "What have you done with Perl, Tcl, Make?"
+
+!!! guard "Ownership: confirm before Friday"
+    The Innovus scripts start from a **course template** (header: "EECS 627 Final Lab, Created by Qirui Zhang"). What the **team added** on top is the interesting part: the Make pattern rules, the per-PE parameterization, and the Tcl procs for pins, route blockages and antenna diodes. **Claim only the pieces you wrote or ran**, and say "we started from the course's Innovus template and extended it." **[fill in: which procs/targets were yours]**
+
+
+### Scripting: Part 2 — Make: what you used, what it means
+
+!!! guard "2.2 Make vocabulary you should use naturally · One subtle thing that sounds senior"
+    `tool | tee log` returns **tee's** exit code, so a **failed** DC/Innovus run can look like success to Make. Fix: put `SHELL := /bin/bash` and `.SHELLFLAGS := -o pipefail -c` at the top of the Makefile. Mention it as "something I'd fix."
+
+
+### Scripting: Part 3 — Tcl: the language, then your procs
+
+!!! eq "3.1 Tcl in ten rules · The gotcha that proves you've actually written Tcl for EDA tools"
+    **Square brackets in pin names must be escaped**, because `[0]` would be treated as a command. Your pin script does exactly this: `editPin -pin "${pin_name}\[$pin_idx\]"`. **Memory trick:** "in Tcl, brackets **run** things."
+
+
+### Scripting: Part 7 — Perl, shell and Python: the report-parsing toolkit
+
+!!! guard "7.2 One-liners worth memorizing · Say this, it shows maturity"
+    "Report formats differ between tools and versions, so I **check one report by eye first**, then write the parser, and I make the script **flag files it couldn't parse** instead of silently skipping them."
+
+### 427: Lecture 2 — Fabrication and Layout
+
+!!! core "2.1 CMOS refresher: the device and the complementary gate · Core idea"
+    In static CMOS the pull-down and pull-up networks are **duals**: series in one is parallel in the other. For any input combination exactly one network conducts, so the output is always driven, rail-to-rail, with no static current (ignoring leakage).
+
+!!! guard "2.2 NAND, NOR and the internal node · Common trap"
+    The internal nodes are not "don't care". The charge stored on Z (V_DD − V_th in the A = 1, B = 0 case) has to be discharged on the next falling transition. That is the origin of the **input-pattern dependence** of delay in Lecture 3 and of **charge sharing** in dynamic gates. In a dynamic NOR ROM or a domino stack, an internal node like Z can share charge with the precharged node and pull it down.
+
+!!! core "2.3 Tristates: restoring vs nonrestoring · Core idea"
+    Restoring means a stage with gain whose output comes from the rails, not from the input. A TG is fine inside a cell, for example in a mux or flip-flop, as long as a restoring stage follows it. Long TG chains accumulate RC delay and noise.
+
+!!! guard "2.7 Design rules · Common trap"
+    Spacing and enclosure rules are not arbitrary. Each one maps to a specific failure (short, open, high-R contact, punch-through to the well). An interviewer may ask "why does poly need to extend past active?" The answer is misalignment, which would otherwise short source to drain.
+
+!!! eq "Sizing NAND2 and NOR2 (2:1 and 1:1), worked out · Equation card"
+    Series stack of k devices: R_total = Σ R_i → **width each = k × reference width** to match.
+    Parallel: size for the worst case (one device on) → **width = reference width**.
+    2:1 ref: g_NAND,n = (n+2)/3, g_NOR,n = (2n+1)/3. 1:1 ref: both (n+1)/2.
+    Memory trick: "**series scales, parallel stays.**"
+
+!!! core "2.11 Stick diagrams and Euler paths · Core idea"
+    Same input order in both networks + one Euler path in each = one diffusion strip per network = minimum width and minimum diffusion capacitance. This is the textbook way to lay out a static CMOS cell, and interviewers like to have it drawn on a whiteboard.
+
+!!! core "2.12 Cost and yield · Core idea"
+    Area is cost twice over: fewer dies per wafer, and lower yield per die (Y = e^(−AD)). That is the reason dense layout and small cells matter, and why memories (the largest area blocks) carry redundancy.
+
+
+### 427: Lecture 3 — Static CMOS Circuits Review: Delay
+
+!!! eq "3.1 Delay definitions and the first-order RC model · Equation card"
+    t_p = 0.69·R_eq·(C_self + C_load)
+    Width ×k: R/k, C_self·k → intrinsic delay constant, load term ÷k.
+    Memory trick: "**ln 2 ≈ 0.69, and the intrinsic delay never shrinks with size.**"
+
+!!! guard "3.2 Inverter transient and equivalent resistance · Common trap"
+    R_eq is not the small-signal r_ds and not V_DD/I_DSAT. It is an **average over the switching window**, about ¾·V_DD/I_DSAT. Also, a pMOS of the same W has roughly 2× the R of an nMOS (μn/μp ≈ 2), which is why the reference inverter is 2:1.
+
+!!! guard "3.4 Hand estimate: fanout-of-1 inverter · Common trap"
+    Raising V_DD speeds the gate up only with diminishing returns, while dynamic energy grows as V_DD². Near V_T the delay blows up. This matters for **min-V_DD (Vmin) characterization** of memories and register files.
+
+!!! core "3.5 Sizing an inverter: self-loading and the P/N ratio · Core idea"
+    Sizing helps only the **load-dependent** part of delay. Equal rise and fall (β ≈ 2) is good for noise margins and duty cycle (clock trees). Minimum average delay prefers a smaller β (about 1.4–1.5).
+
+!!! eq "3.7 Sizing gates to match the inverter, including complex gates · Equation card"
+    For each rail-to-output path: Σ_i (R_unit / w_i) = R_ref.
+    nMOS unit: w = 1 → R. pMOS unit: w = 2 → R.
+    k devices in series, equal widths → each k × reference width.
+
+!!! guard "3.8 Elmore delay and the NAND3 example · Common trap"
+    In the series stack, the node **nearest ground** sees only one R/3, and the **output** sees the full stack. Write each C with *its own* path resistance to the source. Also remember the factor 0.69 if you want a 50% delay rather than an Elmore "time constant".
+
+
+### 427: Lecture 4 — Logical Effort
+
+!!! core "4.1 Delay of one gate: d = gh + p · Core idea"
+    Delay is a straight line in h. The **slope is g** (topology cost) and the **intercept is p** (self-loading). Making a gate bigger slides you along the line (h changes); it never changes g or p.
+
+!!! eq "4.2 Computing g and the g table · Equation card"
+    2:1 → g_INV = 1, g_NAND,n = (n+2)/3, g_NOR,n = (2n+1)/3, p_NAND = p_NOR = n (×p_inv).
+    Memory trick: "**NAND adds n to 2, NOR adds 2n to 1, all over 3.**"
+
+!!! guard "4.3 Parasitic delay and delay components · Common trap"
+    p = n for NAND and NOR here is a simplification that ignores internal-node capacitance. Real p values in a measured library are larger, and the gates in the middle of a stack suffer more (see 4.11). Also, p_inv in a real process is not 1. The class measured **about 3.4** in 130 nm (4.12).
+
+!!! guard "4.5 Path effort and branching · Common trap"
+    Forgetting **B** is the most common error in decoder problems. Each address line fans out to many decoder gates, but only one is on the path you are timing.
+
+!!! core "4.6 Minimum delay: equal stage effort · Core idea"
+    **Equal effort per stage minimizes delay.** The total "effort budget" F is fixed by topology, so it is divided evenly.
+
+!!! eq "4.7 Worked example: three NAND2s · Equation card"
+    F = GBH → N̂ ≈ log₄F → f̂ = F^(1/N) → D̂ = N·f̂ + P → C_in,i = g_i·C_out,i/f̂ (go backward).
+    Check: the first stage's C_in must come out equal to the spec.
+
+!!! core "4.10 Sensitivity: wrong sizes and P/N ratio · Core idea"
+    Logical-effort optima are **flat**. Being within ±50% of the ideal size, or one stage off on the "more stages" side, costs only a few percent. Effort should go into topology (G, B, P), not into perfect fractional sizes.
+
+
+### 427: Lecture 5 — Adders
+
+!!! core "5.1 Single-bit addition and PGK · Core idea"
+    PGK turns addition into a carry-propagation problem: Ci+1 = Gi + Pi·Ci. Everything in this lecture is a way to evaluate that recurrence faster.
+
+!!! guard "5.1 Single-bit addition and PGK · Common trap"
+    P = A + B is fine for carries (and for the carry-bypass "all propagate" test only if you are careful — see 5.4, where the slide insists on XOR). It is never fine for the sum.
+
+!!! eq "5.3 The mirror adder · Equation card"
+    Co = G + P·Ci ; S = P ⊕ Ci ; S = ABCi + (A+B+Ci)·¬Co.
+    Memory trick: "carry first, sum reuses carry" — both the 28T and the 24T mirror adder build ¬Co first.
+
+!!! core "5.5 Carry-select adders · Core idea"
+    Ripple O(N), carry-select O(N/M), square-root select O(√N), prefix trees O(log N). Each step spends area/power to remove serial dependence.
+
+!!! guard "5.5 Carry-select adders · Common trap"
+    In the bypass adder, a block whose bits are not all propagating is not "slow" — its carry-out is determined internally. The worst case is a carry born in the first block and dying in the last.
+
+!!! eq "5.6 Parallel-prefix (PG) trees · Equation card"
+    Prefix op: (G,P)i:j = (Gi:k + Pi:k·Gk−1:j , Pi:k·Pk−1:j).
+    Levels: Kogge-Stone log2N; Sklansky log2N; Brent-Kung 2log2N − 1; Han-Carlson log2N + 1.
+    Trick: "KS = wires, BK = levels, Sk = fanout."
+
+
+### 427: Lecture 6 — Static Logic Families
+
+!!! core "6.1 Classic static CMOS · Core idea"
+    Every non-CMOS family removes some of the PMOS network (to cut input capacitance and area) and pays with ratioed behavior, reduced swing, clocking, or noise sensitivity.
+
+!!! guard "6.3 Differential cascode voltage switch (DCVS) · Common trap"
+    DCVS has no static current in steady state, but it is still a ratioed fight during transitions. If an interviewer asks "is DCVS ratioed?", the answer is "dynamically yes, statically no" — and the sizing constraint is the same as a keeper constraint.
+
+!!! eq "6.5 Pass-gate logic · Equation card"
+    NMOS passes 1 → Vdd − Vtn (body-effected); PMOS passes 0 → |Vtp|.
+    Unbuffered n-stage pass chain: t ≈ RC·n(n+1)/2.
+    Trick: "NMOS is good at 0, PMOS is good at 1 — a pass gate is good at only one."
+
+!!! core "6.9 Output prediction logic (OPL) · Core idea"
+    Every non-CMOS family wins speed by limiting swing, sharing NMOS, or relying on timing — and each must eventually restore a full-rail, noise-robust signal.
+
+
+### 427: Lecture 7 — Dynamic Logic Families
+
+!!! core "7.1 The basic domino gate · Core idea"
+    A dynamic node is a capacitor with a switch to ground. In evaluate it can only go down, so every input must rise monotonically, and anything that removes charge (leakage, charge sharing, coupling) causes an irreversible error.
+
+!!! guard "7.1 The basic domino gate · Common trap"
+    "Dynamic logic is faster because NMOS is faster" is only half the story. The bigger win is input capacitance (no PMOS on the inputs) and the early switch point (threshold ≈ Vt). The same early switch point is why noise margin is so low.
+
+!!! eq "7.2 Leakage and the keeper · Equation card"
+    n·I_off(worst leak corner) < I_keeper < I_on,single path(weak corner).
+    Max fan-in n_max ≈ I_on / I_off ÷ (margin factor).
+    Trick: "keeper sits between one-on and all-off."
+
+!!! core "7.11 Coupling issues: back-gate and Miller · Core idea"
+    Every dynamic-node failure is a charge budget: precharge puts Q = C·VDD on the node, and leakage, charge sharing, back-gate coupling and feedthrough all remove or add charge. The keeper and the output inverter's threshold set how much error is tolerated.
+
+
+### 427: Lecture 8 — Dynamic Power
+
+!!! guard "8.1 Where power goes: switching, short-circuit, leakage · Common trap"
+    "Short-circuit power is negligible" is only true when slopes are balanced. A large gate driven by a weak, slow net (or a long wire without repeaters) can spend a large fraction of its energy in crowbar current. Fix the slew, not the gate.
+
+!!! core "8.2 Deriving CV² — and why half of it is lost · Core idea"
+    A full 0→1→0 output cycle draws exactly C·VDD² from the supply. The energy depends on C and V only — sizing changes speed, not the per-transition energy of a given C.
+
+!!! eq "8.3 Activity factor · Equation card"
+    P_dyn = α·C·VDD²·f, α = P0·P1 (independent inputs), clock α = 1, random data α = 0.25, typical logic α ≈ 0.1. Memory trick: α counts *charging* events per cycle — the supply only pays on 0→1.
+
+!!! guard "8.3 Activity factor · Common trap"
+    Mixing conventions. Some texts define activity as "transitions per cycle" (both edges) and write ½·α·C·V²·f. This course uses α = probability of a 0→1 transition, so the factor ½ is absorbed (clock α = 1, not 2). State your convention before plugging numbers.
+
+!!! core "8.7 Reducing C: latch topology and clock load · Core idea"
+    Capacitance is not equal: weight it by activity. Clock-pin capacitance (α = 1) costs ~10× data-pin capacitance (α ≈ 0.1).
+
+!!! eq "8.8 Trading area for voltage: parallel and pipelined datapaths · Equation card"
+    P ∝ C·V²·f. Parallel-by-N: C×N (plus overhead), f÷N, V lowered to match N× delay budget. Pipeline-by-N: C × (1 + register overhead), f same, V lowered to match 1/N path. Both win because V enters squared while C enters linearly.
+
+!!! guard "8.9 Multiple supplies and level converters · Common trap"
+    "Low swing saves V²." Only if the charge comes from a supply at the low voltage. If you derive the low swing from VDD (Vt drops, charge sharing), the energy is C·VDD·Vswing — linear savings.
+
+!!! core "8.11 DVFS versus gating · Core idea"
+    Lowering C is always the best strategy (no speed penalty); the voltage knob is the strongest but trades speed; multiple supplies and lower supplies need level converters on step-up. (Lecture summary.)
+
+
+### 427: Lecture 9 — Static Power (Leakage)
+
+!!! eq "9.2 The subthreshold equation and the 'Ioff·10^(V/S)' form · Equation card"
+    I = Ioff · 10^[(Vgs + η(Vds − VDD) − kγVsb)/S] · (1 − e^(−Vds/vT)). S = n·vT·ln10 ≈ 100 mV/dec. Memory trick: "100 mV per decade" — 100 mV of Vt, of gate underdrive, or (via η = 0.1) of 1 V of Vds each move the current by 10×, 10×, and 10× respectively.
+
+!!! core "9.4 The Id–Vgs roundup and the numbers to use · Core idea"
+    Leakage is one exponential: every 100 mV of Vt, of negative Vgs, of reverse body bias (÷kγ = 0.1 → 1 V), or of drain voltage (÷η = 0.1 → 1 V) is a factor of 10. Reason about leakage by counting decades.
+
+!!! eq "9.6 Leakage levers and the stack effect · Equation card"
+    Vx = ηVDD/(1 + 2η + kγ); I_stack2 ≈ Ioff·10^(−ηVDD/S) ≈ Ioff/10 for η = 0.1, VDD = 1 V, S = 100 mV. Memory trick: the 2-stack factor is "η·VDD/S decades" — DIBL decides how much stacking helps.
+
+!!! guard "9.6 Leakage levers and the stack effect · Common trap"
+    The stack factor is mostly a DIBL effect. In a technology with small η (long channel, low VDD) stacking buys much less. Also: the factor applies only when *both* devices are OFF; a 2-stack with one device ON is just one OFF device with a slightly higher source.
+
+!!! guard "9.8 State dependence at block level and input-vector control · Common trap"
+    Quoting a gate's "leakage" as one number. Per-gate leakage varies by 1–2 decades with state; per-block leakage varies far less. Always ask "at what input state, temperature, and corner?"
+
+!!! core "9.10 Sleep transistor layout and dual-Vt logic · Core idea"
+    Dual-Vt is the cheapest leakage knob in active mode: same supply, no converters, swap cells on non-critical paths. Its limit is that it cannot reduce leakage on critical paths and saves little when the timing slack histogram is narrow.
+
+!!! core "9.13 Characterizing the leakage of a standard-cell library with minima · Core idea"
+    Leakage characterization is DC, exponential, and topological: extract a few device parameters per Vt and corner, compose cell states from parallel-add / series-stack rules, simulate only the dominant one-OFF-device states, and interpolate corners in log space.
+
+
+### 427: Lecture 10 — SRAM
+
+!!! core "10.1 Array organization and the 6T cell · Core idea"
+    One cell, two opposite requirements. A **read** must not disturb the cell, so the cell must win against the bitline. A **write** must flip the cell, so the bitline must win against the cell. All of 6T sizing reconciles those two.
+
+!!! guard "10.2 Static noise margin and the butterfly curve · Common trap"
+    The SNM square goes inside the lobe, between the two curves, and is measured along an axis. It is **not** the diagonal distance, and it is **not** VDD/2 minus something. Also state which SNM you mean: hold SNM can look great while read SNM is the number that fails at low VDD.
+
+!!! eq "10.4 Write operation and the pull-up ratio · Equation card"
+    **CR = (W/L)pull-down / (W/L)access** — must be large (≈1.2 to 2+) for **read stability** (N1 > N2).
+
+    **PR = (W/L)pull-up / (W/L)access** — must be small (≲1 to 1.5) for **writability** (N4 > P2).
+
+    Order: **pull-down > access > pull-up**. Memory trick: "**Read: cell beats bitline. Write: bitline beats cell.**"
+
+!!! guard "10.4 Write operation and the pull-up ratio · Common trap"
+    The two ratios share a denominator, the access transistor. Making the access device stronger speeds reads and helps writes, but it hurts read stability. Making it weaker helps stability but slows reads and hurts writability. Being asked "what if I upsize the access transistor?" is a standard interview probe. Name both consequences.
+
+!!! core "10.8 Column circuitry: bitline conditioning and sense amplifiers · Core idea"
+    tpd ∝ C·ΔV / I. Since the cell can't supply more I and the bitline can't shed C, a memory gets its speed by **sensing a small ΔV** with a well-timed, offset-tolerant, clocked sense amp.
+
+
+### 427: Lecture 11 — Timing and Latch Design
+
+!!! core "11.1 Synchronous timing and the three timing metrics · Core idea"
+    Setup is a **max-delay** check against the **next** edge. Hold is a **min-delay** check against the **same** edge. Mixing these up is the root of every confused answer about timing.
+
+!!! guard "11.3 Positive and negative skew · Common trap"
+    "Skew is bad" is the wrong answer. Skew is a **trade**: positive skew lends time to the setup path and borrows it from the hold path, and negative skew does the reverse. Useful-skew optimization in CTS exploits exactly this. What is always bad is **uncertainty** (unpredictable skew and jitter), because it must be subtracted from both checks.
+
+!!! eq "11.4 Deriving the timing constraints with skew and jitter · Equation card"
+    Setup: **T ≥ tc-q + tlogic,max + tsu − δ (+2tj)** — slow numbers, next edge, T helps.
+
+    Hold: **tc-q,cd + tlogic,cd > thold + δ (+2tj)** — fast numbers, same edge, T absent.
+
+    Memory trick: "**setup — slow — next; hold — hurry — now.**" Positive δ: + for setup, − for hold. Every picosecond of skew moved into one inequality is taken from the other.
+
+!!! guard "11.4 Deriving the timing constraints with skew and jitter · Common trap"
+    Watch the sign convention. This lecture defines δ = t(receiver) − t(launcher). Some textbooks define skew the other way, which flips every sign. In an interview, state your convention before writing the inequality.
+
+!!! core "11.7 Latches, master–slave flip-flops and the dynamic (C²MOS) register · Core idea"
+    A flop's setup and hold are not two independent numbers; they are the two ends of one window, positioned by when the master actually closes. Delay the closing (clock buffers, phase overlap, pulse width) and the window slides later: setup goes down, hold goes up.
+
+!!! guard "11.7 Latches, master–slave flip-flops and the dynamic (C²MOS) register · Common trap"
+    "The TG master–slave flop has zero hold time" is true only with perfect, non-overlapping clk/clkb. With a lagging clkb, the master input TG stays partially on after the edge and hold becomes positive. That is why the cell generates its own clocks locally and keeps clk/clkb skew small.
+
+!!! eq "11.9 Pulsed registers and the hybrid latch flip-flop (HLFF) · Equation card"
+    Master–slave TG: **tsu ≈ ttg + tinv, thold ≈ 0, tc-q ≈ ttg + 2·tinv**.
+
+    Pulsed / HLFF: **tsu < 0 possible, thold ≈ tpulse, tc-q ≈ one latch delay**.
+
+    Clock-phase delay δ inside the cell: **tsu → tsu − δ, thold → thold + δ**.
+
+
+### 427: Lecture 12 — Multipliers
+
+!!! core "12.1 Multi-operand addition and carry-save adders · Core idea"
+    Never propagate carries until the very end. A CSA level costs one full-adder delay regardless of word width; only the final CPA sees the carry chain.
+
+!!! eq "12.1 Multi-operand addition and carry-save adders · Equation card"
+    Chained CPAs: ≈ (k − 1)·N.  CSA array + CPA: ≈ (k − 2) + N (+ small constant).
+    A 3:2 CSA: S = X⊕Y⊕Z, C = MAJ(X,Y,Z) shifted left 1.
+
+!!! guard "12.3 Partial-product reduction and Booth encoding · Common trap"
+    Booth radix-4 halves the number of partial products, not the number of bits per partial product — each PP is M+1 bits (to hold ±2Y) and is signed, so sign extension becomes a real cost.
+
+!!! core "12.5 Partial-product accumulation: Wallace trees and 4:2 compressors · Core idea"
+    Multiplier = Booth (fewer PPs) + tree (log-depth accumulation in carry-save form) + one fast CPA tailored to the tree's arrival profile.
+
+!!! eq "12.5 Partial-product accumulation: Wallace trees and 4:2 compressors · Equation card"
+    Array: delay ∝ N + M.  Wallace (3:2): ≈ log_{1.5}(N/2) levels.  4:2 tree: ≈ log2(N/2) levels, each ≈ 1.5 FA delays (added).
+    Booth radix-4: N/2 partial products from 0, ±Y, ±2Y.
+
+
+### 427: Lecture 13 — Interconnect
+
+!!! eq "13.6 Elmore delay for a wire (added) · Equation card"
+    Wire: R = R□·l/w, C = Ctop + Cbot + 2Cadj (∝ l). Elmore of a distributed wire = RC/2 (π-model). With a driver: Rd(Cw + CL) + Rw(Cw/2 + CL). Memory trick: "the wire sees half its own capacitance, the load sees all of the wire's resistance."
+
+!!! guard "13.8 Driven victims, waveforms, and why noise matters · Common trap"
+    Treating Cadj as a fixed capacitance in timing. It is Cgnd + MCF·Cadj with MCF from 0 to 2. Using MCF = 1 for both setup and hold hides both the worst-case slow path and the worst-case fast path.
+
+!!! eq "13.10 Repeater results and energy · Equation card"
+    l/N = √(2RC′/(RwCw)), W = √(RCw/(RwC′)), C′ = C(1 + pinv). Energy at min delay ≈ 1.87·Cw·VDD²/length; at min EDP, +30% energy for +14% delay. Memory trick: "unrepeated is l², repeated is l; the optimum is flat, so undersize."
+
+!!! core "13.10 Repeater results and energy · Core idea"
+    Wires scale badly because RC ∝ l²; repeaters make delay linear in length at a sizable energy cost, and the flat delay optimum means you should downsize them.
+
+### 627: Lecture 1 — Digital Noise
+
+!!! core "1.1 Capacitive coupling: the four noise types and the lumped model · Core idea"
+    Coupling noise is a capacitive divider during the aggressor edge, then an RC recovery set by the victim's holder. The peak depends on the race between the aggressor injecting charge and the victim driver removing it.
+
+!!! eq "1.2 Charge-divider approximation and parameter sensitivities · Equation card"
+    ΔVN ≤ ΔVa · Cc/(Cc+Cg). Memory trick: a capacitive divider with Cc on top and Cg on the bottom. The holder (victim driver) and the aggressor slope only reduce it.
+
+!!! guard "1.2 Charge-divider approximation and parameter sensitivities · Common trap"
+    In the exam question, reducing the victim driver width makes the aggressor transition **faster**. A weaker holder lets the victim node follow the aggressor, so less voltage changes across Cc and the aggressor sees less effective load. Coupling is two-way: the victim also affects the aggressor.
+
+!!! eq "1.5 Soft errors: mechanism, Qcrit, collection area, FIT · Equation card"
+    Qcrit ≈ Cnode·VDD. FIT = failures per 10⁹ h. P(fail in time T) ≈ Σ(FITᵢ)·T/10⁹. Neutrons: 100–200 fC and unshieldable. Alphas: 10–20 fC and shieldable/cleanable.
+
+!!! core "1.6 Hardened latches: TMR and DICE · Core idea"
+    Hardening means redundant state: three copies plus a vote (TMR), or four interlocked nodes (DICE) where any node needs agreement from two neighbors to change. A plain 2-node latch has no way to tell which node was hit.
+
+!!! guard "1.6 Hardened latches: TMR and DICE · Common trap"
+    Hardening relies on the strike being **transient** and on the redundant nodes being **physically separate**. In the practice-exam latch (Check yourself Q7), a strike held indefinitely leaves the output node floating, so whether Q survives depends on off-state leakage ratios, not on restoring feedback. A single strike that reaches two sensitive nodes (an MCU) defeats DICE and TMR alike.
+
+!!! eq "1.8 Noise propagation and noise margins · Equation card"
+    NML = VIL − VOL and NMH = VOH − VIH. Max-sum gives |H′| = 1 at VIL/VIH. Robustness gives loop noise gain k/(1−k), so use |gain| ≤ ½. Memory trick: "unity gain = infinite sensitivity, half gain = unity sensitivity".
+
+!!! guard "1.8 Noise propagation and noise margins · Common trap"
+    Saying "noise margin is at the unity-gain point" without qualification. That maximizes the *sum* of margins, but a stage sitting there has infinite sensitivity to extra noise. The lecture's safer rule is the **½-gain point**. Also, NM only exists if VOL < VIL and VOH > VIH, which fails for weak or ratioed outputs.
+
+!!! eq "1.9 Delay noise · Equation card"
+    Miller factor = 1 + (aggressor slew rate / victim slew rate), with a sign for direction. Same direction at equal slew gives 0, quiet gives 1, opposite at equal slew gives 2, and opposite with the aggressor 2× faster gives 3 for the victim. Use 0 for min-delay (hold) and 2 or more for max-delay (setup).
+
+!!! core "1.10 Noise avoidance · Core idea"
+    Every fix trades density, power or delay for noise. Strengthening the holder helps the victim but hurts its neighbors. Shielding kills Cc but adds C. Only spacing reduces both, at the cost of area.
+
+
+### 627: Lecture 2 — Synchronization
+
+!!! core "2.1 Why synchronization is needed · Core idea"
+    A bistable element always has a metastable balance point. Sampling an input that is changing near the clock edge can leave the latch near that point, and the time it takes to resolve has no upper bound. It can only be made exponentially unlikely.
+
+!!! eq "2.2 The small-signal model: aperture ta and regeneration τ · Equation card"
+    ΔV0 = Δt/ta, ΔV(t) = ΔV0·e^(t/τr), τr = Cd/gm. Memory trick: "ta converts time to voltage, τr amplifies voltage exponentially." Small Cd and large gm give a fast latch.
+
+!!! guard "2.3 Resolving time td and why it diverges · Common trap"
+    ta and τr are different things. ta (aperture) sets how big the dangerous window is at t = 0 and enters the probability linearly. τr sets how fast the window shrinks and sits in the exponent. Halving τr helps far more than halving ta. Also, the setup and hold times on a datasheet are not ta: they are chosen to keep tCQ degradation small (for example 10%), so ta is much smaller than setup + hold.
+
+!!! eq "2.4 Failure rate and MTBF · Equation card"
+    MTBF = e^(td/τr) / (ta·fA·fB). Memory trick: "time constant on top, frequencies on the bottom." Each extra τr of waiting multiplies MTBF by e. Each extra clock cycle TA multiplies it by e^(TA/τr), which is huge when TA ≫ τr.
+
+!!! core "2.5 Basic synchronizers: one, two and three stages · Core idea"
+    A synchronizer works by buying resolving time. Every stage with no logic between flops adds about one clock period to td, and MTBF grows as e^(td/τr).
+
+!!! guard "2.7 Handshaking and ways to reduce failure · Common trap"
+    "Scaling fixes metastability" is wrong in practice. τr improves with each node, but TA shrinks just as fast, and at low VDD τr gets much worse because gm collapses. MTBF has to be checked at the operating voltage and corner where the synchronizer runs.
+
+!!! core "2.9 Advanced synchronizers and how to measure them · Core idea"
+    You cannot simulate or measure a 10⁸-year MTBF directly. You measure or simulate τr and ta (for example by de-rating to make them large and then extrapolating), and compute MTBF from the exponential model.
+
+
+### 627: Lecture 3 — Low Power
+
+!!! eq "3.1 Power consumption review · Equation card"
+    ```latex
+    P_{switching} = \alpha\, C\, V_{DD}^2\, f
+    ```
+    Only V is squared, so supply scaling is the strongest knob. Watch the α convention: here α counts full charge/discharge cycles per clock (clock α = 1). Many textbooks define α as 0→1 transitions per cycle and write ½αCV²f; both agree for a clock (added).
+
+!!! guard "3.1 Power consumption review · Common trap"
+    "A bigger driver burns more switching energy." It does not. The ½CV² lost per edge is independent of on-resistance. A bigger driver costs energy only through its own extra gate and diffusion capacitance (more C) and through short-circuit current if it slows the edges of its own input.
+
+!!! core "3.2 Clock gating · Core idea"
+    Clock gating lowers α on the highest-α net on the chip. The latch + AND structure makes it safe: `en` is sampled only during the low phase, so `g_clk` cannot glitch.
+
+!!! eq "3.3 Supply scaling at constant throughput: parallelism and pipelining · Equation card"
+    Parallel: P = ε²·(2+ov)/2·Pref ≈ ε²·Pref. Pipelined: P = ε²·(1+ov)·Pref. Example: 0.66²·1.1 = 0.48.
+    The overhead is linear; the voltage win is squared.
+
+!!! guard "3.3 Supply scaling at constant throughput: parallelism and pipelining · Common trap"
+    The ε² gain exists only if VDD is actually lowered. Parallelism at fixed VDD saves nothing; it doubles C and halves f. Near threshold, delay grows superlinearly as VDD drops, so a 2× delay budget buys a much smaller ε, and the leakage of the doubled area starts to count (see 3.6).
+
+!!! core "3.4 Multiple supply domains (multi-VDD, CVS) · Core idea"
+    Going down in voltage is free. Going up needs a level converter, because a VDDL "1" cannot shut off a VDDH PMOS. Put the converter where a sequential element already exists (the LCFF) and keep each cone strictly high-to-low.
+
+!!! guard "3.5 Dynamic voltage scaling (DVS) · Common trap"
+    The cubic saving assumes V tracks f and leakage is negligible. Near and below threshold, V stops dropping much while t_task keeps growing, so leakage energy grows. That is the reason for a minimum-energy point (next section), and why race-to-idle can win in leaky technologies or at low voltage (added).
+
+!!! core "3.6 Minimum-energy point and near-threshold computing · Core idea"
+    Energy per operation has a minimum because leakage energy = I_leak·V·t_delay and t_delay explodes below Vth. NTV sits just above Vth, where most of the energy saving remains but the delay and variability penalties have not yet blown up.
+
+!!! eq "3.7 Level converters: DCVS and pass-gate · Equation card"
+    DCVS works only if **IN-ON(min) > IP-ON(max)** and **IP-ON(min) > IN-OFF(max)**.
+    VDDL = 0.8 V: about 1000× margin each side. VDDL = 0.3 V: about 30× each side.
+    Mnemonic: "N must win the fight, P must beat the leak."
+
+!!! guard "3.8 Improved and wide-range level converters · Common trap"
+    **Picking one "worst corner" for a level shifter.** The constraint is two-sided, so it needs two different corner checks, each with its own temperature. When the NMOS is subthreshold (VDDL = 0.3 V, |Vt| = 0.4 V), its current falls when cold, while a superthreshold PMOS gets stronger when cold (mobility). So the "is the NMOS strong enough?" check is **FS at −20 °C** (PMOS letter first), not "SS hot". Once both devices are superthreshold (VDDL = 0.6 V), temperature moves them together and no single temperature is clearly worst.
+
+
+### 627: Lecture 4 — Power Supply
+
+!!! eq "4.1 Goal and the impedance target · Equation card"
+    ```latex
+    Z_{target} = \frac{r\,V_{DD}^2}{P}
+    ```
+    100 W, 1 V, 10% ripple → 1 mΩ. The target must hold "at all frequencies of interest", from DC (regulator) up to the clock harmonics (on-chip decap).
+
+!!! core "4.3 What supply noise breaks: delay, noise, TDDB, EM · Core idea"
+    Supply noise has two cost centres: the slow, sustained part (IR) costs frequency, and the fast part (L·di/dt, resonance) costs noise margin and oxide reliability. EM is the long-term cost of the current itself and is worst on DC, high-J power wires.
+
+!!! guard "4.4 Board and the decap frequency hierarchy · Common trap"
+    "Just add more capacitance." A capacitor helps only at frequencies below its own self-resonance, and only if the inductance between it and the load is small. A huge cap far from the die does nothing for a 1 GHz current step; only on-die decap (and the package L in front of the next level) set the first droop.
+
+!!! guard "4.7 Implicit (intrinsic) decoupling capacitance · Common trap"
+    Exam 2, P5(B) (P = 1.2 W, 1.2 V, 1 GHz, s = 0.15) gives C_total = 1.2/(1.2²·10⁹·0.15) = 5.56 nF and the official answer C_decap = 0.85·C_total = **4.72 nF**. That uses all of the non-switching capacitance. The slide's rule (½ of C_no-switch) would give about **2.36 nF**. Know both and state which one you use.
+
+!!! eq "4.10 Power-grid model, resonance and how to fix it · Equation card"
+    ```latex
+    \Delta V_{max} \approx IR + \Delta I \sqrt{\frac{L}{C}}\, e^{-\frac{R\,t_{pk}}{2L}},\quad t_{pk} = \frac{T_r}{4} = \frac{1}{4 f_r},\quad f_r = \frac{1}{2\pi\sqrt{LC}}
+    ```
+    Mind 2π: ωr = 1/√(LC) is in rad/s; f_r = ωr/2π is in Hz. Peak at a quarter period.
+
+!!! core "4.10 Power-grid model, resonance and how to fix it · Core idea"
+    The die sees the package through a resonant tank. Below resonance the regulator and board handle current; above it the on-die decap does; at resonance (tens to a hundred MHz) neither does, the impedance peaks, and a current step whose rise time is shorter than about a quarter resonance period produces the first droop, of size about ΔI·√(L/C).
+
+
+### 627: Lecture 5 — Silicon on Insulator (SOI)
+
+!!! core "5.1 The SOI device and its features · Core idea"
+    SOI trades the substrate junction (capacitance, leakage, latch-up, soft errors) for a floating body (history-dependent Vth, parasitic bipolar). PD-SOI design is mostly about managing the body.
+
+!!! guard "5.1 The SOI device and its features · Common trap"
+    "SOI has no body effect" is wrong. In PD-SOI the body is there but floating; its voltage moves with coupling and leakage, so Vth moves. In FD-SOI the BOX/substrate acts as a back gate, so back bias still shifts Vth.
+
+!!! core "5.3 Body-charging mechanisms · Core idea"
+    Fast mechanisms (capacitive coupling, forward diode) move Vb within one transition; slow ones (leakage, impact ionization) set where it starts. Delay therefore depends on what the gate did microseconds to milliseconds ago.
+
+!!! guard "5.4 First switching vs. second switching (history effect) · Common trap"
+    Don't reason only from the DC table. The DC body voltage sets the starting point, but the transition itself (Cdb coupling as the drain swings) often moves Vb more than the DC difference between states.
+
+!!! core "5.5 Parasitic bipolar effect · Core idea"
+    Floating body + source dropping = a free BJT. The gate cannot stop it; only limiting body charge (body contacts, FD-SOI) or avoiding the "S and D both high, then S low" pattern can.
+
+!!! core "5.7 Body contacts · Core idea"
+    The body is a knob: float it (fast, unpredictable), tie it (predictable, slower), tie it to the gate (fast and low leakage, but only at low Vdd), or bias it from the back (UTBB).
+
+!!! eq "5.7 Body contacts · Equation card"
+    Coupling: ΔVb = ΔVx · Cxb / ΣCb. First vs. second switch: Vb starts at 0.35 V vs. 0.45 V → second is faster. DTMOS limit: Vdd < ~0.6 V (body-source diode). FD-SOI swing ~70 mV/dec.
+
+
+### 627: Lecture 6 — Energy Recovery (Adiabatic Logic)
+
+!!! core "6.1 Where the energy goes · Core idea"
+    Dissipation is ∫VR·IR dt in the switch. Adiabatic design keeps VR small by making the source track the load (slow ramp, steps, or a sinusoid), so energy moves back and forth instead of being burned.
+
+!!! eq "6.1 Where the energy goes · Equation card"
+    Step: E = ½CV² (any R). Ramp: E = (RC/T)·CV². n steps: E = ½CV²/n. Memory trick: loss scales with (voltage across the switch)², so cut that voltage.
+
+!!! guard "6.4 Dual-rail adiabatic dynamic logic · Common trap"
+    "Adiabatic logic is zero energy" is false. Loss scales as RC/T, there are non-adiabatic residues (Vt drops, partial-adiabatic steps), and the tank has finite Q. The real costs are area (dual rail, 4T inverter), multi-phase clocks and a fixed frequency.
+
+!!! core "6.6 Adiabatic examples · Core idea"
+    Full adiabatic logic is a research curiosity (slow, multi-phase, area-hungry); the parts that survive are resonant clocks and charge recycling on big capacitive nets.
+
+
+### 627: Lecture 7 — Variations
+
+!!! core "7.1 Why variation became a first-order problem · Core idea"
+    Variation turns one design point into a distribution. Frequency and leakage come from the same distribution, so the fast tail is also the leaky tail, and yield is a two-sided window.
+
+!!! guard "7.4 CMP and metal fill · Common trap"
+    "Fill only affects ground capacitance" is wrong for floating fill. A floating fill shape is a capacitive bridge between the two neighbors, so it keeps (and spreads) Miller coupling. Grounded fill removes switching dependence but costs more total C.
+
+!!! core "7.5 Lithography and resolution enhancement (OPC, phase shift) · Core idea"
+    Gate length is not what you drew. Its printed value depends on neighbors, focus and dose, which is why foundries restrict layout (fixed pitch, one orientation) and why identical layout context is the best matching tool.
+
+!!! eq "7.6 Double patterning and SRAM robustness · Equation card"
+    Pitch-split DPL: two masks → two Leff means µ1 ≠ µ2. Adjacent-device mismatch now has a systematic term: ΔL = (µ1 − µ2) + random. Mismatch variance no longer cancels the global part because the two devices do not share it.
+    Memory trick: "same mask, same fate; different mask, different fate."
+
+!!! guard "7.6 Double patterning and SRAM robustness · Common trap"
+    (Practice exam.) In single patterning, reticle-to-reticle laser intensity variation shifts all six transistors of a bitcell equally, so it does **not** cause bitcell failure; **RDF** (random, uncorrelated) does. Once the cell is double-patterned, laser/dose variation hits the two masks differently, so **both** RDF and laser intensity matter. If only NMOS vary, **read** failure gets worse: read depends on access + pull-down, which are on different masks, while write depends on access + PMOS, and the PMOS has no variation.
+
+!!! guard "7.9 RTA, other fab effects, and the modeling chain · Common trap"
+    (Practice exam: three sources of Ioff variation.) RDF and RTA → Vth; lithography (OPE/OPC/phase shift/double patterning) → channel length; temperature fluctuation during oxide growth → tox. Do not list only "Vth"; the question wants the mechanism and the parameter it moves.
+
+!!! core "7.10 Classifying variation: systematic vs random, die-to-die vs within · Core idea"
+    Know which bucket a source lives in, because the fix differs. Global variation cancels in any differential or matched structure and is handled by corners or adaptive tuning; correlated local variation is handled by proximity; uncorrelated local variation only shrinks with device area.
+
+!!! eq "7.11 Statistical timing: corners vs global MC vs local MC at a corner · Equation card"
+    Global (correlated) adds linearly: σ = N·σG. Local (independent) adds in quadrature: σ = √N·σL.
+    Path: σp² = (N·σG)² + N·σL². Difference of two paths: global cancels, σ² = (NA + NB)·σL².
+    Relative local variation σ/µ falls as 1/√N: deep paths average out local variation; short paths, clock skew and matched pairs do not.
+    Memory trick: "Global marches in step; local takes a random walk."
+
+!!! guard "7.11 Statistical timing: corners vs global MC vs local MC at a corner · Common trap"
+    Never compute mismatch at a corner. Corners set all instances to the same value, so offset, skew and bitcell imbalance come out zero. Mismatch must come from local statistics (local MC or a POCV/LVF sigma per arc).
+
+!!! eq "7.13 Aging: NBTI, HCI, TDDB · Equation card"
+    NBTI: PMOS, Vgs = −VDD, high T, DC-like stress, ΔVth ∝ t^n (n ≈ 0.2), partial recovery. Static: depends on duty cycle (signal probability), not toggle rate.
+    HCI: mostly NMOS, during switching, ∝ activity × f, worse with slow input slew and high VDD.
+    TDDB: oxide field + T; sets max VDD.
+    Memory trick: "NBTI hates idle PMOS; HCI hates busy NMOS; TDDB hates high field."
+
+!!! guard "7.13 Aging: NBTI, HCI, TDDB · Common trap"
+    A clock gated off with its PMOS held on (input low) ages under NBTI asymmetrically: one edge slows and the other does not, so duty cycle and pulse width drift. Likewise an SRAM cell holding the same data for years ages one PMOS only, which skews the cell toward its stored value and degrades write margin for the opposite value (and read SNM). Aging-aware sign-off uses the actual signal probability per pin.
+
+!!! guard "7.14 Electromigration · Common trap"
+    (Practice exam: why are power grid wires more susceptible to EM than signal nets?) Answer: (1) high current density, (2) the current is **unidirectional** (DC), so there is no healing, (3) changes in wire width/thickness (and vias) create flux divergence. Signal wires carry bidirectional current and are limited mostly by RMS/peak rules.
+
+!!! core "7.15 Summary · Core idea"
+    Margin = global corner + local statistics + environment (V, T) + aging + model/extraction error. Global adds linearly and cancels in matched structures; local adds in quadrature and dominates mismatch and high-sigma arrays; aging and EM are time-dependent and set by mission profile.
+
+
+### 627: Lecture 8 — Adaptive Design
+
+!!! core "8.1 Adapt to what? Classifying variation by speed and reach · Core idea"
+    An adaptive loop removes the margin for any variation it can **sense** (same physics, same location) and **out-run** (faster loop than the variation). Everything else still needs a static margin.
+
+!!! eq "8.2 Why margins hurt: stacking and the low-power conflict · Equation card"
+    Linear stacking: margin = Σ 3σi (assumes all worst at once).
+    RSS for independent sources (added): margin = √(Σ (3σi)²).
+    Aging alone (NBTI + HCI + EM) is 25% on the slide's table, which is why aging-aware sign-off matters.
+
+!!! guard "8.3 DVFS: design-time tables and safe switching · Common trap"
+    A design-time DVFS table addresses **none** of the variations on the grid (slide 16). It is pure workload adaptation: every die gets the same worst-case V for a given f. Exam phrasing: DVFS = workload adaptation; AVFS = process and environmental adaptation.
+
+!!! core "8.4 AVFS and post-silicon look-up tables · Core idea"
+    A per-die table measures the truth for that die at test time, so it captures both D2D and WID process variation. It cannot see anything that happens after test: aging, temperature, droop.
+
+!!! guard "8.4 AVFS and post-silicon look-up tables · Common trap"
+    (Practice exam P6.) Add a temperature sensor and three tester tables at −20, 25 and 85 °C. Now the tables also address **ambient temperature**, besides both process variations. They still do not address lifetime degradation, package effects, hot spots, or any fast-changing variation. At a sensor reading between table temperatures (e.g. 40 °C), pick the **worse** neighbor: above Vt that is the **hotter** table (mobility dominates, hot is slow); **below Vt pick the colder table** (Vt rise dominates, cold is slow). This is **temperature inversion** (added explanation): at low VDD the delay sensitivity to Vt, which rises as T falls, outweighs mobility loss.
+
+!!! eq "8.5 Canary circuits: critical-path replicas and ring oscillators · Equation card"
+    Body effect (added, standard): Vt = Vt0 + γ(√(2φF + VSB) − √(2φF)).
+    RBB (VSB > 0 for NMOS) raises Vt and cuts leakage exponentially; FBB lowers Vt and speeds up, at the cost of leakage and junction current. Body-bias effectiveness shrinks in FinFET (thin, undoped fin), which is why it survives mainly in FD-SOI (added).
+
+!!! core "8.6 Why canaries need margin: mistracking, local variation, fast chang · Core idea"
+    A canary is a copy, not the circuit. It tracks what copy and original share (global process, slow V, T, aging) and misses what they do not share (local variation, instruction-dependent paths, local fast droop).
+
+!!! guard "8.7 Canary scorecard and in-situ delay detection · Common trap"
+    (Practice exam P6 B iii.) Compared with per-temperature tester tables, a canary **additionally tracks aging (degradation) and slow package variation**, and can track temperature at finer grain. But it **mistracks across temperature and voltage**, and it **does not track intra-die variation**, which the per-die tables do. Overall (P6 B iv): no firm answer, but tables probably win, because finer temperature tracking is offset by V/T mistracking, canaries miss WID, and degradation is typically small.
+
+!!! guard "8.10 Razor II · Common trap"
+    (Practice exam P6 C.) **Hold time in Razor II** is set by the time from the **detection clock going high to the main clock going low** (the latch becoming opaque): a short path launched by the next edge must not reach N during that interval, or it is flagged as an error. If a hold path is violated on silicon, every time the instruction exercises it Razor flags an error and recovery **replays at lower frequency**, but a hold failure is frequency-independent, so it **fails again and again**: the processor hangs, makes no progress, and the error rate spikes to **100%**. It cannot execute that code.
+
+!!! core "8.11 Silicon results and the scorecard · Core idea"
+    Scorecard across the grid: design-time DVFS covers nothing; tester tables cover static global + local process (add temperature with per-T tables); canaries cover global slow and static (process, aging, package V, ambient T); in-situ covers everything not fast; Razor covers everything within its detection window, at the cost of hold buffering and recovery logic.
+
+
+### 627: Lecture 9 — Leakage
+
+!!! eq "9.1 Leakage components and the subthreshold model · Equation card"
+    Ioff ∝ 10^(−VTH/S), S = n·(kT/q)·ln10 ≈ 60 mV/dec · n at 300 K. kT/q ≈ 26 mV at room temperature, and S grows linearly with absolute temperature.
+
+!!! guard "9.2 DIBL and the voltage dependence of Isub · Common trap"
+    DIBL means the off-current of a device depends on its own VDS. Any technique that lowers VDS across the off device (stacking, a collapsed virtual rail) gains twice: once from the smaller VDS, and again from the higher effective Vth. Any technique that raises VDS (e.g. shorting a virtual rail to VDD) costs leakage.
+
+!!! core "9.3 GIDL and the full drain-leakage picture · Core idea"
+    Driving the gate below the source (super-cutoff, negative wordline, reverse body bias) helps only until GIDL takes over. There is an optimum negative VGS, and it gets shallower as VDS increases.
+
+!!! core "9.7 Stacking · Core idea"
+    The stack effect is a DIBL effect. It is large in planar (λd ≈ 0.1) and modest in FinFET (λd ≈ 0.025–0.05). Each additional off device gives diminishing returns because most of the voltage already sits across the top device.
+
+!!! guard "9.8 State dependence: Isub vs Igate · Common trap"
+    "Isub depends on how many devices are off; Igate depends on where the on devices are." When gate leakage is comparable to subthreshold leakage (thin-oxide planar nodes), the minimum-leakage input vector must be found with both terms included.
+
+!!! guard "9.11 Power gating (MTCMOS) and its variants · Common trap"
+    Super-cutoff does not scale without limit. As VGS goes more negative, VDG across the switch grows and **GIDL** (9.3) rises, so total leakage reaches a minimum and then increases again. The thin-oxide switch also sees VDD + Vboost across its gate oxide in standby, which is a reliability (TDDB) limit (added).
+
+!!! eq "9.12 Virtual rails, sleep-transistor sizing and decap placement · Equation card"
+    Break-even sleep time: E_overhead = ΔP_leak · t_BE, so t_BE = (C_switch·VDD² + C_virtual·VDD²) / (VDD·(I_leak,active − I_leak,sleep)). Sleep only pays when the idle interval is longer than t_BE plus the wake-up latency.
+
+!!! core "9.15 Body biasing and the comparison · Core idea"
+    Runtime leakage is managed by multi-Vt and channel-length choices in the library. Standby leakage is managed by power gating, with retention and wake-up handled carefully. Stacking and body bias, strong in planar, lose most of their effect in FinFET/GAA because DIBL and body effect have shrunk.
+
+
+### 627: Lecture 10 — Inductance
+
+!!! core "10.1 Inductance as a loop property · Core idea"
+    There is no such thing as "the inductance of a wire" on chip. There is the inductance of a loop, set by the signal path and the return path together. Every inductance-control technique in this lecture works by making the return path closer (smaller loop) or by cancelling flux.
+
+!!! guard "10.2 Frequency dependence: proximity and skin effect · Common trap"
+    "Skin effect is what makes on-chip inductance frequency dependent." For on-chip wires a few µm thick, skin depth only reaches wire dimensions around and above 1 GHz (2.06 µm). The dominant on-chip effect in the GHz range is the **proximity effect**: the *return path* moves, which changes L much more than skin effect changes R.
+
+!!! eq "10.4 Frequency of interest and inductive effects on delay · Equation card"
+    ```latex
+    f_{knee} \approx \frac{1}{\pi t_r},\qquad \delta = \sqrt{\frac{2\rho}{\omega\mu}},\qquad V = L\frac{dI}{dt},\quad V_{victim} = m\frac{dI_{agg}}{dt}
+    ```
+    tr = 10 ps → ~30 GHz. Copper δ: 6.52 µm at 100 MHz, 2.06 µm at 1 GHz.
+
+!!! guard "10.5 Inductive coupling (crosstalk) · Common trap"
+    Capacitive crosstalk is local (nearest neighbours, falls fast with spacing) and is fixed by spacing or a shield wire. Inductive crosstalk is set by **loop overlap**, which can be large; a shield helps only if it actually carries the return current close to the signal.
+
+!!! core "10.7 Optimal inductance for repeated interconnect · Core idea"
+    A little inductance speeds up a repeated line by sharpening slopes; too much makes it ring. The optimum sits just before the overshoot inflection point.
+
+
+### 627: Lecture 11 — Compute-in-Memory
+
+!!! guard "11.1 The memory wall and where CIM sits · Common trap"
+    CIM papers often quote 1-bit or 4-bit TOPS/W. Always normalize to the same input and weight precision before comparing. An 8b×8b operation is worth 64 binary operations.
+
+!!! core "11.2 Logic-in-memory: bitline computing · Core idea"
+    A bitline is a wired-OR/AND node, and a decoupled read port is a 1-bit multiplier. CIM starts from those two facts and then counts how much charge or current lands on the bitline.
+
+!!! core "11.7 Multibit weights and the signal-margin problem · Core idea"
+    Analog CIM divides the bitline swing into N + 1 levels. Margin per level shrinks like 1/N while the variation of a level grows with the number of contributing cells, so precision is limited by bitcell current variation and ADC offset, exactly the quantities that limit an SRAM read.

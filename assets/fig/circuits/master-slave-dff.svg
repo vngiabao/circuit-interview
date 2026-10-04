@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 795" role="img" aria-labelledby="title desc"><title id="title">A positive-edge flip-flop, built from two static TG latches</title><desc id="desc">Each latch has two inverters and complementary input / feedback transmission gates.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 1 L7 4 L0 7" fill="none" stroke="context-stroke" stroke-width="1.4"/></marker></defs>
+<rect width="1120" height="795" fill="white"/>
+<text x="40" y="43" font-family="Arial, sans-serif" font-size="27" fill="#26364a" text-anchor="start" font-weight="600">A positive-edge flip-flop, built from two static TG latches</text>
+<text x="40" y="74" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="start" font-weight="400">Each latch has two inverters and complementary input / feedback transmission gates.</text>
+<rect x="77" y="121" width="460" height="392" rx="8" fill="#f7f9fc" stroke="#cbd5e1"/>
+<text x="100" y="150" font-family="Arial, sans-serif" font-size="18" fill="#235ca1" text-anchor="start" font-weight="600">MASTER · transparent when CLK = 0</text>
+<rect x="127" y="248" width="56" height="44" rx="2" fill="white" stroke="#26364a"/>
+<text x="155" y="276" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="middle" font-weight="600">TG</text>
+<polyline points="155,248 155,227" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="155,292 155,313" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="155" cy="299" r="4" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<text x="155" y="218" font-family="Arial, sans-serif" font-size="16" fill="#235ca1" text-anchor="middle" font-weight="400">n: CLK̅</text>
+<text x="155" y="335" font-family="Arial, sans-serif" font-size="16" fill="#235ca1" text-anchor="middle" font-weight="400">p: CLK</text>
+<polyline points="60,270 127,270" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="183,270 280,270" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="230" cy="270" r="4" fill="#26364a"/>
+<path d="M280,247 L280,293 L322,270 Z" fill="white" stroke="#26364a" stroke-width="2.4"/>
+<circle cx="328" cy="270" r="6" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="334,270 514,270" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="430" cy="270" r="4" fill="#26364a"/>
+<polyline points="430,270 430,414 390,414" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M390,391 L390,437 L348,414 Z" fill="white" stroke="#26364a" stroke-width="2.4"/>
+<circle cx="342" cy="414" r="6" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="336,414 308,414" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="252" y="392" width="56" height="44" rx="2" fill="white" stroke="#26364a"/>
+<text x="280" y="420" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="middle" font-weight="600">TG</text>
+<polyline points="280,392 280,371" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="280,436 280,457" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="280" cy="443" r="4" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<text x="280" y="362" font-family="Arial, sans-serif" font-size="16" fill="#235ca1" text-anchor="middle" font-weight="400">n: CLK</text>
+<text x="280" y="479" font-family="Arial, sans-serif" font-size="16" fill="#235ca1" text-anchor="middle" font-weight="400">p: CLK̅</text>
+<polyline points="252,414 230,414 230,270" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="235" y="249" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">X</text>
+<rect x="597" y="121" width="460" height="392" rx="8" fill="#f7f9fc" stroke="#cbd5e1"/>
+<text x="620" y="150" font-family="Arial, sans-serif" font-size="18" fill="#235ca1" text-anchor="start" font-weight="600">SLAVE · transparent when CLK = 1</text>
+<rect x="647" y="248" width="56" height="44" rx="2" fill="white" stroke="#26364a"/>
+<text x="675" y="276" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="middle" font-weight="600">TG</text>
+<polyline points="675,248 675,227" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="675,292 675,313" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="675" cy="299" r="4" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<text x="675" y="218" font-family="Arial, sans-serif" font-size="16" fill="#235ca1" text-anchor="middle" font-weight="400">n: CLK</text>
+<text x="675" y="335" font-family="Arial, sans-serif" font-size="16" fill="#235ca1" text-anchor="middle" font-weight="400">p: CLK̅</text>
+<polyline points="580,270 647,270" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="703,270 800,270" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="750" cy="270" r="4" fill="#26364a"/>
+<path d="M800,247 L800,293 L842,270 Z" fill="white" stroke="#26364a" stroke-width="2.4"/>
+<circle cx="848" cy="270" r="6" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="854,270 1034,270" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="950" cy="270" r="4" fill="#26364a"/>
+<polyline points="950,270 950,414 910,414" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M910,391 L910,437 L868,414 Z" fill="white" stroke="#26364a" stroke-width="2.4"/>
+<circle cx="862" cy="414" r="6" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="856,414 828,414" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="772" y="392" width="56" height="44" rx="2" fill="white" stroke="#26364a"/>
+<text x="800" y="420" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="middle" font-weight="600">TG</text>
+<polyline points="800,392 800,371" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="800,436 800,457" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="800" cy="443" r="4" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<text x="800" y="362" font-family="Arial, sans-serif" font-size="16" fill="#235ca1" text-anchor="middle" font-weight="400">n: CLK̅</text>
+<text x="800" y="479" font-family="Arial, sans-serif" font-size="16" fill="#235ca1" text-anchor="middle" font-weight="400">p: CLK</text>
+<polyline points="772,414 750,414 750,270" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="755" y="249" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">Z</text>
+<text x="42" y="276" font-family="Arial, sans-serif" font-size="21" fill="#235ca1" text-anchor="start" font-weight="600">D</text>
+<polyline points="514,270 580,270" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="547" y="252" font-family="Arial, sans-serif" font-size="17" fill="#087c77" text-anchor="middle" font-weight="400">M = ¬D</text>
+<text x="1044" y="277" font-family="Arial, sans-serif" font-size="21" fill="#235ca1" text-anchor="start" font-weight="600">Q</text>
+<rect x="40" y="536" width="1040" height="45" rx="0" fill="#eaf0f7" stroke="none"/>
+<text x="60" y="565" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="start" font-weight="600">CLOCK PHASE</text>
+<text x="320" y="565" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="start" font-weight="600">MASTER</text>
+<text x="635" y="565" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="start" font-weight="600">SLAVE</text>
+<text x="889" y="565" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="start" font-weight="600">OBSERVE</text>
+<text x="60" y="610" font-family="Arial, sans-serif" font-size="16" fill="#26364a" text-anchor="start" font-weight="400">CLK = 0</text>
+<text x="320" y="610" font-family="Arial, sans-serif" font-size="16" fill="#26364a" text-anchor="start" font-weight="400">Input ON · feedback OFF</text>
+<text x="635" y="610" font-family="Arial, sans-serif" font-size="16" fill="#26364a" text-anchor="start" font-weight="400">Input OFF · feedback ON</text>
+<text x="889" y="610" font-family="Arial, sans-serif" font-size="16" fill="#26364a" text-anchor="start" font-weight="400">Q holds</text>
+<text x="60" y="653" font-family="Arial, sans-serif" font-size="16" fill="#26364a" text-anchor="start" font-weight="400">CLK = 1</text>
+<text x="320" y="653" font-family="Arial, sans-serif" font-size="16" fill="#26364a" text-anchor="start" font-weight="400">Input OFF · feedback ON</text>
+<text x="635" y="653" font-family="Arial, sans-serif" font-size="16" fill="#26364a" text-anchor="start" font-weight="400">Input ON · feedback OFF</text>
+<text x="889" y="653" font-family="Arial, sans-serif" font-size="16" fill="#26364a" text-anchor="start" font-weight="400">Q = ¬M</text>
+<rect x="40" y="686" width="1040" height="103" rx="8" fill="#eff7f6" stroke="none"/>
+<text x="58" y="714" font-family="Arial, sans-serif" font-size="18" fill="#087c77" text-anchor="start" font-weight="600">At the rising edge: the master closes; the slave opens.</text>
+<text x="58" y="740" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">The master stores M = ¬D. The slave inverts M again, so Q takes the sampled D value.</text>
+<text x="58" y="765" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">TG labels name the actual nMOS and pMOS gate nets. CLK̅ is the complement of CLK; overlap is nonideal.</text>
+</svg>

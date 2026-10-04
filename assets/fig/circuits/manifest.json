@@ -1,0 +1,109 @@
+{
+  "figures": [
+    {
+      "id": "cmos-sizing",
+      "topicId": "cmos-sizing",
+      "title": "Size the worst conducting path",
+      "file": "figures/circuits/cmos-sizing.svg",
+      "caption": "Normalized widths at equal length: reference inverter N = 1, P = 2. Device bodies omitted.",
+      "alt": "Size the worst conducting path. Match each worst-case path to the chosen reference. Equal resistance is a first estimate, not equal extracted delay.",
+      "takeaway": "Match each worst-case path to the chosen reference. Equal resistance is a first estimate, not equal extracted delay.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 24,
+          "label": "EECS 427 packet · p. 24"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 29,
+          "label": "EECS 427 packet · p. 29"
+        }
+      ]
+    },
+    {
+      "id": "master-slave-dff",
+      "topicId": "latch-flop",
+      "title": "A positive-edge flip-flop, built from two static TG latches",
+      "file": "figures/circuits/master-slave-dff.svg",
+      "caption": "Each latch has two inverters and complementary input / feedback transmission gates.",
+      "alt": "A positive-edge flip-flop, built from two static TG latches. Two inverting latch stages preserve polarity. Complementary clock phases prevent both latches being transparent in the ideal model.",
+      "takeaway": "Two inverting latch stages preserve polarity. Complementary clock phases prevent both latches being transparent in the ideal model.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 59,
+          "label": "EECS 427 packet · p. 59"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 117,
+          "label": "EECS 427 packet · p. 117"
+        }
+      ]
+    },
+    {
+      "id": "setup-hold-timing",
+      "topicId": "setup-hold-skew",
+      "title": "Setup and hold bracket the same capture edge",
+      "file": "figures/circuits/setup-hold-timing.svg",
+      "caption": "Illustrative timing only: tsetup = 40 ps, thold = 20 ps, tCQ = 60 ps. Not a measured cell.",
+      "alt": "Setup and hold bracket the same capture edge. Setup is before the active clock edge; hold is after it; clock-to-Q is a response delay, not a stability requirement.",
+      "takeaway": "Setup is before the active clock edge; hold is after it; clock-to-Q is a response delay, not a stability requirement.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 117,
+          "label": "EECS 427 packet · p. 117"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 123,
+          "label": "EECS 427 packet · p. 123"
+        }
+      ]
+    },
+    {
+      "id": "sram-6t",
+      "topicId": "sram",
+      "title": "6T SRAM: the read must leave the stored bit intact",
+      "file": "figures/circuits/sram-6t.svg",
+      "caption": "Shown reading Q = 0, Q̅ = 1. Both bitlines start precharged high; then WL rises.",
+      "alt": "6T SRAM: the read must leave the stored bit intact. During a read, precharged BL pushes the stored zero upward through the access transistor. The pull-down must win without making writing impossible.",
+      "takeaway": "During a read, precharged BL pushes the stored zero upward through the access transistor. The pull-down must win without making writing impossible.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 103,
+          "label": "EECS 427 packet · p. 103"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 104,
+          "label": "EECS 427 packet · p. 104"
+        }
+      ]
+    },
+    {
+      "id": "rom-keeper",
+      "topicId": "rom",
+      "title": "A precharged ROM bitline is a current competition",
+      "file": "figures/circuits/rom-keeper.svg",
+      "caption": "Read-zero convention here means BL discharges. The shown inverter output Y has the opposite polarity.",
+      "alt": "A precharged ROM bitline is a current competition. The keeper must exceed total off-leakage but lose to one selected cell. After the bitline crosses the detector threshold, feedback removes keeper contention.",
+      "takeaway": "The keeper must exceed total off-leakage but lose to one selected cell. After the bitline crosses the detector threshold, feedback removes keeper contention.",
+      "sourceRefs": [
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 65,
+          "label": "EECS 427 packet · p. 65"
+        },
+        {
+          "sourceId": "eecs427-lecture-packet",
+          "page": 103,
+          "label": "EECS 427 packet · p. 103"
+        }
+      ]
+    }
+  ]
+}

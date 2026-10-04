@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 840" role="img" aria-labelledby="title desc"><title id="title">Size the worst conducting path</title><desc id="desc">Normalized widths at equal length: reference inverter N = 1, P = 2. Device bodies omitted.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 1 L7 4 L0 7" fill="none" stroke="context-stroke" stroke-width="1.4"/></marker></defs>
+<rect width="1120" height="840" fill="white"/>
+<text x="40" y="43" font-family="Arial, sans-serif" font-size="27" fill="#26364a" text-anchor="start" font-weight="600">Size the worst conducting path</text>
+<text x="40" y="74" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="start" font-weight="400">Normalized widths at equal length: reference inverter N = 1, P = 2. Device bodies omitted.</text>
+<text x="205" y="118" font-family="Arial, sans-serif" font-size="19" fill="#235ca1" text-anchor="middle" font-weight="600">INVERTER</text>
+<text x="535" y="118" font-family="Arial, sans-serif" font-size="19" fill="#235ca1" text-anchor="middle" font-weight="600">NAND2</text>
+<text x="910" y="118" font-family="Arial, sans-serif" font-size="19" fill="#235ca1" text-anchor="middle" font-weight="600">NOR2</text>
+<polyline points="140,157 255,157" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="198" y="147" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">VDD</text>
+<polyline points="205,157 205,178" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="205,178 205,198 190,198 190,238 205,238 205,258" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="182,195 182,241" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="174" cy="218" r="5" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="157,218 169,218" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="150" y="224" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">A</text>
+<text x="217" y="224" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">P2</text>
+<polyline points="205,258 205,348" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="205,348 205,368 190,368 190,408 205,408 205,428" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="182,365 182,411" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="157,388 182,388" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="150" y="394" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">A</text>
+<text x="217" y="394" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">N1</text>
+<polyline points="205,428 205,438" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="190,438 220,438" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="195,445 215,445" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="201,452 209,452" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="205,302 277,302" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="205" cy="302" r="4" fill="#26364a"/>
+<text x="283" y="308" font-family="Arial, sans-serif" font-size="19" fill="#26364a" text-anchor="start" font-weight="600">Y</text>
+<polyline points="450,157 657,157" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="550" y="147" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">VDD</text>
+<polyline points="470,157 470,178" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="470,178 470,198 455,198 455,238 470,238 470,258" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="447,195 447,241" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="439" cy="218" r="5" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="422,218 434,218" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="415" y="224" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">A</text>
+<text x="482" y="224" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">P2</text>
+<polyline points="470,258 470,288" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="635,157 635,178" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="635,178 635,198 620,198 620,238 635,238 635,258" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="612,195 612,241" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="604" cy="218" r="5" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="587,218 599,218" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="580" y="224" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">B</text>
+<text x="647" y="224" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">P2</text>
+<polyline points="635,258 635,288" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="470,288 692,288" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="550,288 550,318" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="550" cy="288" r="4" fill="#26364a"/>
+<text x="698" y="294" font-family="Arial, sans-serif" font-size="19" fill="#26364a" text-anchor="start" font-weight="600">Y</text>
+<polyline points="550,318 550,338 535,338 535,378 550,378 550,398" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="527,335 527,381" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="502,358 527,358" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="495" y="364" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">A</text>
+<text x="562" y="364" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">N2</text>
+<polyline points="550,398 550,418 535,418 535,458 550,458 550,478" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="527,415 527,461" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="502,438 527,438" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="495" y="444" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">B</text>
+<text x="562" y="444" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">N2</text>
+<polyline points="550,478 550,488" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="535,488 565,488" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="540,495 560,495" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="546,502 554,502" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="873,157 992,157" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="930" y="147" font-family="Arial, sans-serif" font-size="16" fill="#627185" text-anchor="middle" font-weight="400">VDD</text>
+<polyline points="935,157 935,170" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="935,170 935,190 920,190 920,230 935,230 935,250" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="912,187 912,233" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="904" cy="210" r="5" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="887,210 899,210" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="880" y="216" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">A</text>
+<text x="947" y="216" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">P4</text>
+<polyline points="935,250 935,270 920,270 920,310 935,310 935,330" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="912,267 912,313" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="904" cy="290" r="5" fill="white" stroke="#26364a" stroke-width="2.2"/>
+<polyline points="887,290 899,290" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="880" y="296" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">B</text>
+<text x="947" y="296" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">P4</text>
+<polyline points="935,330 935,350 1043,350" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1050" y="356" font-family="Arial, sans-serif" font-size="19" fill="#26364a" text-anchor="start" font-weight="600">Y</text>
+<circle cx="935" cy="350" r="4" fill="#26364a"/>
+<polyline points="850,350 1000,350" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="850,350 850,378" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="850,378 850,398 835,398 835,438 850,438 850,458" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="827,395 827,441" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="802,418 827,418" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="795" y="424" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">A</text>
+<text x="862" y="424" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">N1</text>
+<polyline points="850,458 850,480" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="1000,350 1000,378" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="1000,378 1000,398 985,398 985,438 1000,438 1000,458" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="977,395 977,441" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="952,418 977,418" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="945" y="424" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="end" font-weight="600">B</text>
+<text x="1012" y="424" font-family="Arial, sans-serif" font-size="17" fill="#627185" text-anchor="start" font-weight="400">N1</text>
+<polyline points="1000,458 1000,480" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="850,480 1000,480" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="935,480 935,490" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="920,490 950,490" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="925,497 945,497" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="931,504 939,504" fill="none" stroke="#26364a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="205" y="525" font-family="Arial, sans-serif" font-size="18" fill="#087c77" text-anchor="middle" font-weight="400">R↑ = R↓ = R</text>
+<text x="550" y="525" font-family="Arial, sans-serif" font-size="18" fill="#087c77" text-anchor="middle" font-weight="400">R↓ = R/2 + R/2</text>
+<text x="930" y="525" font-family="Arial, sans-serif" font-size="18" fill="#087c77" text-anchor="middle" font-weight="400">R↑ = R/2 + R/2</text>
+<rect x="40" y="552" width="1040" height="43" rx="0" fill="#eaf0f7" stroke="none"/>
+<text x="60" y="580" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="start" font-weight="600">REFERENCE</text>
+<text x="350" y="580" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="start" font-weight="600">Inverter N / P</text>
+<text x="607" y="580" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="start" font-weight="600">NAND2 N / P</text>
+<text x="867" y="580" font-family="Arial, sans-serif" font-size="17" fill="#235ca1" text-anchor="start" font-weight="600">NOR2 N / P</text>
+<text x="60" y="625" font-family="Arial, sans-serif" font-size="18" fill="#26364a" text-anchor="start" font-weight="400">2 : 1 width ratio</text>
+<text x="350" y="625" font-family="Arial, sans-serif" font-size="18" fill="#26364a" text-anchor="start" font-weight="400">1 / 2</text>
+<text x="607" y="625" font-family="Arial, sans-serif" font-size="18" fill="#26364a" text-anchor="start" font-weight="400">2 / 2</text>
+<text x="867" y="625" font-family="Arial, sans-serif" font-size="18" fill="#26364a" text-anchor="start" font-weight="400">1 / 4</text>
+<text x="60" y="670" font-family="Arial, sans-serif" font-size="18" fill="#26364a" text-anchor="start" font-weight="400">1 : 1 width ratio</text>
+<text x="350" y="670" font-family="Arial, sans-serif" font-size="18" fill="#26364a" text-anchor="start" font-weight="400">1 / 1</text>
+<text x="607" y="670" font-family="Arial, sans-serif" font-size="18" fill="#26364a" text-anchor="start" font-weight="400">2 / 1</text>
+<text x="867" y="670" font-family="Arial, sans-serif" font-size="18" fill="#26364a" text-anchor="start" font-weight="400">1 / 2</text>
+<rect x="40" y="704" width="1040" height="103" rx="8" fill="#eff7f6" stroke="none"/>
+<text x="58" y="732" font-family="Arial, sans-serif" font-size="18" fill="#087c77" text-anchor="start" font-weight="600">Remember: series → multiply width by the stack count; parallel → size for one ON.</text>
+<text x="58" y="758" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">Each entry is the width of each device. Both rows match their own reference inverter in each direction.</text>
+<text x="58" y="783" font-family="Arial, sans-serif" font-size="17" fill="#26364a" text-anchor="start" font-weight="400">With unchanged μn/μp ≈ 2, a 1:1 inverter has slower pull-up. Equal P/N strength is a different assumption.</text>
+</svg>
