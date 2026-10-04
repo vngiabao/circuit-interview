@@ -36,6 +36,37 @@
       if (renders % 10 === 0) await pause();
     }
     await doc.fonts.ready;
+    await render('lessons direct catalog', () => {
+      V.lessons(host,{});
+      if(host.querySelectorAll('.lesson-open').length!==T.units.length) throw Error('Not every lesson is directly accessible');
+      if(host.querySelectorAll('.lesson-topic').length!==domainsCount()) throw Error('Topic separation missing');
+      if(host.querySelector('[data-reset-lessons]').getBoundingClientRect().width) throw Error('Clear filters shown without a filter');
+      const search=host.querySelector('#lesson-search');search.value='zzzz-no-lesson';search.dispatchEvent(new w.Event('input'));
+      if(host.querySelectorAll('.lesson-open').length || !host.querySelector('.empty-state')) throw Error('Search empty state failed');
+      host.querySelector('[data-reset-lessons]').click();
+      if(host.querySelectorAll('.lesson-open').length!==T.units.length) throw Error('Clear filters failed');
+      const topic=host.querySelector('#lesson-topic');topic.value='seq';topic.dispatchEvent(new w.Event('change'));
+      if(host.querySelectorAll('.lesson-open').length!==T.units.filter(u=>u.d==='seq').length) throw Error('Topic filter failed');
+    });
+    function domainsCount(){return w.TAPEOUT_DOMAINS.length;}
+    await render('lessons progress filter', () => {
+      const saved=T.state.units; T.state.units={};
+      try {
+        T.state.units[T.units[0].id]={status:'learning'};V.lessons(host,{status:'learning'});
+        if(host.querySelectorAll('.lesson-open').length!==1) throw Error('Progress filter failed');
+      } finally {T.state.units=saved;}
+    });
+    await render('contextual sheets', () => {
+      V.sheets(host);
+      if(host.querySelectorAll('.sheet-lesson').length!==T.units.filter(u=>u.eq?.length).length) throw Error('Equation lesson context missing');
+      for(const section of host.querySelectorAll('.sheet-lesson')){
+        const context=section.querySelector('.sheet-conditions'),diagram=section.querySelector('.sheet-example'),math=section.querySelector('.sheet-equations');
+        if(!context || !diagram.querySelector('svg') || !math.querySelector('.katex')) throw Error('Incomplete equation context');
+        if(!(context.compareDocumentPosition(math)&w.Node.DOCUMENT_POSITION_FOLLOWING) || !(diagram.compareDocumentPosition(math)&w.Node.DOCUMENT_POSITION_FOLLOWING)) throw Error('Equation appears before its context');
+      }
+      if(!host.querySelector('.sheet-example img[src*="lectures"]')) throw Error('Original lecture crops not used in sheets');
+    });
+    await render('contextual sheets topic filter', () => V.sheets(host,{topic:'mem'}));
     for (const u of T.units) await render('lesson ' + u.id, () => V.unit(host,u.id));
     counts.lessons = T.units.length;
     const questions = T.allQ();
