@@ -3,8 +3,22 @@
   const T = window.T, V = T.views;
   const main = T.$('#main');
 
+  // Visible copy carries no em or en dashes (taste skill rule). Imported text is normalised once at startup.
+  (function dedashAll() {
+    const fix = (str) => str.replace(/\s*—\s*/g, ' - ').replace(/(\d)–(\d)/g, '$1-$2').replace(/\s–\s/g, ' - ').replace(/–/g, '-');
+    const walk = (x, depth) => {
+      if (!x || typeof x !== 'object' || depth > 6) return;
+      for (const k of Object.keys(x)) {
+        if (k === 'solution' || k === 'tests' || k === 'starter') continue;
+        if (typeof x[k] === 'string') x[k] = fix(x[k]);
+        else walk(x[k], depth + 1);
+      }
+    };
+    [T.units, T.bank, T.labs, T.glossary, window.TAPEOUT_VAULT, window.TAPEOUT_DOMAINS].forEach((a) => walk(a, 0));
+  })();
+
   T.applyTheme = () => {
-    const t = T.state.settings.theme || 'auto';
+    const t = T.state.settings.theme || 'dark';
     const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   };
@@ -49,7 +63,7 @@
     T.keyHandler = null;
     const hit = routes.find(([re]) => re.test(path));
     try { hit ? hit[1](path.match(hit[0]), p) : V.notFound(main); }
-    catch (e) { console.error(e); main.innerHTML = `<div class="page"><div class="empty-state"><h3>Something broke on this page</h3><p class="mono small">${T.esc(e.message)}</p><a href="#/">Back to the die map</a></div></div>`; }
+    catch (e) { console.error(e); main.innerHTML = `<div class="page"><div class="empty-state"><h3>Something broke on this page</h3><p class="mono small">${T.esc(e.message)}</p><a href="#/">Back to today</a></div></div>`; }
     const key = navKey(path);
     T.$$('.nav a').forEach((a) => { if (a.dataset.nav === key) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     const h1 = main.querySelector('h1');
@@ -105,7 +119,8 @@
   document.addEventListener('click', (e) => {
     const img = e.target.closest('.md img, .fig img, .slides img');
     if (!img) return;
-    T.$('img', zoom).src = img.src; T.$('img', zoom).alt = img.alt;
+    const zi = T.$('img', zoom) || zoom.insertBefore(document.createElement('img'), zoom.firstChild);
+    zi.src = img.src; zi.alt = img.alt;
     T.$('.zcap', zoom).textContent = img.alt || '';
     zoom.showModal();
   });

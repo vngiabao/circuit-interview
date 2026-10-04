@@ -56,8 +56,13 @@
       return 1e-7 * Math.log1p(Math.exp((vg-vt)/(2*n*phi))) ** 2 * (1-Math.exp(-vd/phi));
     },
     energy(v) {
-      const ion = Math.log1p(Math.exp((v-.35)/(2*1.4*.026))) ** 2 * .008;
-      return { dynamic: v*v, leakage: .24*v*v/ion };
+      // Normalised to total energy at 1 V. Dynamic: alpha*C*V^2. Leakage: V*Ioff*Tcycle, Tcycle = LD*C*V/Ion.
+      const n = 1.4, phi = 0.026, vt = 0.35, alpha = 0.05, LD = 30;
+      const ion = (x) => Math.log1p(Math.exp((x - vt) / (2 * n * phi))) ** 2;
+      const ioff = (x) => Math.log1p(Math.exp((-vt + 0.08 * x) / (2 * n * phi))) ** 2;
+      const e = (x) => ({ dynamic: alpha * x * x, leakage: x * ioff(x) * LD * x / ion(x) });
+      const ref = e(1); const norm = ref.dynamic + ref.leakage; const out = e(v);
+      return { dynamic: out.dynamic / norm, leakage: out.leakage / norm };
     },
     droop(t) {
       const L=.5e-9, C=200e-9, R=.4e-3, I=20, alpha=R/(2*L);
@@ -171,18 +176,18 @@
   };
 
   P.energy = () => {
-    // Energy/op: normalized C V² plus assumed constant leakage-current scale × V × delay.
-    const vt = 0.35, n = 1.4, phi = 0.026, a = 1.4;
+    // alpha = 0.05, logic depth 30, VT = 0.35 V, EKV-style current that is continuous through threshold.
     const Edyn = (v) => models.energy(v).dynamic, Eleak = (v) => models.energy(v).leakage;
-    const F = frame({ x0: 0.15, x1: 1.0, y0: 0, y1: 2, xl: 'VDD (V)', yl: 'Energy per operation (normalised)' });
+    const F = frame({ x0: 0.15, x1: 1.0, y0: 0, y1: 1.1, xl: 'VDD (V)', yl: 'Energy per operation (1 = value at 1 V)' });
     const pts = range(0.15, 1.0, 170);
     const tot = pts.map((v) => [v, Edyn(v) + Eleak(v)]);
-    let mi = tot.reduce((m, p) => (p[1] < m[1] ? p : m));
+    const mi = tot.reduce((m, p) => (p[1] < m[1] ? p : m));
     let body = F.g + line(pts.map((v) => [v, Edyn(v)]), F, 'pa') + line(pts.map((v) => [v, Eleak(v)]), F, 'pc') + line(tot, F, 'pb');
-    body += dot(mi[0], mi[1], F, 'pdot hot') + note(mi[0], mi[1], `minimum ≈ ${mi[0].toFixed(2)} V in this model`, F, -8, -10, 'end');
-    body += note(.17, 1.9, 'Low-V energy continues above this axis; VT = 0.35 V', F, 0, 0);
-    body += legend([['pa', 'Dynamic C·VDD²'], ['pc', 'Leakage × (slower) delay'], ['pb', 'Total']]);
-    return svg(body, 'Energy per operation versus supply voltage showing a minimum-energy point');
+    body += vline(0.35, F) + note(0.35, 1.02, 'VT', F, 4, 0);
+    body += dot(mi[0], mi[1], F, 'pdot hot') + note(mi[0], mi[1], `minimum-energy point ≈ ${mi[0].toFixed(2)} V, ${Math.round(mi[1] * 100)}% of the 1 V energy`, F, 10, -12);
+    body += note(0.62, 0.62, 'above VT: dynamic energy dominates', F) + note(0.17, 0.2, 'below: delay explodes,', F) + note(0.17, 0.27, 'leakage per op wins', F);
+    body += legend([['pa', 'Dynamic α·C·VDD²'], ['pc', 'Leakage × cycle time'], ['pb', 'Total']]);
+    return svg(body, 'Energy per operation versus supply voltage showing a minimum-energy point just below threshold');
   };
 
   P.pushout = () => {

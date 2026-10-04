@@ -215,7 +215,7 @@
       const missed = results.filter((r) => !r.correct).map((r) => T.getQ(r.id));
       el.innerHTML = `<div class="page narrow"><header class="head"><h1>${T.esc(label)}: done</h1><p class="lede">${results.length ? `${ok} of ${results.length} correct or self-graded solid, in ${Math.max(1, Math.round((Date.now() - t0) / 60000))} min.` : 'No answers recorded.'} ${missed.length ? 'Misses are back in your review queue for today.' : ''}</p></header>
         ${results.length ? `<table class="report"><thead><tr><th>Question</th><th>Domain</th><th>Result</th></tr></thead><tbody>${results.map((r) => { const q = T.getQ(r.id); return `<tr><td><a href="#/q/${q.id}">${T.esc(title(q))}</a></td><td class="mono">${T.domain(q.d).code}</td><td>${r.correct ? '<span class="mark-ok">✓ solid</span>' : '<span class="mark-bad">× review</span>'}</td></tr>`; }).join('')}</tbody></table>` : ''}
-        <div class="row" style="margin-top:24px">${missed.length ? `<a class="btn accent" href="#/drill?mode=weak">Drill the misses</a>` : ''}<a class="btn ghost" href="#/drill">Another drill</a><a class="btn quiet" href="#/">Die map</a></div></div>`;
+        <div class="row" style="margin-top:24px">${missed.length ? `<a class="btn accent" href="#/drill?mode=weak">Drill the misses</a>` : ''}<a class="btn ghost" href="#/drill">Another drill</a><a class="btn quiet" href="#/">Today</a></div></div>`;
     }
     show();
   }
@@ -239,7 +239,7 @@
         <div class="field"><label for="mb">Opener</label><select id="mb"><option value="1">Include a project or behavioural opener</option><option value="0">Technical only</option></select></div>
         <button class="btn accent" type="submit">Start the interview</button>
       </form>
-      <p class="small muted" style="margin-top:12px">Chains are drawn from must-conquer domains for your lens (${T.esc(window.TAPEOUT_LENSES.find((l) => l.id === T.lens()).name)}). Change it on the die map.</p>
+      <p class="small muted" style="margin-top:12px">Chains are drawn from must-conquer domains for your lens (${T.esc(window.TAPEOUT_LENSES.find((l) => l.id === T.lens()).name)}). Change it on the Today page.</p>
     </div>`;
     el.querySelector('#mk').addEventListener('submit', (e) => { e.preventDefault(); T.state.activeSession = null; T.save(); location.hash = `#/mock?go=1&m=${el.querySelector('#ml').value}&b=${el.querySelector('#mb').value}`; });
   };

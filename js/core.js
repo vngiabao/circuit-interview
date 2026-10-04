@@ -31,6 +31,13 @@
   T.addQ = (list) => T.bank.push(...list);
   T.addLabs = (list) => T.labs.push(...list);
   T.addGlossary = (list) => T.glossary.push(...list);
+  // Structured teaching layered onto imported lessons (model, traps, spoken answer, worked example).
+  T.upgradeUnits = (map) => Object.entries(map).forEach(([id, extra]) => {
+    const u = T.units.find((x) => x.id === id);
+    if (!u) { console.warn('upgrade for missing unit', id); return; }
+    if (extra.figs && u.figs) extra = Object.assign({}, extra, { figs: extra.figs.concat(u.figs) });
+    Object.assign(u, extra);
+  });
 
   /* ---------- markdown + KaTeX ---------- */
   const renderTex = (tex, display) => {
@@ -60,7 +67,7 @@
 
   /* ---------- progress store (browser-local) ---------- */
   const KEY = 'tapeout.v1';
-  const blank = () => ({ v: 1, q: {}, units: {}, notes: {}, drafts: {}, labs: {}, stories: {}, sessions: [], activeSession: null, legacy: {}, legacyArchive: {}, settings: { hideCompany: true, theme: 'auto' } });
+  const blank = () => ({ v: 1, q: {}, units: {}, notes: {}, drafts: {}, labs: {}, stories: {}, sessions: [], activeSession: null, legacy: {}, legacyArchive: {}, settings: { hideCompany: true, theme: 'dark' } });
   const object = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
   const finite = (x) => typeof x === 'number' && Number.isFinite(x);
   const require = (condition, message) => { if (!condition) throw new Error(message); };

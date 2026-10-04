@@ -1,0 +1,4 @@
+[
+  { "date": "2026-10-04", "macrostructure": "Instrument Panel (custom, bespoke)", "theme": "custom: Instrument", "nav": "N3 side-rail + N4 cmd-K", "footer": "Ft2 inline rule", "paperBand": "dark", "display": "grotesk-sans condensed (IBM Plex Sans)", "accentHue": "yellow 96", "brief": "GBVirtuoso, circuit/ASIC/VLSI interview study workspace" },
+  { "date": "2026-10-04", "macrostructure": "Map / Diagram", "theme": "custom: Datasheet", "nav": "N3 side-rail + N4 cmd-K", "footer": "Ft2 inline rule", "paperBand": "light", "display": "Archivo", "accentHue": "orange 50", "brief": "Tapeout (previous build)" }
+]

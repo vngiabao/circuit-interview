@@ -12,8 +12,8 @@ import json, re, os, collections
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-OLD = os.path.join(ROOT, '..', 'interview-studio', 'dist')
-SRC_MD = os.path.join(ROOT, '..', 'interview-studio', 'source-bible', 'src')
+OLD = os.path.join(ROOT, 'archive', 'study-studio', 'dist')
+SRC_MD = os.path.join(ROOT, 'archive', 'study-studio', 'source-bible', 'src')
 
 
 def load(name):

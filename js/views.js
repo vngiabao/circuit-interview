@@ -1,4 +1,4 @@
-/* Learning-side views: die map, domains, units, sheets, stories, sources, settings. */
+/* Learning-side views: dashboard, domains, units, sheets, stories, sources, settings. */
 (function () {
   const T = window.T;
   const V = (T.views = T.views || {});
@@ -12,31 +12,17 @@
   T.unitsOf = unitsOf;
   const ustatus = (u) => (T.state.units[u.id] && T.state.units[u.id].status) || 'new';
 
-  /* ---------- floorplan packing: rows that always sum to 12 columns ---------- */
-  function pack(domains) {
-    const out = [];
-    const byTier = [1, 2, 3].map((t) => domains.filter((d) => T.tierOf(d) === t));
-    const per = { 1: 3, 2: 4, 3: 4 };
-    byTier.forEach((list, ti) => {
-      const t = ti + 1;
-      for (let i = 0; i < list.length; i += per[t]) {
-        const row = list.slice(i, i + per[t]);
-        const base = Math.floor(12 / row.length), extra = 12 - base * row.length;
-        row.forEach((d, k) => out.push({ d, t, c: base + (k < extra ? 1 : 0), r: t === 1 ? 2 : 1 }));
-      }
-    });
-    return out;
-  }
-
-  function block({ d, t, c, r }) {
+  const TIER_SHORT = { 1: 'must conquer', 2: 'excel', 3: 'breadth' };
+  function tile(d) {
+    const t = T.tierOf(d);
     const s = T.domainStats(d.id);
     const cover = s.total ? s.seen / s.total : 0;
-    const segs = 10, on = Math.round(cover * segs);
+    const segs = 12, on = Math.max(cover > 0 ? 1 : 0, Math.round(cover * segs));
     const hot = s.acc != null && s.acc < 0.6 && s.seen >= 3;
-    return `<a class="blk t${t}" style="grid-column:span ${c};grid-row:span ${r}" href="#/learn/${d.id}" aria-label="${T.esc(d.name)}: ${s.seen} of ${s.total} questions attempted">
-      <div><div class="code">${d.code}${s.due ? ` · ${s.due} due` : ''}</div><div class="nm">${T.esc(d.name)}</div></div>
-      <div><div class="meter" aria-hidden="true">${Array.from({ length: segs }, (_, i) => `<i class="${i < on ? (hot ? 'hot' : 'on') : ''}"></i>`).join('')}</div>
-      <div class="stat">${s.seen}/${s.total} tried · review success ${T.fmtPct(s.acc)}${t === 1 ? ` · ${s.unitsDone}/${s.units} lessons solid` : ''}</div></div>
+    return `<a class="tile t${t}" href="#/learn/${d.id}" aria-label="${T.esc(d.name)}: ${s.seen} of ${s.total} questions attempted">
+      <div><div class="top"><span class="code">${d.code}</span><span class="tlab">${TIER_SHORT[t]}</span></div><div class="nm">${T.esc(d.name)}</div></div>
+      <div style="display:grid;gap:8px"><div class="meter" aria-hidden="true">${Array.from({ length: segs }, (_, i) => `<i class="${i < on ? (hot ? 'hot' : 'on') : ''}"></i>`).join('')}</div>
+      <div class="stat"><span>${s.seen}/${s.total} tried</span><span>${s.due ? `<span class="due">${s.due} due</span>` : s.acc != null ? T.fmtPct(s.acc) : s.units ? `${s.unitsDone}/${s.units} lessons` : ''}</span></div></div>
     </a>`;
   }
 
@@ -55,36 +41,45 @@
     attempts.forEach((s) => (s.hist || []).forEach(([t, g, auto]) => { if (t > week) { wn++; if (auto === true || (auto === null && g >= 2)) wok++; } }));
     const u = nextUnit();
     const lab = T.labs.find((l) => !(T.state.labs[l.id] && T.state.labs[l.id].passed)) || T.labs[0];
-    const story = T.shuffle(T.allQ().filter((q) => q.d === 'story'), T.today() / 86400000 | 0)[0];
+    const story = T.shuffle(T.allQ().filter((q) => q.d === 'story' && !q.vault), T.today() / 86400000 | 0)[0];
+    const doms = D().slice().sort((a, b) => T.tierOf(a) - T.tierOf(b));
+    const must = doms.filter((d) => T.tierOf(d) === 1);
+    const left = T.units.filter((x) => must.some((d) => d.id === x.d) && ustatus(x) !== 'solid').length;
+    const hr = new Date().getHours();
+    const hello = hr < 5 ? 'Late night session.' : hr < 12 ? 'Good morning.' : hr < 18 ? 'Good afternoon.' : 'Good evening.';
+    const lens = window.TAPEOUT_LENSES.find((l) => l.id === T.lens());
     el.innerHTML = `<div class="page">
-      <header class="head"><h1>Your die map</h1>
-        <p class="lede">Sixteen interview domains laid out like a floorplan. Orange-edged blocks are must-conquer for your role lens. Each block fills as you attempt its questions.</p>
-        <div class="row">${lensSeg()}<a class="btn ghost sm" href="#/plan">Your weekly plan</a></div>
+      <header class="head"><h1>${hello}</h1>
+        <p class="lede">${due ? `${due} question${due > 1 ? 's' : ''} due for review. ` : ''}${left} must-conquer lesson${left === 1 ? '' : 's'} left for ${T.esc(lens.name.toLowerCase())}.</p>
+        <div class="row">${lensSeg()}</div>
       </header>
-      <div class="die-wrap">
-        <div>
-          <div class="die"><div class="die-grid">${pack(D()).map(block).join('')}</div></div>
-          <div class="die-legend"><span><i class="acc"></i>Must conquer</span><span><i></i>How to excel / good to know</span><span>Meter: share of the domain's questions you have attempted. Orange meter: review success under 60% (checks and self-ratings).</span></div>
+      <div class="dash">
+        <section class="panel next" aria-label="Next lesson">
+          <span class="label">Next lesson</span>
+          ${u ? `<span class="dom">${T.esc(T.domain(u.d).code)} · ${u.mins || 15} min</span><h2>${T.esc(u.title)}</h2><p>${T.esc(u.goal || '')}</p>
+          <ul class="anatomy">${[u.model && 'Mental model', (u.eq || []).length && `${u.eq.length} equation${u.eq.length > 1 ? 's' : ''}`, (u.figs || []).length && `${u.figs.length} figure${u.figs.length > 1 ? 's' : ''}`, u.worked && 'Worked example', (u.traps || []).length && `${u.traps.length} traps`, u.say && '30-second answer', (u.checks || []).length && `${u.checks.length} checks`].filter(Boolean).map((x) => `<li>${x}</li>`).join('')}</ul>
+          <div class="row"><a class="btn accent" href="#/unit/${u.id}">Open lesson</a><a class="btn ghost" href="#/plan">Weekly plan</a></div>` : `<h2>Every lesson is marked solid.</h2><p>Keep the knowledge warm with reviews and a mock interview.</p><div class="row"><a class="btn accent" href="#/mock">Start a mock</a></div>`}
+        </section>
+        <div class="side-stack">
+          <div class="panel readout" aria-label="Your numbers"><div><b class="${due ? 'hot' : ''}">${due}</b><span>due today</span></div><div><b>${attempts.length}</b><span>questions tried</span></div><div><b>${wn ? T.fmtPct(wok / wn) : '-'}</b><span>last 7 days</span></div></div>
+          <div class="panel"><span class="label">Today's loop</span><ul class="todo">
+            <li><a href="#/drill?mode=${due ? 'due' : 'quick'}"><span class="t">${due ? 'Clear your reviews' : 'Quick ten'}</span><span class="s">${due ? `${due} scheduled for today` : 'Ten auto-checked questions, new first'}</span><span class="go">→</span></a></li>
+            ${lab ? `<li><a href="#/lab/${lab.id}"><span class="t">One coding rep</span><span class="s">${T.esc(lab.title)}</span><span class="go">→</span></a></li>` : ''}
+            ${story ? `<li><a href="#/q/${story.id}"><span class="t">Say one answer out loud</span><span class="s">${T.esc(story.title || story.q)}</span><span class="go">→</span></a></li>` : ''}
+            <li><a href="#/mock"><span class="t">Mock interview</span><span class="s">Timed, spoken, with follow-up chains</span><span class="go">→</span></a></li>
+          </ul></div>
         </div>
-        <aside class="today" aria-label="Today's loop">
-          <div class="kpis"><div><b>${due}</b><span>due for review</span></div><div><b>${attempts.length}</b><span>questions tried</span></div><div><b>${wn ? T.fmtPct(wok / wn) : '-'}</b><span>last 7 days</span></div></div>
-          <div class="loop">
-            <h2>Today's loop</h2>
-            <div class="loop-item"><span class="k">01</span><div><h3>Learn one mechanism</h3><p>${u ? `${T.esc(T.domain(u.d).code)}: ${T.esc(u.title)} (${u.mins || 15} min)` : 'All lessons marked solid.'}</p>${u ? `<a class="btn accent sm" href="#/unit/${u.id}">Open lesson</a>` : ''}</div></div>
-            <div class="loop-item"><span class="k">02</span><div><h3>Clear your reviews</h3><p>${due ? `${due} question${due > 1 ? 's are' : ' is'} due. Spaced review is where retention comes from.` : 'Nothing due. Answer new questions and they will come back on schedule.'}</p><a class="btn ghost sm" href="#/drill?mode=${due ? 'due' : 'quick'}">${due ? 'Review now' : 'Quick ten'}</a></div></div>
-            <div class="loop-item"><span class="k">03</span><div><h3>One coding rep</h3><p>${lab ? T.esc(lab.title) : ''}</p>${lab ? `<a class="btn ghost sm" href="#/lab/${lab.id}">Open lab</a>` : ''}</div></div>
-            <div class="loop-item"><span class="k">04</span><div><h3>Say one answer out loud</h3><p>${story ? T.esc(story.title || story.q) : 'Pick any oral question.'}</p>${story ? `<a class="btn ghost sm" href="#/q/${story.id}">Rehearse</a>` : ''}</div></div>
-          </div>
-          <p class="small muted">Progress lives only in this browser. Back it up from <a href="#/settings">Settings</a>.</p>
-        </aside>
       </div>
-      <section class="sec"><h2>Build understanding, then test it</h2>
-        <div class="tiers">
-          <div class="tier"><h3>Understand</h3><p class="muted">Each lesson gives the mental model, the few equations that matter, a worked example, the traps, and a 30-second spoken version.</p></div>
-          <div class="tier"><h3>Attempt before reveal</h3><p class="muted">${T.allQ().length} questions, with multiple choice first and open reasoning where it matters. Commit to an answer, check it, then study the explanation.</p></div>
-          <div class="tier"><h3>Rehearse and revisit</h3><p class="muted">Grade yourself honestly. Misses return today, solid answers return in days to weeks. The mock interview chains follow-ups the way a panel does.</p></div>
-        </div>
-      </section>
+      <div class="sec-head"><div><h2>Domains</h2><p>Ordered for ${T.esc(lens.name.toLowerCase())}. Each meter fills as you attempt that domain's questions.</p></div><a class="btn ghost sm" href="#/learn">All lessons</a></div>
+      <div class="tiles">${doms.map(tile).join('')}</div>
+      <div class="legend"><span><i class="top"></i>Yellow top edge: must conquer</span><span><i></i>Share attempted</span><span><i class="bad"></i>Accuracy under 60%</span></div>
+      <div class="sec-head"><div><h2>How this works</h2></div></div>
+      <div class="method">
+        <div class="panel"><h3>Understand</h3><p>Each lesson gives the mental model, the few equations that matter, a worked example, the traps, and a 30-second spoken answer.</p></div>
+        <div class="panel"><h3>Attempt before reveal</h3><p>${T.allQ().length} questions. Commit to an answer, check it, then read why every option is right or wrong.</p></div>
+        <div class="panel"><h3>Rehearse and revisit</h3><p>Grade yourself honestly. Misses return today, solid answers return in days to weeks.</p></div>
+      </div>
+      <p class="small faint" style="margin-top:24px">Progress lives in this browser only. Back it up in <a href="#/settings">Settings</a>.</p>
     </div>`;
     bindLens(el, () => V.home(el));
   };
@@ -113,10 +108,10 @@
         <span class="spacer"></span><a class="btn accent sm" href="#/drill?mode=domain&d=${id}">Drill this domain</a><a class="btn ghost sm" href="#/bank?d=${id}">Browse questions</a></div>
       <div class="co co-why"><p class="co-t">Why interviewers ask</p><p>${T.esc(d.why)}</p></div>
       <section class="sec"><h2>Lessons</h2>
-        ${us.length ? `<ul class="ulist">${us.map((u) => `<li class="${ustatus(u) === 'solid' ? 'done' : ''}"><a href="#/unit/${u.id}"><span class="t">${T.esc(u.title)}</span><span class="m">${TIER[u.tier || 2]} · ${u.mins || 15} min</span><span class="s">${T.esc(u.goal || '')}</span></a></li>`).join('')}</ul>` : `<div class="empty-state"><h3>No lessons here yet</h3><p>The question bank still covers this domain.</p></div>`}
+        ${us.length ? `<ul class="ulist panel">${us.map((u) => `<li class="${ustatus(u) === 'solid' ? 'done' : ''}"><a href="#/unit/${u.id}"><span class="t">${T.esc(u.title)}</span><span class="m">${TIER[u.tier || 2]} · ${u.mins || 15} min</span><span class="s">${T.esc(u.goal || '')}</span></a></li>`).join('')}</ul>` : `<div class="empty-state"><h3>No lessons here yet</h3><p>The question bank still covers this domain.</p></div>`}
       </section>
       ${eqs.length ? `<section class="sec"><h2>Keycard</h2><p class="sub">Every equation from this domain's lessons on one sheet.</p><div class="eqs">${eqs.map(({ e, u }) => `<div class="eq-row"><div class="tex">${T.tex(e[0], true)}</div><div class="note">${T.md(e[1] || '', { inline: true })} <a class="faint" href="#/unit/${u.id}">${T.esc(u.title)}</a></div></div>`).join('')}</div></section>` : ''}
-      ${lec.length ? `<section class="sec"><h2>Original lecture figures</h2><p class="sub">Captioned slides from your EECS lecture packets.</p><ul class="ulist">${lec.map((k) => `<li><a href="#/slides/${k}"><span class="t">EECS ${k.split('-')[0]} lecture ${k.split('-')[1]}: ${T.esc(window.TAPEOUT_LECTURES[k])}</span><span class="m">${(window.TAPEOUT_SLIDES || []).filter((x) => x.lec === k).length} figures</span></a></li>`).join('')}</ul></section>` : ''}
+      ${lec.length ? `<section class="sec"><h2>Original lecture figures</h2><p class="sub">Captioned slides from your EECS lecture packets.</p><ul class="ulist panel">${lec.map((k) => `<li><a href="#/slides/${k}"><span class="t">EECS ${k.split('-')[0]} lecture ${k.split('-')[1]}: ${T.esc(window.TAPEOUT_LECTURES[k])}</span><span class="m">${(window.TAPEOUT_SLIDES || []).filter((x) => x.lec === k).length} figures</span></a></li>`).join('')}</ul></section>` : ''}
     </div>`;
   };
 
@@ -138,7 +133,8 @@
     add('model', 'The mental model', u.model ? `<div class="md">${T.md(u.model)}</div>` : '');
     add('eq', 'Equations that matter', u.eq && u.eq.length ? `<div class="eqs">${u.eq.map((e) => `<div class="eq-row"><div class="tex">${T.tex(e[0], true)}</div><div class="note">${T.md(e[1] || '', { inline: true })}</div></div>`).join('')}</div>` : '');
     add('fig', 'Picture it', u.figs && u.figs.length ? u.figs.map(figHTML).join('') : '');
-    add('body', 'Go deeper', u.body ? `<div class="md">${T.md(u.body)}</div>` : '');
+    const structured = !!(u.model || u.say);
+    if (!structured) add('body', 'Go deeper', u.body ? `<div class="md">${T.md(u.body)}</div>` : '');
     add('worked', 'Worked example', u.worked ? `<div class="md"><div class="co co-key"><p class="co-t">Problem</p>${T.md(u.worked.q)}</div><details class="deeper"><summary>Try it first, then open the solution</summary><div class="md">${T.md(u.worked.a)}</div></details></div>` : '');
     add('traps', 'Traps', u.traps && u.traps.length ? `<ul class="traps">${u.traps.map((t) => `<li><span>${T.md(t, { inline: true })}</span></li>`).join('')}</ul>` : '');
     add('say', 'Say it in 30 seconds', u.say ? `<p class="say">${T.md(u.say, { inline: true })}</p>` : '');
@@ -147,6 +143,7 @@
     add('understanding', 'Prove you understand', (u.understandingChecks || []).length ? `<p class="muted">Close the explanation and do each task unaided. These are your own checkpoints.</p>${u.understandingChecks.map((x, n) => `<label class="lesson-check"><input type="checkbox" data-understanding="${n}" ${(st.checks || {})[n] ? 'checked' : ''}><span>${T.md(x, { inline: true })}</span></label>`).join('')}` : '');
     add('labs', 'Apply it in code', (u.labIds || []).length ? `<ul>${u.labIds.map((id) => { const l = T.labs.find((x) => x.id === id); return l ? `<li><a href="#/lab/${id}">${T.esc(l.title)}</a></li>` : ''; }).join('')}</ul>` : '');
     add('check', 'Check yourself', (u.checks || []).length ? `<div class="checks"></div>` : '');
+    if (structured && u.body) add('notes-src', 'Full notes from your sources', `<details class="source-notes"><summary>Original lecture and drill notes for this topic <span>${Math.round(u.body.length / 1000)}k characters</span></summary><div class="md">${T.md(u.body)}</div></details>`);
     add('slides', 'From your lecture slides', slides.length ? `<div class="slides">${slides.slice(0, 12).map((s) => `<figure><img src="${s.f}" alt="${T.esc(s.cap)}" loading="lazy"><figcaption>${T.esc(s.cap)}</figcaption></figure>`).join('')}</div>${slides.length > 12 ? `<p><a href="#/slides/${slides[0].lec}">See all ${slides.length} figures</a></p>` : ''}` : '');
     const related = T.allQ().filter((q) => q.u === u.id || (q.d === u.d && (u.tags || []).some((t) => (q.tags || []).includes(t))));
     el.innerHTML = `<div class="page">
@@ -258,5 +255,5 @@
     el.querySelector('#rs').addEventListener('click', () => { if (confirm('Delete all saved progress in this browser? Export first if you want a backup.')) { localStorage.removeItem('tapeout.v1'); location.reload(); } });
   };
 
-  V.notFound = (el) => { el.innerHTML = `<div class="page"><div class="empty-state"><h3>That page does not exist</h3><p>The link may be from an older version. <a href="#/">Back to the die map</a>.</p></div></div>`; };
+  V.notFound = (el) => { el.innerHTML = `<div class="page"><div class="empty-state"><h3>That page does not exist</h3><p>The link may be from an older version. <a href="#/">Back to the dashboard</a>.</p></div></div>`; };
 })();

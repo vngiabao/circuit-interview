@@ -24,9 +24,9 @@ T.state.settings.hideCompany = false;
 const questions = T.allQ(), units = T.units, labs = T.labs;
 function unique(xs, label) { test(new Set(xs.map(x=>x.id)).size === xs.length, label+' IDs are not unique'); }
 unique(questions,'Question'); unique(units,'Lesson'); unique(labs,'Lab');
-test(questions.length === 446, 'Expected 446 total questions');
-test(units.length === 46, 'Expected 46 lessons');
-test(labs.length === 13, 'Expected 13 labs');
+test(questions.length >= 600, 'Expected at least 600 total questions');
+test(units.length >= 54, 'Expected at least 54 lessons');
+test(labs.length >= 21, 'Expected at least 21 labs');
 const old = new Map(questions.filter(q=>q.legacyId).map(q=>[q.legacyId,q]));
 test(old.size === 412, 'Expected all 412 legacy questions');
 for (const q of input.questions) {

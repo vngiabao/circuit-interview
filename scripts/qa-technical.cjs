@@ -20,8 +20,9 @@ near(measuredSwing,1.4*.026*Math.log(10),.00011);
 assert.ok(m.subthreshold(0,.8)>m.subthreshold(0,.05),'DIBL must increase off-current at higher drain voltage');
 const energies=Array.from({length:171},(_,i)=>{const v=.15+.85*i/170,e=m.energy(v);return{v,total:e.dynamic+e.leakage}});
 const minimum=energies.reduce((a,b)=>a.total<b.total?a:b);
-near(minimum.v,.73);near(minimum.total,1.1184519523780287);
-assert.match(T.plots.energy(),/minimum ≈ 0.73 V/);assert.ok(!T.plots.energy().includes('near/below VT'));
+// Minimum-energy point must sit near or below VT (0.35 V) and well below the 1 V energy.
+assert.ok(minimum.v>.2&&minimum.v<.36,'MEP should be near/below VT, got '+minimum.v);assert.ok(minimum.total<.3);
+assert.match(T.plots.energy(),/minimum-energy point ≈ 0\.[23]\d V/);
 // A load-current step starts with capacitor discharge I/C and settles to Vsource - IR.
 near(m.droop(0),1);near((m.droop(1e-14)-m.droop(0))/1e-14,-20/200e-9,20);
 near(m.droop(.0001),1-20*.0004,1e-10);
