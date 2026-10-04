@@ -68,6 +68,7 @@ function run() {
    rows.forEach((row,r)=>row.forEach((node,c)=>{rects[node]={x:25+c*205,y:55+r*110,w:175,h:55};}));
    for(const match of svg.matchAll(/<path d="([^"]+)"[^>]*data-edge="([^&]+)&gt;([^"]+)"/g)) {
     const [,d,a,b]=match,points=d.replace(/^M/,'').split(' L').map(p=>p.split(',').map(Number));
+    assert.ok(points.length<=8,id+' '+a+'>'+b+' has excessive bends; routes must not become staircases');
     for(let i=1;i<points.length;i++)for(const [node,r] of Object.entries(rects))if(node!==a&&node!==b){const [x1,y1]=points[i-1],[x2,y2]=points[i],hit=x1===x2?x1>r.x&&x1<r.x+r.w&&Math.max(y1,y2)>r.y&&Math.min(y1,y2)<r.y+r.h:y1>r.y&&y1<r.y+r.h&&Math.max(x1,x2)>r.x&&Math.min(x1,x2)<r.x+r.w;assert.ok(!hit,id+' '+a+'>'+b+' crosses '+node);}
    }
   } else if(t.kind==='layout') {
@@ -111,6 +112,11 @@ function run() {
  for(const [,x,y,anchor,label] of rcLabels){const width=label.length*8,right=Number(x)+(anchor==='end'?0:anchor==='middle'?width/2:width),left=Number(x)-(anchor==='end'?width:anchor==='middle'?width/2:0);assert.ok(left>=0&&right<=640,'Passive value '+label+' must remain inside the viewBox');}
  assert.ok(rcLabels.some(([,x,y,anchor])=>Number(x)>500&&anchor==='end'),'Rightmost RC capacitor label must face inward');
  const meta=T.schematicModel('timing-metastability').spec;
+ const handshakeSvg=T.schematic('handshake');
+ for(const label of ['SOURCE','DATA','DEST','REQ','ACK'])assert.equal((handshakeSvg.match(new RegExp('>'+label+'</text>','g'))||[]).length,1,'Handshake '+label+' label must appear once');
+ const handshakeWave=T.schematic('timing-handshake');
+ assert.match(handshakeWave,/<text[^>]*y="40"[^>]*>hold payload stable<\/text>/,'Hold-window caption must sit above the DATA trace');
+ assert.ok(!handshakeWave.includes('>2.4</text>'),'Handshake cycle ticks must be integer events');
  assert.ok(meta.signals[0].points.some(([time,value])=>time===7&&value===1),'Second synchronizer capture must have a rising edge at 7 ns');
  assert.throws(()=>T.schematic('block-diagram',{nodes:['A'],edges:[['A','MISSING']]}),/Unknown block endpoint/);
  assert.throws(()=>T.schematic('block-diagram',{nodes:['A','A'],edges:[]}),/Duplicate block node/);

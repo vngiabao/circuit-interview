@@ -34,4 +34,8 @@ The 59 missing historical source-figure names remain explicitly marked unavailab
 
 ## Reproduce
 
+## Follow-up correction: readable routing
+
+User review caught staircase block wires and duplicate node labels that the first checks missed. Block routing now selects ports facing the destination and includes direction and a bend penalty in its shortest-path search. All 112 block edges still avoid unrelated boxes; a new regression limits routes to six bends. Identical ID/title labels render once. Waveform window captions sit above the traces, bus transitions use one crossover per change, and the handshake uses integer cycle ticks. The shared renderer passed the same four viewport/theme sweeps (6,128 states), all QA gates and the detector. The Oura token file is byte-for-byte unchanged from `0790d7d`.
+
 Run `node scripts/qa-content.cjs`, `node scripts/qa-technical.cjs`, `node scripts/qa-state.cjs`, `node scripts/figure-coverage.cjs` and `node scripts/build-site.cjs`. Serve this folder locally, then open `scripts/browser-sweep.html?theme=dark` and `?theme=light` at 375px and 1280px. The gallery and screenshot-export helper are development tools excluded from `dist`.

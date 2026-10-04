@@ -184,20 +184,29 @@
   blocks('compressor-tree','Carry-save row reduction',[['ROWS9','ROWS6','ROWS4'],['ROWS3','ROWS2','CPA']],[['ROWS9','ROWS6'],['ROWS6','ROWS4'],['ROWS4','ROWS3'],['ROWS3','ROWS2'],['ROWS2','CPA']],'Each carry-save reduction has local sum/carry outputs; only the final CPA propagates carry.',{ROWS9:'9 input rows',ROWS6:'6 rows',ROWS4:'4 rows',ROWS3:'3 rows',ROWS2:'2 rows',CPA:'Final carry adder'});
   blocks('ntt-butterfly','Modular NTT butterfly',[['A','B','MUL'],['ADD','SUB','W'],['OUTP','OUTM']],[['B','MUL'],['W','MUL'],['MUL','ADD'],['MUL','SUB'],['A','ADD'],['A','SUB'],['ADD','OUTP'],['SUB','OUTM']],'t = b times w mod q; outputs are (a + t) mod q and (a - t) mod q.',{MUL:'t = b w mod q',ADD:'a + t mod q',SUB:'a - t mod q',W:'Twiddle w',OUTP:'Butterfly plus',OUTM:'Butterfly minus'});
   function routeBlocks(A,B,coords,height,used) {
-    const start=[A.x+A.w+5,A.y+25],goal=[B.x-5,B.y+25],key=p=>p.join(','),startKey=key(start),goalKey=key(goal);
+    // Choose ports facing the destination. Vertical and return paths should
+    // read like information flow, rather than wrapping around every block.
+    const vertical=A.x===B.x,forward=vertical?B.y>A.y:B.x>A.x;
+    const from=vertical?[snap(A.x+A.w/2),forward?A.y+A.h:A.y]:[forward?A.x+A.w:A.x,A.y+25];
+    const to=vertical?[snap(B.x+B.w/2),forward?B.y:B.y+B.h]:[forward?B.x:B.x+B.w,B.y+25];
+    const dir=vertical?(forward?2:3):(forward?0:1),opposite=[1,0,3,2],dirs=[[5,0],[-5,0],[0,5],[0,-5]];
+    const start=[from[0]+dirs[dir][0],from[1]+dirs[dir][1]],goal=[to[0]-dirs[dir][0],to[1]-dirs[dir][1]],key=(p,d)=>p.join(',')+','+d,startKey=key(start,dir);
     const blocked=(x,y)=>Object.values(coords).some(c=>x>=c.x-2&&x<=c.x+c.w+2&&y>=c.y-2&&y<=c.y+c.h+2);
     const heap=[];
     const push=v=>{heap.push(v);let i=heap.length-1;while(i>0){const p=(i-1)>>1;if(heap[p].f<=v.f)break;heap[i]=heap[p];i=p;}heap[i]=v;};
     const pop=()=>{const first=heap[0],last=heap.pop();if(heap.length){let i=0;while(true){let c=i*2+1;if(c>=heap.length)break;if(c+1<heap.length&&heap[c+1].f<heap[c].f)c++;if(heap[c].f>=last.f)break;heap[i]=heap[c];i=c;}heap[i]=last;}return first;};
-    const best=new Map([[startKey,0]]),prev=new Map();push({p:start,g:0,f:0});
-    while(heap.length){const cur=pop(),k=key(cur.p);if(cur.g!==best.get(k))continue;if(k===goalKey)break;
-      for(const [dx,dy] of [[5,0],[-5,0],[0,5],[0,-5]]){const next=[cur.p[0]+dx,cur.p[1]+dy],nk=key(next);if(next[0]<10||next[0]>630||next[1]<40||next[1]>height-45||blocked(...next))continue;const g=cur.g+1+(used.get(nk)||0)*2;
-        if(g<(best.get(nk)??Infinity)){best.set(nk,g);prev.set(nk,k);push({p:next,g,f:g+(Math.abs(next[0]-goal[0])+Math.abs(next[1]-goal[1]))/5});}
+    const best=new Map([[startKey,0]]),prev=new Map();let goalKey;push({p:start,d:dir,g:0,f:0});
+    while(heap.length){const cur=pop(),k=key(cur.p,cur.d);if(cur.g!==best.get(k))continue;if(cur.p[0]===goal[0]&&cur.p[1]===goal[1]&&cur.d===dir){goalKey=k;break;}
+      for(let d=0;d<dirs.length;d++){if(d===opposite[cur.d])continue;const [dx,dy]=dirs[d],next=[cur.p[0]+dx,cur.p[1]+dy],nk=key(next,d);if(next[0]<10||next[0]>630||next[1]<40||next[1]>height-45||blocked(...next))continue;
+        // A bend costs more than a short detour. Track direction in the search
+        // state so equal-length paths cannot degenerate into staircases.
+        const g=cur.g+1+(d!==cur.d?12:0)+(used.get(next.join(','))||0)*0.25;
+        if(g<(best.get(nk)??Infinity)){best.set(nk,g);prev.set(nk,k);push({p:next,d,g,f:g+(Math.abs(next[0]-goal[0])+Math.abs(next[1]-goal[1]))/5});}
       }
     }
-    if(!best.has(goalKey))throw new Error('No unobstructed block route');
-    const pts=[];for(let k=goalKey;k;k=prev.get(k)){const p=k.split(',').map(Number);pts.push(p);used.set(k,(used.get(k)||0)+1);if(k===startKey)break;}pts.reverse();
-    const full=[[A.x+A.w,A.y+25],...pts,[B.x,B.y+25]],out=[full[0]];
+    if(!goalKey)throw new Error('No unobstructed block route');
+    const pts=[];for(let k=goalKey;k;k=prev.get(k)){const p=k.split(',').slice(0,2).map(Number);pts.push(p);const pk=p.join(',');used.set(pk,(used.get(pk)||0)+1);if(k===startKey)break;}pts.reverse();
+    const full=[from,...pts,to],out=[full[0]];
     for(let i=1;i<full.length-1;i++){const a=full[i-1],b=full[i],c=full[i+1];if(!((a[0]===b[0]&&b[0]===c[0])||(a[1]===b[1]&&b[1]===c[1])))out.push(b);}out.push(full[full.length-1]);return out;
   }
   function renderBlocks(m,spec) {
@@ -212,7 +221,7 @@
       const pts=routeBlocks(A,B,coords,h,used);
       body+=path(pts,(spec.highlight || []).includes(a)|| (spec.highlight || []).includes(b)?'sg-wire sg-highlight':'sg-wire',`marker-end="url(#sg-arrow-${sid})" data-edge="${esc(a+'>'+b)}"`);
     });
-    rows.forEach(row=>row.forEach(id=>{const c=coords[id];body+=box(c.x,c.y,c.w,c.h)+tx(c.x+c.w/2,c.y+20,id,'sg-note','middle')+tx(c.x+c.w/2,c.y+40,m.labels?.[id] || id,'sg-label','middle');}));
+    rows.forEach(row=>row.forEach(id=>{const c=coords[id],label=m.labels?.[id];body+=box(c.x,c.y,c.w,c.h);body+=label&&label!==id?tx(c.x+c.w/2,c.y+20,id,'sg-note','middle')+tx(c.x+c.w/2,c.y+40,label,'sg-label','middle'):tx(c.x+c.w/2,c.y+32,id,'sg-label','middle');}));
     const notes=words(m.notice || 'Conceptual block diagram: arrows show functional information flow.').concat((spec.annotations || []).flatMap(a=>words((a.net ? a.net+': ' : '')+a.label)));
     notes.forEach((line,i)=>body+=tx(20,h-10+i*20,line,'sg-note'));
     return wrap(body,spec.title || m.title,h+20+notes.length*20);
@@ -228,7 +237,7 @@
     const ticks=spec.ticks || Array.from({length:6},(_,i)=>i*duration/5);
     ticks.forEach(time=>body+=ln(fx(time),top-15,fx(time),H-65,'pg')+tx(fx(time),H-40,String(time),'sg-note','middle'));
     body+=tx(615,H-20,spec.unit || 'time','sg-note','end');
-    (spec.regions || []).forEach(r=>{const y=r.signal==null?top-10:top+r.signal*step-10,height=r.signal==null?signals.length*step:55;body+=`<rect x="${fx(r.from)}" y="${y}" width="${Math.max(0,fx(r.to)-fx(r.from))}" height="${height}" class="sg-region"/>`+tx((fx(r.from)+fx(r.to))/2,y+15,r.label || 'window','sg-note','middle');});
+    (spec.regions || []).forEach(r=>{const y=r.signal==null?top-10:top+r.signal*step-10,height=r.signal==null?signals.length*step:55;body+=`<rect x="${fx(r.from)}" y="${y}" width="${Math.max(0,fx(r.to)-fx(r.from))}" height="${height}" class="sg-region"/>`+tx((fx(r.from)+fx(r.to))/2,y-8,r.label || 'window','sg-note','middle');});
     signals.forEach((signal,row)=>{
       const y=top+row*step,low=y+35,high=y+5;
       body+=tx(left-15,y+25,signal.name,'sg-label','end');
@@ -244,7 +253,13 @@
           const Y=v==='1'?high:low;body+=ln(X,Y,E,Y,cls);
           if((next==='0'||next==='1')&&next!==v)body+=ln(E,Y,E,next==='1'?high:low,cls);
         }else if(v==='z')body+=ln(X,y+20,E,y+20,'sg-wire sg-x')+tx((X+E)/2,y+15,'Z','sg-note','middle');
-        else {body+=box(X,y,E-X,40,'sg-region')+path([[X,y],[Math.min(X+10,E),y+20],[X,y+40]],cls)+path([[E,y],[Math.max(E-10,X),y+20],[E,y+40]],cls)+tx((X+E)/2,y+25,v==='x'?'X':String(state),'sg-note','middle');}
+        else {
+          // Two bus rails and one crossover at each change, with no artificial
+          // rounded boxes or duplicate chevrons on either side of the boundary.
+          const gap=Math.min(5,(E-X)/4),a=X+(i?gap:0),b=E-(i+1<points.length?gap:0);
+          body+=ln(a,y,b,y,cls)+ln(a,y+40,b,y+40,cls)+tx((X+E)/2,y+25,v==='x'?'X':String(state),'sg-note','middle');
+          if(i+1<points.length&&next!=='0'&&next!=='1'&&next!=='z')body+=ln(E-gap,y,E+gap,y+40,cls)+ln(E-gap,y+40,E+gap,y,cls);
+        }
       });
     });
     (spec.arrows || []).forEach((a,i)=>{const Y=a.y==null?H-70:top+Number(a.y)*step+55,X=fx(a.from),E=fx(a.to);body+=ln(X,Y,E,Y,'sg-wire sg-highlight')+path([[X+5,Y-5],[X,Y],[X+5,Y+5]],'sg-wire sg-highlight')+path([[E-5,Y-5],[E,Y],[E-5,Y+5]],'sg-wire sg-highlight')+tx((X+E)/2,Y-5,a.label || 'interval','sg-note','middle');});
@@ -259,7 +274,7 @@
   const wave=(id,spec)=>add(id,()=>({kind:'waveform',title:spec.title,spec}));
   wave('timing-setup-hold',{title:'Setup and hold stability window',duration:10,signals:[{name:'CLK',points:[[0,0],[5,1],[8,0]]},{name:'D',points:[[0,0],[3,1],[7,0]]},{name:'Q',points:[[0,0],[5.8,1]]}],regions:[{from:4,to:5,label:'setup',signal:1},{from:5,to:6,label:'hold',signal:1}],arrows:[{from:5,to:5.8,y:2,label:'clk to Q'}],unit:'ns'});
   wave('timing-metastability',{title:'Metastability is analog settling, not a fixed delay',duration:10,signals:[{name:'CLK',points:[[0,0],[3,1],[5,0],[7,1],[9,0]]},{name:'ASYNC',points:[[0,0],[3,1]]},{name:'Q1',points:[[0,0],[3,'x'],[5.5,1]]},{name:'Q2',points:[[0,0],[7.8,1]]}],regions:[{from:3,to:5.5,label:'uncertain settling',signal:2}],unit:'ns'});
-  wave('timing-handshake',{title:'Four-phase request/acknowledgment transfer',duration:12,signals:[{name:'DATA',points:[[0,'old'],[1,'new'],[10,'old']]},{name:'REQ',points:[[0,0],[2,1],[7,0]]},{name:'ACK',points:[[0,0],[5,1],[9,0]]}],regions:[{from:1,to:9,label:'hold payload stable',signal:0}],unit:'cycles'});
+  wave('timing-handshake',{title:'Four-phase request/acknowledgment transfer',duration:12,ticks:[0,2,4,6,8,10,12],signals:[{name:'DATA',points:[[0,'old'],[1,'new'],[10,'next']]},{name:'REQ',points:[[0,0],[2,1],[7,0]]},{name:'ACK',points:[[0,0],[5,1],[9,0]]}],regions:[{from:1,to:9,label:'hold payload stable',signal:0}],unit:'cycles'});
   wave('timing-fifo',{title:'Gray pointer crosses one changing bit',duration:8,signals:[{name:'CLKw',values:'01010101'},{name:'BIN',points:[[0,'00'],[2,'01'],[4,'10'],[6,'11']]},{name:'GRAY',points:[[0,'00'],[2,'01'],[4,'11'],[6,'10']]},{name:'READ SYNC',points:[[0,'00'],[4,'01'],[6,'11']]}],unit:'cycles'});
   wave('timing-scan',{title:'Scan shift then functional capture',duration:10,signals:[{name:'CLK',values:'0101010101'},{name:'SCAN_EN',points:[[0,1],[6.5,0]]},{name:'SCAN_IN',values:'0011110000'},{name:'MODE',points:[[0,'shift'],[6.5,'capture']]}],unit:'cycles'});
   wave('timing-domino',{title:'Domino precharge and evaluate sequence',duration:8,signals:[{name:'CLK',values:'00001111'},{name:'A',points:[[0,0],[4.5,1]]},{name:'B',points:[[0,0],[5,1]]},{name:'X',points:[[0,1],[5.5,0]]},{name:'Y',points:[[0,0],[6,1]]}],regions:[{from:0,to:4,label:'precharge'},{from:4,to:8,label:'evaluate'}],unit:'ns'});

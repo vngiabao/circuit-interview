@@ -8,7 +8,8 @@
     ['id-vgs','id-vds','vtc-noise','butterfly-snm','gm-id'],
     ['bode-margin','step-ringing','fo4-vdd','leakage-vt-temp','crosstalk-glitch'],
     ['ir-heatstrip','em-lifetime','mc-histogram','sigma-yield','liberty-surface'],
-    ['elmore-response','shmoo','dvfs-power','timing-setup-hold','timing-handshake']
+    ['elmore-response','shmoo','dvfs-power','timing-setup-hold','timing-handshake'],
+    ['handshake','async-fifo','pll','ntt-butterfly','timing-handshake']
   ];
   const group = Number(new URLSearchParams(location.search).get('group') || 0);
   T.state.settings.theme = new URLSearchParams(location.search).get('theme') || 'dark'; T.applyTheme();
