@@ -412,6 +412,51 @@ details.deeper > .md { padding: 0 14px 8px; }
 .keycard h3 { display: flex; gap: 10px; align-items: baseline; margin-bottom: 8px; }
 .keycard h3 .code { font-family: var(--font-mono); font-size: 11.5px; color: var(--accent-ink); font-weight: 500; }
 .keycard .eq-row { padding: 8px 0; }
+
+/* Direct lesson library; the entire catalog is expanded by default. */
+.lesson-start { display: flex; align-items: center; justify-content: space-between; gap: var(--s5); }
+.lesson-start h2 { font-size: 20px; margin: 0; }
+.lesson-start p { margin: 6px 0 0; max-width: 72ch; }
+.lesson-start .btn { flex-shrink: 0; }
+.lesson-filters { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, .7fr); gap: var(--s4); margin-top: var(--s5); }
+.lesson-results { display: flex; align-items: center; gap: var(--s4); min-height: 44px; margin-top: var(--s2); }
+.lesson-results p { margin: 0; }
+.lesson-results [hidden] { display: none; }
+.lesson-topic .sec-head { margin-top: var(--s5); }
+.lesson-list { list-style: none; padding: 0 var(--s4); margin: 0; }
+.lesson-list li + li { border-top: 1px solid var(--line); }
+.lesson-open { display: grid; grid-template-columns: 28px minmax(0, 1fr) 20px; gap: var(--s3); padding: var(--s4) 0; text-decoration: none; color: var(--ink); }
+.lesson-open:hover b { color: var(--accent-ink); }
+.lesson-number { color: var(--ink-3); font-family: var(--font-mono); font-size: 13px; padding-top: 2px; }
+.lesson-copy { display: grid; gap: 4px; min-width: 0; }
+.lesson-copy b { font-size: 16px; font-weight: 550; }
+.lesson-copy > span { font-size: 14px; color: var(--ink-2); max-width: 75ch; }
+.lesson-copy .lesson-meta { display: flex; flex-wrap: wrap; gap: 4px var(--s3); color: var(--ink-3); font-size: 12px; margin-top: 3px; }
+.lesson-state.solid { color: var(--ok); }
+.lesson-state.learning { color: var(--warn); }
+.lesson-arrow { align-self: center; color: var(--accent-ink); }
+.lesson-prereqs { padding: 0 0 var(--s4) 40px; font-size: 12.5px; color: var(--ink-3); }
+.lesson-prereqs a { color: var(--ink-2); }
+
+/* Equation references keep the circuit, conditions and lesson boundaries. */
+.context-keycards { display: grid; gap: var(--s5); }
+.sheet-topic-filter { max-width: 420px; margin-bottom: var(--s5); }
+.context-keycards .keycard { margin: 0; }
+.sheet-lesson { padding: var(--s4) 0; min-width: 0; }
+.sheet-lesson + .sheet-lesson { border-top: 1px solid var(--line-strong); }
+.sheet-lesson h4 { font-size: 18px; font-weight: 550; margin: 0 0 var(--s3); }
+.sheet-conditions { max-width: 75ch; color: var(--ink-2); font-size: 14px; }
+.sheet-conditions p { margin: 0 0 var(--s3); }
+.sheet-conditions b { color: var(--ink); }
+.sheet-example { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--s4); margin: var(--s4) 0; }
+.sheet-example .fig { margin: 0; min-width: 0; }
+.sheet-example img { width: 100%; height: auto; }
+.sheet-equations { margin-bottom: var(--s4); min-width: 0; }
+@media (max-width: 760px) {
+  .lesson-start { align-items: flex-start; flex-direction: column; gap: var(--s3); }
+  .lesson-filters { grid-template-columns: minmax(0, 1fr); gap: var(--s3); }
+  .sheet-example { grid-template-columns: minmax(0, 1fr); }
+}
 .glossary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--s6); }
 .glossary > div { padding: 12px 0; border-bottom: 1px solid var(--line); }
 .glossary dt { font-weight: 600; }
@@ -584,4 +629,3 @@ svg.plot-expanded .pn { font-size: 14px; }
   .figure-sheet .figure-strip { display: block; }
   .figure-sheet .figure-open { max-width: 680px; }
 }
-

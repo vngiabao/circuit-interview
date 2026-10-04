@@ -8,7 +8,7 @@
   const TIER = { 1: 'Must conquer', 2: 'How to excel', 3: 'Good to know' };
   const lensSeg = () => `<div class="seg" role="group" aria-label="Role lens">${window.TAPEOUT_LENSES.map((l) => `<button data-lens="${l.id}" aria-pressed="${T.lens() === l.id}">${l.name}</button>`).join('')}</div>`;
   const bindLens = (root, rerender) => root.querySelectorAll('[data-lens]').forEach((b) => b.addEventListener('click', () => { T.state.settings.lens = b.dataset.lens; T.save(); rerender(); }));
-  const unitsOf = (did) => T.units.filter((u) => u.d === did).sort((a, b) => (a.tier || 2) - (b.tier || 2) || (a.order || 0) - (b.order || 0));
+  const unitsOf = (did) => (T.lessonTopics.find(t => t.d === did)?.ids || []).map(T.unit).filter(Boolean);
   T.unitsOf = unitsOf;
   const ustatus = (u) => (T.state.units[u.id] && T.state.units[u.id].status) || 'new';
 
@@ -27,9 +27,7 @@
   }
 
   function nextUnit() {
-    const doms = D().slice().sort((a, b) => T.tierOf(a) - T.tierOf(b));
-    for (const d of doms) for (const u of unitsOf(d.id)) if (ustatus(u) !== 'solid') return u;
-    return T.units[0];
+    return T.nextLesson();
   }
   T.nextUnit = nextUnit;
 
@@ -71,7 +69,7 @@
           </ul></div>
         </div>
       </div>
-      <div class="sec-head"><div><h2>Domains</h2><p>Ordered for ${T.esc(lens.name.toLowerCase())}. Each meter fills as you attempt that domain's questions.</p></div><a class="btn ghost sm" href="#/learn">All lessons</a></div>
+      <div class="sec-head"><div><h2>Domains</h2><p>Ordered for ${T.esc(lens.name.toLowerCase())}. Each meter fills as you attempt that domain's questions.</p></div><a class="btn ghost sm" href="#/lessons">All lessons</a></div>
       <div class="tiles">${doms.map(tile).join('')}</div>
       <div class="legend"><span><i class="top"></i>Yellow top edge: must conquer</span><span><i></i>Share attempted</span><span><i class="bad"></i>Accuracy under 60%</span></div>
       <div class="sec-head"><div><h2>How this works</h2></div></div>
@@ -88,11 +86,64 @@
   V.learn = (el) => {
     const doms = D().slice().sort((a, b) => T.tierOf(a) - T.tierOf(b));
     el.innerHTML = `<div class="page">
-      <header class="head"><h1>Learn</h1><p class="lede">${T.units.length} lessons across 16 domains, ordered by what your role lens says matters most. Start at the top of the first column.</p><div class="row">${lensSeg()}</div></header>
+      <header class="head"><h1>Learn</h1><p class="lede">Choose your interview priorities by role. For a topic-by-topic reading path, open Lessons.</p><div class="row">${lensSeg()}<a class="btn ghost" href="#/lessons">Browse all lessons</a></div></header>
       <div class="tiers">${[1, 2, 3].map((t) => `<div class="tier t${t}"><h3>${TIER[t]} <small>${doms.filter((d) => T.tierOf(d) === t).length} domains</small></h3>
         <ul class="ulist">${doms.filter((d) => T.tierOf(d) === t).map((d) => { const s = T.domainStats(d.id); return `<li><a href="#/learn/${d.id}"><span class="t">${T.esc(d.name)}</span><span class="m">${s.unitsDone}/${s.units} solid</span><span class="s">${T.esc(d.blurb)}</span></a></li>`; }).join('')}</ul></div>`).join('')}</div>
     </div>`;
     bindLens(el, () => V.learn(el));
+  };
+
+  V.lessons = (el, p = {}) => {
+    const next = T.nextLesson();
+    const statusLabel = {new:'Not started', learning:'Learning', solid:'Solid'};
+    el.innerHTML = `<div class="page lesson-library">
+      <header class="head"><h1>Lessons</h1><p class="lede">${T.units.length} lessons, grouped into ${T.lessonTopics.length} topics. Build from devices and delay to circuits, implementation and interview extensions. Open any lesson directly.</p></header>
+      <div class="lesson-start panel">
+        <div><h2>${next ? 'Your next step' : 'Your reading path is complete'}</h2><p>${next ? `<a href="#/unit/${next.id}">${T.esc(next.title)}</a>` : 'Every lesson is marked solid. Revisit a topic or test yourself in a drill.'}</p><p class="small muted">The suggested path puts prerequisites first. Topic lists run from foundations to deeper applications; linked prerequisites help you move between topics.</p></div>
+        <a class="btn accent" href="${next ? '#/unit/'+next.id : '#/drill'}">${next ? 'Open next lesson' : 'Start a drill'}</a>
+      </div>
+      <div class="lesson-filters">
+        <div class="field"><label for="lesson-search">Find a lesson</label><input id="lesson-search" type="search" placeholder="Try setup, SRAM or feedback" value="${T.esc(p.q || '')}"></div>
+        <div class="field"><label for="lesson-topic">Topic</label><select id="lesson-topic"><option value="">All topics</option>${T.lessonTopics.map(t => `<option value="${t.d}">${T.esc(T.domain(t.d).name)}</option>`).join('')}</select></div>
+        <div class="field"><label for="lesson-status">Progress</label><select id="lesson-status"><option value="">All lessons</option><option value="new">Not started</option><option value="learning">Learning</option><option value="solid">Solid</option></select></div>
+      </div>
+      <div class="lesson-results"><p class="small muted" id="lesson-result-count" role="status"></p><button class="btn ghost sm" data-reset-lessons>Clear filters</button></div>
+      <div id="lesson-groups"></div>
+    </div>`;
+    const search = el.querySelector('#lesson-search'), topic = el.querySelector('#lesson-topic'), progress = el.querySelector('#lesson-status');
+    topic.value = T.domain(p.topic) ? p.topic : '';
+    progress.value = statusLabel[p.status] ? p.status : '';
+    function update() {
+      const terms = search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      let count = 0;
+      el.querySelector('#lesson-groups').innerHTML = T.lessonTopics.map(t => {
+        if (topic.value && topic.value !== t.d) return '';
+        const d = T.domain(t.d), all = unitsOf(t.d);
+        const shown = all.filter(u => (!progress.value || ustatus(u) === progress.value) && terms.every(term => `${u.title} ${u.goal || ''} ${(u.tags || []).join(' ')} ${d.name}`.toLowerCase().includes(term)));
+        if (!shown.length) return '';
+        count += shown.length;
+        return `<section class="lesson-topic" aria-labelledby="topic-${t.d}">
+          <div class="sec-head"><div><h2 id="topic-${t.d}">${T.esc(d.name)}</h2><p>${all.filter(u => ustatus(u) === 'solid').length}/${all.length} solid · ${all.reduce((sum,u) => sum + (u.mins || 15),0)} min total</p></div><a class="btn ghost sm" href="#/learn/${t.d}">Topic overview</a></div>
+          <ol class="lesson-list panel">${shown.map(u => `<li>
+            <a class="lesson-open" href="#/unit/${u.id}"><span class="lesson-number" aria-label="Lesson ${all.indexOf(u)+1} in this topic">${all.indexOf(u)+1}</span><span class="lesson-copy"><b>${T.esc(u.title)}</b><span>${T.esc(u.goal || '')}</span><span class="lesson-meta"><span>${u.mins || 15} min</span><span>${TIER[u.tier || 2]}</span><span class="lesson-state ${ustatus(u)}">${statusLabel[ustatus(u)] || statusLabel.new}</span></span></span><svg class="ico lesson-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+            ${T.lessonPrereqs(u).length ? `<div class="lesson-prereqs"><span>Before this:</span> ${T.lessonPrereqs(u).map(id => `<a href="#/unit/${id}">${T.esc(T.unit(id).title)}</a>`).join('<span aria-hidden="true"> · </span>')}</div>` : ''}
+          </li>`).join('')}</ol>
+        </section>`;
+      }).join('') || '<div class="empty-state"><h3>No lessons match these filters</h3><p>Try a shorter search or clear the filters to see every topic.</p></div>';
+      el.querySelector('#lesson-result-count').textContent = `${count} of ${T.units.length} lessons shown`;
+      el.querySelector('[data-reset-lessons]').hidden = !search.value && !topic.value && !progress.value;
+      const query = new URLSearchParams();
+      if (search.value) query.set('q', search.value);
+      if (topic.value) query.set('topic', topic.value);
+      if (progress.value) query.set('status', progress.value);
+      // Keep filters when opening a lesson and returning with browser Back.
+      history.replaceState(null, '', '#/lessons' + (query.size ? '?' + query : ''));
+    }
+    search.addEventListener('input', update);
+    topic.addEventListener('change', update);
+    progress.addEventListener('change', update);
+    el.querySelector('[data-reset-lessons]').addEventListener('click', () => { search.value = ''; topic.value = ''; progress.value = ''; update(); search.focus(); });
+    update();
   };
 
   V.domain = (el, id) => {
@@ -106,13 +157,13 @@
       <nav class="crumbs"><a href="#/learn">Learn</a><span>/</span><span>${d.code}</span></nav>
       <header class="head"><h1>${T.esc(d.name)}</h1><p class="lede">${T.esc(d.blurb)}</p></header>
       <div class="status-row"><span><b>${TIER[T.tierOf(d)]}</b> for ${T.esc(window.TAPEOUT_LENSES.find((l) => l.id === T.lens()).name)}</span><span>${s.total} questions</span><span>${s.seen} attempted</span><span>review success ${T.fmtPct(s.acc)}</span><span>${s.due} due</span>
-        <span class="spacer"></span><a class="btn accent sm" href="#/drill?mode=domain&d=${id}">Drill this domain</a><a class="btn ghost sm" href="#/bank?d=${id}">Browse questions</a></div>
+        <span class="spacer"></span><a class="btn ghost sm" href="#/lessons?topic=${id}">Browse lessons</a><a class="btn accent sm" href="#/drill?mode=domain&d=${id}">Drill this domain</a><a class="btn ghost sm" href="#/bank?d=${id}">Browse questions</a></div>
       <div class="co co-why"><p class="co-t">Why interviewers ask</p><p>${T.esc(d.why)}</p></div>
       ${T.domainFigures && T.domainFigures[id] ? `<section class="sec"><h2>Trace the mechanisms</h2><div class="figure-strip">${T.figures(T.domainFigures[id])}</div><a class="btn ghost sm" href="#/figures/${id}">Open printable figure sheet</a></section>` : ''}
       <section class="sec"><h2>Lessons</h2>
         ${us.length ? `<ul class="ulist panel">${us.map((u) => `<li class="${ustatus(u) === 'solid' ? 'done' : ''}"><a href="#/unit/${u.id}"><span class="t">${T.esc(u.title)}</span><span class="m">${TIER[u.tier || 2]} · ${u.mins || 15} min</span><span class="s">${T.esc(u.goal || '')}</span></a></li>`).join('')}</ul>` : `<div class="empty-state"><h3>No lessons here yet</h3><p>The question bank still covers this domain.</p></div>`}
       </section>
-      ${eqs.length ? `<section class="sec"><h2>Keycard</h2><p class="sub">Every equation from this domain's lessons on one sheet.</p><div class="eqs">${eqs.map(({ e, u }) => `<div class="eq-row"><div class="tex">${T.tex(e[0], true)}</div><div class="note">${T.md(e[1] || '', { inline: true })} <a class="faint" href="#/unit/${u.id}">${T.esc(u.title)}</a></div></div>`).join('')}</div></section>` : ''}
+      ${eqs.length ? `<section class="sec"><h2>Keycard</h2><p class="sub">Review each formula with its circuit and operating conditions.</p><a class="btn ghost" href="#/sheets?topic=${id}">Open contextual equation sheet</a></section>` : ''}
       ${lec.length ? `<section class="sec"><h2>Original lecture figures</h2><p class="sub">Captioned slides from your EECS lecture packets.</p><ul class="ulist panel">${lec.map((k) => `<li><a href="#/slides/${k}"><span class="t">EECS ${k.split('-')[0]} lecture ${k.split('-')[1]}: ${T.esc(window.TAPEOUT_LECTURES[k])}</span><span class="m">${(window.TAPEOUT_SLIDES || []).filter((x) => x.lec === k).length} figures</span></a></li>`).join('')}</ul></section>` : ''}
     </div>`;
   };
@@ -123,15 +174,15 @@
     const u = T.unit(id);
     if (!u) return V.notFound(el);
     const d = T.domain(u.d);
-    const sib = unitsOf(u.d), i = sib.indexOf(u);
+    const sib = T.lessonPath(), i = sib.indexOf(u);
     const st = T.state.units[u.id] || {};
-    const slides = (window.TAPEOUT_SLIDES || []).filter((s) => (u.slides || []).some((k) => (typeof k === 'string' ? s.lec === k : s.lec === k.lec && (!k.pg || k.pg.includes(s.pg)))));
+    const slides = T.lessonSlides(u);
     const sections = [];
     const add = (key, title, html) => { if (html) sections.push({ key, title, html }); };
-    add('prereqs', 'Before this lesson', (u.prerequisites || []).length ? `<ul>${u.prerequisites.map((id) => { const p = T.unit(id); return p ? `<li><a href="#/unit/${p.id}">${T.esc(p.title)}</a></li>` : `<li>${T.esc(id)}</li>`; }).join('')}</ul>` : '');
+    add('prereqs', 'Before this lesson', T.lessonPrereqs(u).length ? `<ul>${T.lessonPrereqs(u).map((id) => { const p = T.unit(id); return p ? `<li><a href="#/unit/${p.id}">${T.esc(p.title)}</a></li>` : `<li>${T.esc(id)}</li>`; }).join('')}</ul>` : '');
     add('model', 'The mental model', u.model ? `<div class="md">${T.md(u.model)}</div>` : '');
     add('eq', 'Equations that matter', u.eq && u.eq.length ? `<div class="eqs">${u.eq.map((e) => `<div class="eq-row"><div class="tex">${T.tex(e[0], true)}</div><div class="note">${T.md(e[1] || '', { inline: true })}</div></div>`).join('')}</div>` : '');
-    add('fig', 'Picture it', u.figs && u.figs.length ? u.figs.map(figHTML).join('') : '');
+    add('fig', 'Picture it', T.figures([...(u.figs || []), ...slides.slice(0, 2).map(T.lectureFigure)]));
     const structured = !!(u.model || u.say);
     if (!structured) add('body', 'Go deeper', u.body ? `<div class="md">${T.md(u.body)}</div>` : '');
     add('worked', 'Worked example', u.worked ? `<div class="md"><div class="co co-key"><p class="co-t">Problem</p>${T.md(u.worked.q)}</div><details class="deeper"><summary>Try it first, then open the solution</summary><div class="md">${T.md(u.worked.a)}</div></details></div>` : '');
@@ -143,10 +194,10 @@
     add('labs', 'Apply it in code', (u.labIds || []).length ? `<ul>${u.labIds.map((id) => { const l = T.labs.find((x) => x.id === id); return l ? `<li><a href="#/lab/${id}">${T.esc(l.title)}</a></li>` : ''; }).join('')}</ul>` : '');
     add('check', 'Check yourself', (u.checks || []).length ? `<div class="checks"></div>` : '');
     if (structured && u.body) add('notes-src', 'Full notes from your sources', `<details class="source-notes"><summary>Original lecture and drill notes for this topic <span>${Math.round(u.body.length / 1000)}k characters</span></summary><div class="md">${T.md(u.body)}</div></details>`);
-    add('slides', 'From your lecture slides', slides.length ? `<div class="slides">${slides.slice(0, 12).map((s) => `<figure><img src="${s.f}" alt="${T.esc(s.cap)}" loading="lazy"><figcaption>${T.esc(s.cap)}</figcaption></figure>`).join('')}</div>${slides.length > 12 ? `<p><a href="#/slides/${slides[0].lec}">See all ${slides.length} figures</a></p>` : ''}` : '');
+    add('slides', 'From your lecture slides', slides.length ? `<div class="slides">${slides.slice(0, 12).map((s) => `<figure><img src="${s.f}" alt="${T.esc(s.cap)}" loading="lazy"><figcaption>${T.esc(s.cap)}</figcaption></figure>`).join('')}</div>${slides.length > 12 ? `<p>Complete source galleries: ${[...new Set(slides.map(s => s.lec))].map(lec => `<a href="#/slides/${lec}">EECS ${T.esc(lec.replace('-', ' lecture '))}</a>`).join(' · ')}</p>` : ''}` : '');
     const related = T.allQ().filter((q) => q.u === u.id || (q.d === u.d && (u.tags || []).some((t) => (q.tags || []).includes(t))));
     el.innerHTML = `<div class="page">
-      <nav class="crumbs"><a href="#/learn">Learn</a><span>/</span><a href="#/learn/${d.id}">${T.esc(d.name)}</a></nav>
+      <nav class="crumbs"><a href="#/lessons">Lessons</a><span>/</span><a href="#/lessons?topic=${d.id}">${T.esc(d.name)}</a></nav>
       <header class="head"><h1>${T.esc(u.title)}</h1>${u.goal ? `<p class="lede">${T.esc(u.goal)}</p>` : ''}</header>
       <div class="status-row no-print"><span>${u.mins || 15} min · ${TIER[u.tier || 2]}</span><span class="spacer"></span>
         <span class="lbl" id="ust">Your status</span><div class="seg" role="group" aria-labelledby="ust">${[['new', 'Not started'], ['learning', 'Learning'], ['solid', 'Solid']].map(([k, l]) => `<button data-st="${k}" aria-pressed="${(st.status || 'new') === k}">${l}</button>`).join('')}</div></div>
@@ -154,7 +205,7 @@
         ${sections.map((s) => `<section class="unit-block" id="u-${s.key}"><h2>${s.title}</h2>${s.html}</section>`).join('')}
         <section class="unit-block no-print" id="u-notes"><h2>Your notes</h2><div class="field"><label for="un">Rewrite the model in your own words. Saved locally.</label><textarea id="un">${T.esc(T.state.notes[u.id] || '')}</textarea></div></section>
         ${related.length ? `<section class="unit-block no-print"><h2>Practice on this topic</h2><p><a class="btn ghost sm" href="#/bank?u=${u.id}">${related.length} related questions</a> <a class="btn ghost sm" href="#/drill?mode=domain&d=${u.d}">Drill ${d.code}</a></p></section>` : ''}
-        <nav class="unit-nav no-print">${i > 0 ? `<a href="#/unit/${sib[i - 1].id}"><span>Previous</span><b>${T.esc(sib[i - 1].title)}</b></a>` : '<span></span>'}${i < sib.length - 1 ? `<a href="#/unit/${sib[i + 1].id}"><span>Next</span><b>${T.esc(sib[i + 1].title)}</b></a>` : `<a href="#/learn/${d.id}"><span>Done with</span><b>${T.esc(d.name)}</b></a>`}</nav>
+        <nav class="unit-nav no-print" aria-label="Recommended reading path">${i > 0 ? `<a href="#/unit/${sib[i - 1].id}"><span>Previous lesson</span><b>${T.esc(sib[i - 1].title)}</b></a>` : '<span></span>'}${i < sib.length - 1 ? `<a href="#/unit/${sib[i + 1].id}"><span>Next lesson · ${T.esc(T.domain(sib[i + 1].d).code)}</span><b>${T.esc(sib[i + 1].title)}</b></a>` : `<a href="#/lessons"><span>Reading path complete</span><b>Back to all lessons</b></a>`}</nav>
       </article>
       <nav class="toc" aria-label="On this page"><span class="lbl">On this page</span>${sections.map((s) => `<a href="#/unit/${u.id}" data-jump="u-${s.key}">${s.title}</a>`).join('')}<a href="#/unit/${u.id}" data-jump="u-notes">Your notes</a></nav></div>
     </div>`;
@@ -180,16 +231,33 @@
       <div class="slides">${list.map((s) => `<figure><img src="${s.f}" alt="${T.esc(s.cap)}" loading="lazy"><figcaption>${T.esc(s.cap)}${s.pg ? ` <span class="faint mono">p.${s.pg}</span>` : ''}</figcaption></figure>`).join('')}</div></div>`;
   };
 
-  V.sheets = (el) => {
-    const doms = D().slice().sort((a, b) => T.tierOf(a) - T.tierOf(b));
+  V.sheets = (el, p = {}) => {
+    const doms = T.lessonTopics.map(t => T.domain(t.d));
+    const selected = doms.some(d => d.id === p.topic && unitsOf(d.id).some(u => u.eq?.length)) ? p.topic : '';
+    const sheetLesson = u => {
+      const context = T.sheetContext[u.id];
+      const legacy = (u.figs || []).filter(f => f.src || f.plot);
+      const slides = T.lessonSlides(u), match = T.sheetLectureMatch[u.id];
+      const lecture = slides.find(s => match?.test(s.cap)) || slides[0];
+      const extra = lecture ? T.lectureFigure(lecture) : legacy[0];
+      return `<section class="sheet-lesson" aria-labelledby="sheet-${u.id}">
+        <h4 id="sheet-${u.id}"><a href="#/unit/${u.id}">${T.esc(u.title)}</a></h4>
+        <div class="sheet-conditions"><p><b>Circuit and operating mode.</b> ${T.esc(context.mode)}</p><p><b>Symbols and limits.</b> ${T.esc(context.names)}</p></div>
+        <div class="sheet-example">${T.figure({...(typeof context.diagram === 'string' ? {schematic:context.diagram} : context.diagram), cap:'Circuit context for '+u.title+'. Match the node names to the equations below.'})}${extra ? T.figure(extra) : ''}</div>
+        <div class="sheet-equations">${u.eq.map(e => `<div class="eq-row"><div class="tex">${T.tex(e[0], true)}</div><div class="note">${T.md(e[1] || '', {inline:true})}</div></div>`).join('')}</div>
+        <a class="btn ghost sm" href="#/unit/${u.id}">Open lesson and worked example</a>
+      </section>`;
+    };
     el.innerHTML = `<div class="page">
-      <header class="head"><h1>Sheets</h1><p class="lede">Equation keycards for the night before, and a glossary for the words you must define in one breath. Print-friendly.</p>
+      <header class="head"><h1>Sheets</h1><p class="lede">Circuit context first, equations second. Each reference gives the operating mode, model limits and source lesson alongside its diagrams.</p>
         <div class="row no-print"><a class="btn ghost sm" href="#/sheets" data-k="eq">Keycards</a><a class="btn ghost sm" href="#/sheets" data-k="gl">Glossary</a><a class="btn ghost sm" href="#/sheets" data-k="fig">Figure sheets</a><button class="btn ghost sm" onclick="window.print()">Print</button></div></header>
-      <section id="sh-eq"><h2 style="margin-bottom:16px">Keycards</h2><div class="keycards">${doms.map((d) => { const eqs = unitsOf(d.id).flatMap((u) => u.eq || []); if (!eqs.length) return ''; return `<div class="keycard"><h3><span class="code">${d.code}</span>${T.esc(d.name)}</h3>${eqs.map((e) => `<div class="eq-row" style="grid-template-columns:1fr"><div class="tex">${T.tex(e[0], true)}</div><div class="note">${T.md(e[1] || '', { inline: true })}</div></div>`).join('')}</div>`; }).join('')}</div></section>
+      <div class="field sheet-topic-filter no-print"><label for="sheet-topic">Equation topic</label><select id="sheet-topic"><option value="">All topics</option>${doms.filter(d => unitsOf(d.id).some(u => u.eq?.length)).map(d => `<option value="${d.id}" ${selected === d.id ? 'selected' : ''}>${T.esc(d.name)}</option>`).join('')}</select></div>
+      <section id="sh-eq"><h2 style="margin-bottom:16px">Keycards</h2><div class="context-keycards">${doms.filter(d => !selected || d.id === selected).map(d => { const us = unitsOf(d.id).filter(u => u.eq?.length); if (!us.length) return ''; return `<div class="keycard"><h3><span class="code">${d.code}</span>${T.esc(d.name)}</h3>${us.map(sheetLesson).join('')}</div>`; }).join('')}</div></section>
       <section class="sec" id="sh-fig"><h2>Figure sheets</h2><p class="sub">Open one domain to print its circuits, timing diagrams and model plots together.</p><ul class="ulist panel">${doms.map(d => `<li><a href="#/figures/${d.id}"><span class="t">${T.esc(d.name)}</span><span class="m">${(T.domainFigures[d.id] || []).length} diagrams</span></a></li>`).join('')}</ul></section>
       <section class="sec" id="sh-gl"><h2>Glossary</h2><dl class="glossary">${T.glossary.slice().sort((a, b) => a[0].localeCompare(b[0])).map(([t, def]) => `<div><dt>${T.esc(t)}</dt><dd>${T.md(def, { inline: true })}</dd></div>`).join('')}</dl></section>
     </div>`;
     el.querySelectorAll('[data-k]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); document.getElementById('sh-' + a.dataset.k).scrollIntoView({ behavior: 'smooth' }); }));
+    el.querySelector('#sheet-topic').addEventListener('change', e => { location.hash = '#/sheets' + (e.target.value ? '?topic=' + e.target.value : ''); });
   };
 
   V.figureSheet = (el, id) => {

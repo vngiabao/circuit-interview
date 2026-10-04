@@ -61,6 +61,10 @@ Hallmark: custom bespoke "Instrument Panel" macrostructure, N3 side rail with N4
 Today dashboard (next-lesson panel with lesson anatomy chips, readout strip, today's loop list, domain tiles with segmented meters), lesson reader (sectioned with periwinkle dot markers), question card (keyed options, per-option explanations, rubric checklist, four-step self-grade), drill and mock runners (progress bar of result segments, timer), code lab (teaching column plus editor and console).
 
 ## Visual learning components
+Lessons has a direct sidebar entry and an expanded topic library, with search, topic and progress filters. Topic rows link straight to the reader. A prerequisite-aware reading path powers Today, the suggested next lesson and reader previous/next links; Learn retains the role-based priority tiers.
+
+Sheets groups equations by source lesson rather than mixing a domain's formulas. Operating conditions and symbol mappings come first, followed by a circuit context and a source lecture crop or earlier figure, then display math. Source-linked lecture crops also appear in the lesson's visible Picture it section. The palette and original visual assets are preserved.
+
 Inline vector figures share one renderer across lessons, questions, drills, mocks and labs. Every plate opens with a keyboard-accessible zoom button; captions explain what to inspect. SVGs use the same periwinkle, teal and semantic-state tokens as the app. Key gates, the mirror and the 6T bitcell use conventional connected drawings; complex circuits use explicit named nets. All model plots state their assumptions.
 
 Questions preserve the attempt-first flow: solution annotations enter the DOM only after reveal. Contextual mock diagrams sit behind a native sketch-first disclosure; figure-reading exercises remain visible. Domain strips link to printable figure sheets. Printing temporarily uses the existing light theme, then restores the selected theme.

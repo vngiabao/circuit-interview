@@ -34,6 +34,7 @@
     set('bank', T.allQ().length);
     set('drill', due ? `${due} due` : '', due ? 'due' : '');
     set('learn', T.units.length);
+    set('lessons', T.units.length);
     set('code', T.labs.length);
   };
 
@@ -42,6 +43,7 @@
     [/^\/plan$/, () => V.plan(main)],
     [/^\/reference\/([\w-]+)$/, (m) => V.reference(main, m[1])],
     [/^\/learn$/, () => V.learn(main)],
+    [/^\/lessons$/, (m, p) => V.lessons(main, p)],
     [/^\/learn\/([\w-]+)$/, (m) => V.domain(main, m[1])],
     [/^\/unit\/([\w-]+)$/, (m) => V.unit(main, m[1])],
     [/^\/bank$/, (m, p) => V.bank(main, p)],
@@ -50,14 +52,14 @@
     [/^\/mock$/, (m, p) => V.mock(main, p)],
     [/^\/code$/, () => V.code(main)],
     [/^\/lab\/([\w-]+)$/, (m) => V.lab(main, m[1])],
-    [/^\/sheets$/, () => V.sheets(main)],
+    [/^\/sheets$/, (m, p) => V.sheets(main, p)],
     [/^\/figures\/([\w-]+)$/, (m) => V.figureSheet(main, m[1])],
     [/^\/stories$/, () => V.stories(main)],
     [/^\/sources$/, () => V.sources(main)],
     [/^\/slides\/([\w-]+)$/, (m) => V.slides(main, m[1])],
     [/^\/settings$/, () => V.settings(main)],
   ];
-  const navKey = (path) => (path.match(/^\/(\w+)/) || [, 'home'])[1].replace(/^(unit)$/, 'learn').replace(/^q$/, 'bank').replace(/^lab$/, 'code').replace(/^slides$/, 'sources').replace(/^figures$/, 'sheets');
+  const navKey = (path) => (path.match(/^\/(\w+)/) || [, 'home'])[1].replace(/^(unit)$/, 'lessons').replace(/^q$/, 'bank').replace(/^lab$/, 'code').replace(/^slides$/, 'sources').replace(/^figures$/, 'sheets');
 
   function route() {
     const raw = location.hash.replace(/^#/, '') || '/';
@@ -96,7 +98,7 @@
     T.labs.forEach((l) => idx.push({ k: 'LAB', t: l.title, s: l.goal, h: `#/lab/${l.id}` }));
     T.glossary.forEach(([t, d]) => idx.push({ k: 'TERM', t, s: d, h: '#/sheets' }));
     T.allQ().forEach((q) => idx.push({ k: q.id, t: T.qtitle(q), s: `${q.q} ${(q.tags || []).join(' ')}`, h: `#/q/${q.id}` }));
-    [['Weekly plan', '#/plan'], ['Answer bank', '#/bank'], ['Drill', '#/drill'], ['Mock interview', '#/mock'], ['Code corner', '#/code'], ['Sheets', '#/sheets'], ['Stories', '#/stories'], ['Sources', '#/sources'], ['Settings', '#/settings']].forEach(([t, h]) => idx.push({ k: 'GO', t, s: '', h }));
+    [['Lessons', '#/lessons'], ['Learn', '#/learn'], ['Weekly plan', '#/plan'], ['Answer bank', '#/bank'], ['Drill', '#/drill'], ['Mock interview', '#/mock'], ['Code corner', '#/code'], ['Sheets', '#/sheets'], ['Stories', '#/stories'], ['Sources', '#/sources'], ['Settings', '#/settings']].forEach(([t, h]) => idx.push({ k: 'GO', t, s: '', h }));
     idx.forEach((x) => (x.hay = `${x.k} ${x.t} ${x.s}`.toLowerCase()));
     return (T._idx = idx);
   }
