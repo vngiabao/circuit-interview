@@ -49,11 +49,13 @@
     'arith-adders': C('Combinational binary addition with carry generate/propagate groups. Prefix composition combines groups associatively without changing bit significance.', {plot:'ks'}, 'The prefix tree combines generate/propagate groups to compute carries. Delay scaling abstracts wiring, fanout and cell drive; bit order still matters even though grouping is associative.'),
     'char-std-cell': C('A reusable standard-cell row template with supply rails and routing tracks. Track height is a layout convention tied to a specific technology.', 'standard-cell', 'Six tracks at 28 nm pitch gives an illustrative 168 nm height. It is not evidence of the process used in your projects or a universal advanced-node dimension.')
   };
-  // Only expose crops already linked by a lesson's original source notes or
-  // explicit lecture metadata. Captions remain the verified shipped captions.
+  // Expose source-linked crops plus explicitly reviewed teaching selections.
+  // Captions remain the verified shipped captions.
   T.lessonSlides = u => {
-    const paths = new Set([...(u.body || '').matchAll(/assets\/fig\/lectures\/[A-Za-z0-9_.-]+\.(?:png|jpe?g|svg)/g)].map(m => m[0]));
-    return (window.TAPEOUT_SLIDES || []).filter(s => paths.has(s.f) || (u.slides || []).some(k => typeof k === 'string' ? s.lec === k : s.lec === k.lec && (!k.pg || k.pg.includes(s.pg))));
+    const selected = T.lessonSlideSelections?.[u.id] || [];
+    const paths = new Set([...selected, ...[...(u.body || '').matchAll(/assets\/fig\/lectures\/[A-Za-z0-9_.-]+\.(?:png|jpe?g|svg)/g)].map(m => m[0])]);
+    const slides=(window.TAPEOUT_SLIDES || []).filter(s => paths.has(s.f) || (u.slides || []).some(k => typeof k === 'string' ? s.lec === k : s.lec === k.lec && (!k.pg || k.pg.includes(s.pg))));
+    return slides.sort((a,b)=>(selected.includes(a.f)?selected.indexOf(a.f):selected.length)-(selected.includes(b.f)?selected.indexOf(b.f):selected.length));
   };
   T.lectureFigure = s => ({src:s.f, cap:s.cap, from:`EECS ${s.lec.split('-')[0]} lecture ${s.lec.split('-')[1]}, source packet p.${s.pg}`});
   T.sheetLectureMatch = {

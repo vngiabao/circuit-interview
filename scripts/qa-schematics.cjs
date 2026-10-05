@@ -64,8 +64,9 @@ function run() {
    t.edges.forEach(([a,b])=>{assert.ok(t.nodes.includes(a)&&t.nodes.includes(b),id+' dangling edge');assert.ok(svg.includes('data-edge="'+a+'&gt;'+b+'"'),id+' edge not drawn');});
    // An independent geometry pass checks every edge segment against all unrelated
    // block rectangles. This catches a router that sends a labelled edge through a box.
-   const model=T.schematicModel(id),rows=model.rows||Array.from({length:Math.ceil(model.nodes.length/3)},(_,i)=>model.nodes.slice(i*3,i*3+3)),rects={};
-   rows.forEach((row,r)=>row.forEach((node,c)=>{rects[node]={x:25+c*205,y:55+r*110,w:175,h:55};}));
+   const rects={};
+   for(const r of svg.matchAll(/<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"[^>]*data-block="([^"]+)"/g))rects[r[5]]={x:+r[1],y:+r[2],w:+r[3],h:+r[4]};
+   assert.equal(Object.keys(rects).length,t.nodes.length,id+' every block needs rendered bounds');
    for(const match of svg.matchAll(/<path d="([^"]+)"[^>]*data-edge="([^&]+)&gt;([^"]+)"/g)) {
     const [,d,a,b]=match,points=d.replace(/^M/,'').split(' L').map(p=>p.split(',').map(Number));
     assert.ok(points.length<=8,id+' '+a+'>'+b+' has excessive bends; routes must not become staircases');
@@ -121,6 +122,21 @@ function run() {
  assert.throws(()=>T.schematic('block-diagram',{nodes:['A'],edges:[['A','MISSING']]}),/Unknown block endpoint/);
  assert.throws(()=>T.schematic('block-diagram',{nodes:['A','A'],edges:[]}),/Duplicate block node/);
  assert.equal(T.schematicTopology('logic-chain',{stages:6}).nodes.length,8);
+ // The reported defect involved unrelated arrows merging/crossing, not a box
+ // collision. Validate the actual drawn segments and distinct terminal ports.
+ for(const id of ['rtl-gds','barrel-shifter','booth','compressor-tree']) {
+  const svg=T.schematic(id),edges=[...svg.matchAll(/<path d="([^"]+)"[^>]*data-edge="([^"]+)"/g)].map(m=>({name:m[2],pts:m[1].slice(1).split(' L').map(p=>p.split(',').map(Number))}));
+  const ports=new Set();
+  for(const edge of edges)for(const p of [edge.pts[0],edge.pts.at(-1)]){const key=p.join(',');assert(!ports.has(key),id+' arrows merge at port '+key);ports.add(key);}
+  for(let a=0;a<edges.length;a++)for(let b=a+1;b<edges.length;b++)for(let i=1;i<edges[a].pts.length;i++)for(let j=1;j<edges[b].pts.length;j++){
+   const [p,q]=[edges[a].pts[i-1],edges[a].pts[i]], [r,s]=[edges[b].pts[j-1],edges[b].pts[j]];
+   const av=p[0]===q[0],bv=r[0]===s[0],between=(x,u,v)=>x>=Math.min(u,v)&&x<=Math.max(u,v);
+   const hit=av===bv?(av?p[0]===r[0]&&Math.max(Math.min(p[1],q[1]),Math.min(r[1],s[1]))<=Math.min(Math.max(p[1],q[1]),Math.max(r[1],s[1])):p[1]===r[1]&&Math.max(Math.min(p[0],q[0]),Math.min(r[0],s[0]))<=Math.min(Math.max(p[0],q[0]),Math.max(r[0],s[0]))):av?between(p[0],r[0],s[0])&&between(r[1],p[1],q[1]):between(r[0],p[0],q[0])&&between(p[1],r[1],s[1]);
+   assert(!hit,id+' ambiguous crossing/overlap: '+edges[a].name+' / '+edges[b].name);
+  }
+ }
+ const flowSvg=T.schematic('rtl-gds');
+ for(const name of ['NETLIST&gt;STA','EXTRACT&gt;STA'])assert(flowSvg.includes('data-edge="'+name+'" data-edge-role="check"'),'STA must be a separate check path');
  const w=T.waveform({duration:10,signals:[{name:'D',points:[[0,0],[2,1],[5,'x'],[7,'z']]}],arrows:[{from:2,to:4,y:0,label:'2 ns'}],annotations:[{time:10,signal:0,label:'source sees completion'}]});assert.match(w,/>X</);assert.match(w,/>Z</);assert.match(w,/>2 ns</);assert.ok(!w.includes('x="620" y="50"'));
  const result={pass:true,generators:Object.keys(T.schematics).length,circuits:Object.keys(counts).length,blocks:Object.keys(blockExpected).length,layouts:Object.keys(layoutExpected).length,timing:Object.keys(waveCounts).length,terminalChecks:terminals,checks:'independent net/device counts, critical terminal connections, drawn edge coverage, CMOS truth tables through fan-in 4, no rail shorts, TG and tristate controls, custom-block validation'};
  return result;

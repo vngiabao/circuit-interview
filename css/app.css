@@ -591,6 +591,9 @@ svg.sch .sn { fill: var(--ink-2); font-size: 12.5px; }
 .fig svg, .zoom svg { display: block; width: 100%; height: auto; background: var(--plot-bg); border-radius: var(--r); font-family: var(--font-ui); }
 .figure-strip { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5); }
 .figure-strip .fig { min-width: 0; margin-bottom: 0; }
+.figure-strip .fig-wide { grid-column: 1 / -1; }
+.fig-wide .figure-open { max-width: 860px; }
+.figure-hint { display: none; }
 .next-figure { max-width: 380px; margin-block: var(--s4); }
 .next-figure .fig { margin: 0; }
 .next-figure figcaption { display: none; }
@@ -605,6 +608,7 @@ svg .sg-note { fill: var(--ink-2); font-size: 13px; }
 svg .sg-dot { fill: var(--ink-2); }
 svg .sg-panel { fill: var(--panel-2); stroke: var(--line); }
 svg .sg-highlight { fill: none; stroke: var(--accent); stroke-width: 3; }
+svg .sg-check { stroke: var(--accent); stroke-dasharray: 6 5; }
 svg .sg-ch2 { fill: none; stroke: var(--ch2); stroke-width: 2; }
 svg .sg-warn { fill: none; stroke: var(--warn); stroke-width: 2; }
 svg .sg-region { fill: var(--accent-dim); stroke: var(--accent); }
@@ -622,7 +626,7 @@ svg.plot .ppass { fill: var(--ok); stroke: none; }
 svg.plot-expanded .pt { font-size: 14px; }
 svg.plot-expanded .pl { font-size: 15px; }
 svg.plot-expanded .pn { font-size: 14px; }
-@media (max-width: 760px) { .figure-strip { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 760px) { .figure-strip { grid-template-columns: minmax(0, 1fr); } .figure-hint { display: inline; color: var(--accent-ink); } }
 @media print {
 
   .figure-sheet .fig { break-inside: avoid; }

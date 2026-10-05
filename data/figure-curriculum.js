@@ -2,6 +2,25 @@
  * connect each lesson to its actual structure and changing electrical state. */
 (function () {
   const T = window.T;
+  // Original course figures lead the arithmetic overview; generated diagrams
+  // remain available underneath for practice. Exact source crops are preserved.
+  T.domainLectureFigures = {
+    arith: [
+      ['eecs427-lecture-packet-p47-1.png','Read the black-cell, gray-cell and buffer definitions before following a prefix tree.'],
+      ['eecs427-lecture-packet-p47-3.png','Kogge–Stone: trace the increasing group spans and notice the dense wiring.'],
+      ['eecs427-lecture-packet-p47-4.png','Brent–Kung: follow the reduction and distribution paths. Its smaller network trades wiring and cell count for additional depth.'],
+      ['eecs427-lecture-packet-p48-2.png','Compare logic depth, fanout and wiring before choosing an adder architecture.'],
+      ['eecs427-lecture-packet-p135-3.png','Booth recoding: read each overlapping three-bit group and select 0, ±Y or ±2Y; Y is the multiplicand.'],
+      ['eecs427-lecture-packet-p135-4.png','Follow the Booth encoder controls into the partial-product selector.'],
+      ['eecs427-lecture-packet-p132-2.png','Carry-save reduction: three equal-weight inputs become a sum and a carry of doubled weight.'],
+      ['eecs427-lecture-packet-p138-2.png','Trace a concrete Wallace reduction tree through its half/full adders and final carry-propagating adder.']
+    ].map(([file,cap])=>{
+      const slide=(window.TAPEOUT_SLIDES || []).find(s=>s.f.endsWith('/'+file));
+      if(!slide)throw new Error('Missing arithmetic lecture figure '+file);
+      return {src:slide.f,alt:slide.cap,cap,from:'EECS '+slide.lec.replace('-',' lecture ')+', packet p. '+slide.pg};
+    })
+  };
+  T.lessonSlideSelections = {'arith-adders':T.domainLectureFigures.arith.slice(0,4).map(f=>f.src)};
   const S = (id, cap, spec) => ({ schematic: id, cap, ...(spec ? {spec} : {}) });
   const P = (id, cap) => ({ plot: id, cap: 'Computed teaching model. ' + cap });
   const W = (id, cap) => S(id, 'Illustrative timing sequence. ' + cap);

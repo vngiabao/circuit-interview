@@ -161,13 +161,13 @@
   add('common-source',()=>circuit('Resistively loaded common-source amplifier',[passive('RD','res','VDD','Y','RD'),n('M1','Y','VIN','GND')],[['RD','M1']],'Drain output Y inverts the input signal. The source and bulk are at ground.'));
   add('coupled-wire',()=>circuit('Capacitive aggressor-victim coupling',[passive('CC','cap','A','Y','Cc'),passive('CG','cap','Y','GND','Cg')],[['CC','CG']],'A changes; initially floating Y moves by Cc/(Cc+Cg) times the aggressor step.'));
   add('supply-inductor',()=>circuit('Supply inductance and local decoupling',[passive('L','inductor','VDD','Y','Lpkg'),passive('C','cap','Y','GND','Cdecap'),passive('ILOAD','current','Y','GND','Iload')],[['L','C'],['ILOAD']],'Voltage across L follows current slew through L; decap separates load and inductor current slew.'));
-  function blocks(id,title,rows,edges,notice,labels={}) {add(id,()=>({kind:'blocks',title,rows,nodes:rows.flat(),edges,notice,labels}));}
+  function blocks(id,title,rows,edges,notice,labels={}) {add(id,()=>({kind:'blocks',layout:id,title,rows,nodes:rows.flat(),edges,notice,labels}));}
   blocks('rtl-gds','RTL to GDS design flow',[['RTL','SYNTH','NETLIST'],['STA','PLACE','CTS'],['ROUTE','EXTRACT','SIGNOFF']],[['RTL','SYNTH'],['SYNTH','NETLIST'],['NETLIST','STA'],['NETLIST','PLACE'],['PLACE','CTS'],['CTS','ROUTE'],['ROUTE','EXTRACT'],['EXTRACT','SIGNOFF'],['EXTRACT','STA']],'Extracted parasitics feed timing closure; signoff includes DRC, LVS and reliability.',{SYNTH:'Synthesis',NETLIST:'Mapped netlist',EXTRACT:'RC extraction',SIGNOFF:'GDS / signoff'});
   blocks('async-fifo','Dual-clock FIFO structure',[['WDATA','RAM','RDATA'],['WGRAY','WSYNC','REMPTY'],['RFULL','RSYNC','RGRAY']],[['WDATA','RAM'],['RAM','RDATA'],['WGRAY','WSYNC'],['WSYNC','REMPTY'],['RGRAY','RSYNC'],['RSYNC','RFULL']],'Pointers cross clock domains through two-flop synchronizers; payload uses dual-port storage.',{WSYNC:'2FF in read clock',RSYNC:'2FF in write clock',WGRAY:'Write Gray pointer',RGRAY:'Read Gray pointer',RFULL:'Write full logic',REMPTY:'Read empty logic'});
   blocks('synchronizer','Two-flop single-bit synchronizer',[['ASYNC','FF1','FF2'],['CLK','Q1','SYNC']],[['ASYNC','FF1'],['FF1','FF2'],['FF2','SYNC'],['FF1','Q1'],['CLK','FF1'],['CLK','FF2']],'Use only the second stage for functional logic. This circuit does not make arbitrary buses coherent.',{FF1:'Metastability catcher',FF2:'Settling stage',Q1:'No functional fanout'});
   blocks('handshake','Four-phase bundled-data handshake',[['SOURCE','DATA','DEST'],['REQ','REQSYNC','ACK'],['ACKRX','ACKSYNC','ACKTX']],[['SOURCE','DATA'],['DATA','DEST'],['SOURCE','REQ'],['REQ','REQSYNC'],['REQSYNC','DEST'],['DEST','ACK'],['ACK','ACKTX'],['ACKTX','ACKSYNC'],['ACKSYNC','ACKRX'],['ACKRX','SOURCE']],'Hold DATA stable until returned ACK; request and acknowledgment cross via synchronizers.',{REQSYNC:'Request 2FF',ACKSYNC:'ACK 2FF',ACKRX:'Source sees ACK',ACKTX:'Destination ACK'});
-  blocks('pipeline','Three-stage synchronous pipeline',[['FF0','COMB1','FF1'],['COMB2','FF2','CLK']],[['FF0','COMB1'],['COMB1','FF1'],['FF1','COMB2'],['COMB2','FF2'],['CLK','FF0'],['CLK','FF1'],['CLK','FF2']],'Every register-to-register edge has setup and hold checks; latency is two clock periods.',{COMB1:'Logic stage 1',COMB2:'Logic stage 2'});
-  blocks('booth','Radix-4 Booth multiplication',[['OPERANDS','RECODE','PARTIAL'],['CSA1','CSA2','CPA']],[['OPERANDS','RECODE'],['RECODE','PARTIAL'],['PARTIAL','CSA1'],['CSA1','CSA2'],['CSA2','CPA']],'Overlapping three-bit recoding selects 0, plus/minus A or plus/minus 2A; compressor stages reduce rows.',{RECODE:'Radix-4 recoder',PARTIAL:'Partial products',CSA1:'3:2 compressor',CSA2:'3:2 compressor',CPA:'Final carry adder'});
+  blocks('pipeline','Three-stage synchronous pipeline',[['FF0','COMB1','FF1'],['CLK','FF2','COMB2']],[['FF0','COMB1'],['COMB1','FF1'],['FF1','COMB2'],['COMB2','FF2'],['CLK','FF0'],['CLK','FF1'],['CLK','FF2']],'Every register-to-register edge has setup and hold checks; latency is two clock periods.',{COMB1:'Logic stage 1',COMB2:'Logic stage 2'});
+  blocks('booth','Radix-4 Booth multiplication',[['OPERANDS','RECODE','PARTIAL'],['CPA','CSA2','CSA1']],[['OPERANDS','RECODE'],['RECODE','PARTIAL'],['PARTIAL','CSA1'],['CSA1','CSA2'],['CSA2','CPA']],'Overlapping three-bit recoding selects 0, plus/minus A or plus/minus 2A; compressor stages reduce rows.',{RECODE:'Radix-4 recoder',PARTIAL:'Partial products',CSA1:'3:2 compressor',CSA2:'3:2 compressor',CPA:'Final carry adder'});
   blocks('barrel-shifter','Eight-bit logarithmic barrel shifter',[['INPUT','MUX1','MUX2'],['MUX4','OUTPUT','SELECT']],[['INPUT','MUX1'],['MUX1','MUX2'],['MUX2','MUX4'],['MUX4','OUTPUT'],['SELECT','MUX1'],['SELECT','MUX2'],['SELECT','MUX4']],'Three 2:1-mux layers select a shift by 1, 2 and 4. Fill behavior determines logical vs arithmetic shift.',{MUX1:'Shift 0 or 1',MUX2:'Shift 0 or 2',MUX4:'Shift 0 or 4',SELECT:'s[2:0]'});
   blocks('memory-array','Banked memory organization',[['ADDR','ROWDEC','CELLS'],['COLMUX','SENSE','DATA'],['BANK','PRECHARGE','WRITE']],[['ADDR','ROWDEC'],['ROWDEC','CELLS'],['CELLS','COLMUX'],['COLMUX','SENSE'],['SENSE','DATA'],['BANK','ROWDEC'],['PRECHARGE','CELLS'],['WRITE','COLMUX']],'Row decode selects wordlines; column mux selects bitlines; banks trade parallelism and area.',{ROWDEC:'Row decoder',CELLS:'Bitcell array',COLMUX:'Column mux',SENSE:'Sense amps',PRECHARGE:'BL precharge',WRITE:'Write drivers'});
   blocks('serdes','SerDes transmit and receive path',[['PARALLEL','SERIALIZE','TX'],['CHANNEL','RX','DESERIALIZE'],['CDR','PLL','OUT']],[['PARALLEL','SERIALIZE'],['SERIALIZE','TX'],['TX','CHANNEL'],['CHANNEL','RX'],['RX','DESERIALIZE'],['DESERIALIZE','OUT'],['RX','CDR'],['CDR','DESERIALIZE'],['PLL','SERIALIZE']],'TX serialization and RX clock/data recovery solve different clocking problems.',{PARALLEL:'TX parallel data',OUT:'RX parallel data',RX:'Equalizer / sampler',CDR:'Clock recovery'});
@@ -181,7 +181,7 @@
   });
   add('logic-chain',spec=>{const k=Math.min(6,Math.max(1,Number(spec.stages)||4)),nodes=['IN',...Array.from({length:k},(_,i)=>'G'+(i+1)),'OUT'];return {kind:'blocks',title:'Combinational logic chain',nodes,edges:nodes.slice(1).map((id,i)=>[nodes[i],id]),labels:{IN:'Input',OUT:'Output'},notice:k+' combinational stages lie on this path; add their cell and interconnect delays.'};});
   blocks('register-swap','Simultaneous register exchange',[['Q1','D2','FF2'],['FF1','D1','Q2']],[['Q1','D2'],['D2','FF2'],['FF2','Q2'],['Q2','D1'],['D1','FF1'],['FF1','Q1']],'Both flops sample old values at the same edge. Nonblocking assignments exchange Q1 and Q2.');
-  blocks('compressor-tree','Carry-save row reduction',[['ROWS9','ROWS6','ROWS4'],['ROWS3','ROWS2','CPA']],[['ROWS9','ROWS6'],['ROWS6','ROWS4'],['ROWS4','ROWS3'],['ROWS3','ROWS2'],['ROWS2','CPA']],'Each carry-save reduction has local sum/carry outputs; only the final CPA propagates carry.',{ROWS9:'9 input rows',ROWS6:'6 rows',ROWS4:'4 rows',ROWS3:'3 rows',ROWS2:'2 rows',CPA:'Final carry adder'});
+  blocks('compressor-tree','Carry-save row reduction',[['ROWS9','ROWS6','ROWS4'],['CPA','ROWS2','ROWS3']],[['ROWS9','ROWS6'],['ROWS6','ROWS4'],['ROWS4','ROWS3'],['ROWS3','ROWS2'],['ROWS2','CPA']],'Each carry-save reduction has local sum/carry outputs; only the final CPA propagates carry.',{ROWS9:'9 input rows',ROWS6:'6 rows',ROWS4:'4 rows',ROWS3:'3 rows',ROWS2:'2 rows',CPA:'Final carry adder'});
   blocks('ntt-butterfly','Modular NTT butterfly',[['A','B','MUL'],['ADD','SUB','W'],['OUTP','OUTM']],[['B','MUL'],['W','MUL'],['MUL','ADD'],['MUL','SUB'],['A','ADD'],['A','SUB'],['ADD','OUTP'],['SUB','OUTM']],'t = b times w mod q; outputs are (a + t) mod q and (a - t) mod q.',{MUL:'t = b w mod q',ADD:'a + t mod q',SUB:'a - t mod q',W:'Twiddle w',OUTP:'Butterfly plus',OUTM:'Butterfly minus'});
   function routeBlocks(A,B,coords,height,used) {
     // Choose ports facing the destination. Vertical and return paths should
@@ -211,20 +211,60 @@
   }
   function renderBlocks(m,spec) {
     const rows=m.rows || Array.from({length:Math.ceil(m.nodes.length/3)},(_,i)=>m.nodes.slice(i*3,i*3+3));
-    const coords={}, h=85+rows.length*110;
+    const coords={}, layout=readableBlockLayout(m.layout);
+    const h=layout?.height || 85+rows.length*110;
     let body=tx(20,25,spec.title || m.title,'sg-title'), sid=++serial;
     body+=`<defs><marker id="sg-arrow-${sid}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="sg-dot"/></marker></defs>`;
     rows.forEach((row,r)=>row.forEach((id,c)=>{coords[id]={x:25+c*205,y:55+r*110,w:175,h:55};}));
+    if(layout)Object.assign(coords,layout.coords);
     const used=new Map();
     m.edges.forEach(([a,b],i)=>{
       const A=coords[a],B=coords[b];if(!A||!B)throw new Error('Unknown block net '+a+' '+b);
-      const pts=routeBlocks(A,B,coords,h,used);
-      body+=path(pts,(spec.highlight || []).includes(a)|| (spec.highlight || []).includes(b)?'sg-wire sg-highlight':'sg-wire',`marker-end="url(#sg-arrow-${sid})" data-edge="${esc(a+'>'+b)}"`);
+      const key=a+'>'+b, pts=layout?.routes[key] || routeBlocks(A,B,coords,h,used);
+      const check=layout?.checks.includes(key);
+      body+=path(pts,check?'sg-wire sg-check':(spec.highlight || []).includes(a)|| (spec.highlight || []).includes(b)?'sg-wire sg-highlight':'sg-wire',`marker-end="url(#sg-arrow-${sid})" data-edge="${esc(key)}" data-edge-role="${check?'check':'signal'}"`);
     });
-    rows.forEach(row=>row.forEach(id=>{const c=coords[id],label=m.labels?.[id];body+=box(c.x,c.y,c.w,c.h);body+=label&&label!==id?tx(c.x+c.w/2,c.y+20,id,'sg-note','middle')+tx(c.x+c.w/2,c.y+40,label,'sg-label','middle'):tx(c.x+c.w/2,c.y+32,id,'sg-label','middle');}));
-    const notes=words(m.notice || 'Conceptual block diagram: arrows show functional information flow.').concat((spec.annotations || []).flatMap(a=>words((a.net ? a.net+': ' : '')+a.label)));
+    rows.forEach(row=>row.forEach(id=>{const c=coords[id],label=layout?.labels[id] || m.labels?.[id],heading=layout?.steps?.[id]?layout.steps[id]+' · '+id:id;body+=box(c.x,c.y,c.w,c.h).replace('/>',` data-block="${esc(id)}"/>`);body+=label&&label!==id?tx(c.x+c.w/2,c.y+20,heading,'sg-note','middle')+tx(c.x+c.w/2,c.y+40,label,'sg-label','middle'):tx(c.x+c.w/2,c.y+32,heading,'sg-label','middle');}));
+    if(layout?.annotations)layout.annotations.forEach(([x,y,label])=>body+=tx(x,y,label,'sg-note'));
+    const notes=words(layout?.notice || m.notice || 'Conceptual block diagram: arrows show functional information flow.').concat((spec.annotations || []).flatMap(a=>words((a.net ? a.net+': ' : '')+a.label)));
     notes.forEach((line,i)=>body+=tx(20,h-10+i*20,line,'sg-note'));
     return wrap(body,spec.title || m.title,h+20+notes.length*20);
+  }
+  // Authored layouts distinguish the implementation/data path from side checks
+  // and control inputs. Generic shortest routes cannot express that hierarchy.
+  function readableBlockLayout(id) {
+    const c=(x,y)=>({x,y,w:175,h:55});
+    if(id==='rtl-gds')return {
+      height:525,
+      coords:{RTL:c(25,55),SYNTH:c(230,55),NETLIST:c(230,165),PLACE:c(25,165),CTS:c(25,275),ROUTE:c(230,275),EXTRACT:c(230,385),SIGNOFF:c(25,385),STA:c(435,225)},
+      steps:{RTL:1,SYNTH:2,NETLIST:3,PLACE:4,CTS:5,ROUTE:6,EXTRACT:7,SIGNOFF:8},
+      labels:{STA:'Timing checks'},checks:['NETLIST>STA','EXTRACT>STA'],
+      routes:{
+        'RTL>SYNTH':[[200,80],[230,80]],'SYNTH>NETLIST':[[315,110],[315,165]],
+        'NETLIST>PLACE':[[230,190],[200,190]],'PLACE>CTS':[[110,220],[110,275]],
+        'CTS>ROUTE':[[200,300],[230,300]],'ROUTE>EXTRACT':[[315,330],[315,385]],
+        'EXTRACT>SIGNOFF':[[230,410],[200,410]],
+        'NETLIST>STA':[[405,190],[420,190],[420,245],[435,245]],
+        'EXTRACT>STA':[[405,410],[420,410],[420,265],[435,265]]
+      },
+      annotations:[[435,310,'Dashed: timing inputs']],
+      notice:'Follow steps 1–8. STA checks mapped and extracted designs throughout closure; DRC, LVS and reliability checks are also required before GDS release.'
+    };
+    if(id==='barrel-shifter')return {
+      height:520,
+      coords:{INPUT:c(25,55),MUX1:c(25,140),MUX2:c(25,225),MUX4:c(25,310),OUTPUT:c(25,395),SELECT:c(435,225)},
+      labels:{},checks:['SELECT>MUX1','SELECT>MUX2','SELECT>MUX4'],
+      routes:{
+        'INPUT>MUX1':[[110,110],[110,140]],'MUX1>MUX2':[[110,195],[110,225]],
+        'MUX2>MUX4':[[110,280],[110,310]],'MUX4>OUTPUT':[[110,365],[110,395]],
+        'SELECT>MUX1':[[435,240],[360,240],[360,165],[200,165]],
+        'SELECT>MUX2':[[435,250],[200,250]],
+        'SELECT>MUX4':[[435,260],[400,260],[400,335],[200,335]]
+      },
+      annotations:[[215,155,'s[0]'],[215,240,'s[1]'],[215,325,'s[2]'],[435,310,'Dashed: control bits']],
+      notice:'Data passes through three mux layers. Each control bit selects bypass or shift by 1, 2 or 4; together they select shifts 0–7. Fill determines logical or arithmetic behavior.'
+    };
+    return null;
   }
   /* Waveform spec: points are event changes [time, 0|1|'x'|'z'|bus string].
    * values is an equal-duration string of 0/1/x/z states. Only state transitions

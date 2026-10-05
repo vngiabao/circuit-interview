@@ -79,6 +79,7 @@ function sessionHost() {
   check('legacy and array figures coexist; solution annotations remain answer-only', () => {
     T.plot = () => '<svg role="img" aria-label="legacy plot"></svg>';
     T.schematic = name => `<svg role="img" aria-label="${name}"></svg>`;
+    T.schematicModel = () => ({kind:'blocks'});
     const q = {id:'figure-test',d:'seq',f:'mcq',q:'Read the circuit',opts:['one','two'],ans:0,
       fig:'plot:legacy',figs:[{schematic:'question-structure',cap:'Question structure'}],
       afig:[{schematic:'solution-structure',cap:'Answer-only annotation'}]};

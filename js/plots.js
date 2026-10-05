@@ -315,7 +315,11 @@
       for (let d = n / 4; d >= 1; d /= 2) { l++; b += pass(l); for (let i = 0; i < n; i++) { if ((i + 1) % (2 * d) === d && i >= 2 * d) b += wire(i, i - d, l) + node(i, l, true); else b += node(i,l,false); } }
       maxL = l;
     }
-    const h = y0 + 30 + maxL * rowH;
+    const legendY = y0 + 40 + maxL * rowH;
+    b += `<circle cx="${x0+6}" cy="${legendY}" r="6" class="snode"/><text x="${x0+20}" y="${legendY+4}" class="sl">Combine two groups</text>`;
+    b += `<circle cx="${x0+270}" cy="${legendY}" r="6" class="sopen"/><text x="${x0+284}" y="${legendY+4}" class="sl">Input / pass-through</text>`;
+    b += `<text x="${x0}" y="${legendY+28}" class="sl">Read downward: diagonal joins a lower-bit group; vertical keeps the prior group.</text>`;
+    const h = legendY + 45;
     return S(x0 * 2 + n * colW, h, b, kind === 'ks' ? 'Kogge-Stone prefix network' : 'Brent-Kung prefix network');
   };
   P.bk = () => P.prefix('bk');

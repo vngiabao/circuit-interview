@@ -31,5 +31,9 @@ for(const u of equations){
   assert(T.figure(f).includes('<svg'),'Missing context diagram '+u.id);
 }
 assert.equal(equations.length,44);assert.equal(images,22);assert.equal(c.TAPEOUT_SLIDES.length,534);
+assert.equal(T.domainLectureFigures.arith.length,8,'Arithmetic needs its reviewed original teaching figures');
+assert.equal(T.lessonSlides(T.unit('arith-adders'))[0].f,'assets/fig/lectures/eecs427-lecture-packet-p47-1.png','Define prefix notation before drawing a tree');
+for(const f of T.domainLectureFigures.arith){assert(fs.existsSync(path.resolve(__dirname,'..',f.src)));assert(T.figure(f).includes('fig-wide'),'Lecture teaching figures must span the row');}
+for(const f of [{schematic:'booth'},{schematic:'barrel-shifter'},{plot:'ks'},{plot:'bk'}])assert(T.figure(f).includes('fig-wide'),'Dense diagrams must not be squeezed into half-width cards');
 for(const id of ['low-power-domains','adaptive-voltage','compute-in-memory']) assert(T.lessonSlides(T.unit(id)).some(s=>s.f.endsWith('.jpeg')),'EECS627 JPEG crops omitted '+id);
 console.log(JSON.stringify({pass:true,lessons:ids.length,topics:T.lessonTopics.length,prerequisiteEdges:dependencies,equationLessons:equations.length,preservedLessonImages:images,lectureFigures:c.TAPEOUT_SLIDES.length,sourceLinkedLectureUses:lectureLinks}));

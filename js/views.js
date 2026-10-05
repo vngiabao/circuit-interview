@@ -159,7 +159,8 @@
       <div class="status-row"><span><b>${TIER[T.tierOf(d)]}</b> for ${T.esc(window.TAPEOUT_LENSES.find((l) => l.id === T.lens()).name)}</span><span>${s.total} questions</span><span>${s.seen} attempted</span><span>review success ${T.fmtPct(s.acc)}</span><span>${s.due} due</span>
         <span class="spacer"></span><a class="btn ghost sm" href="#/lessons?topic=${id}">Browse lessons</a><a class="btn accent sm" href="#/drill?mode=domain&d=${id}">Drill this domain</a><a class="btn ghost sm" href="#/bank?d=${id}">Browse questions</a></div>
       <div class="co co-why"><p class="co-t">Why interviewers ask</p><p>${T.esc(d.why)}</p></div>
-      ${T.domainFigures && T.domainFigures[id] ? `<section class="sec"><h2>Trace the mechanisms</h2><div class="figure-strip">${T.figures(T.domainFigures[id])}</div><a class="btn ghost sm" href="#/figures/${id}">Open printable figure sheet</a></section>` : ''}
+      ${(T.domainLectureFigures?.[id] || []).length ? `<section class="sec"><h2>Learn from your lecture figures</h2><p class="sub">Start with the notation, trace the circuit, then compare the architectures. Open any figure to enlarge it.</p><div class="figure-strip">${T.figures(T.domainLectureFigures[id])}</div></section>` : ''}
+      ${T.domainFigures && T.domainFigures[id] ? `<section class="sec"><h2>${T.domainLectureFigures?.[id]?'Practice with supplementary diagrams':'Trace the mechanisms'}</h2><div class="figure-strip">${T.figures(T.domainFigures[id])}</div><a class="btn ghost sm" href="#/figures/${id}">Open printable figure sheet</a></section>` : ''}
       <section class="sec"><h2>Lessons</h2>
         ${us.length ? `<ul class="ulist panel">${us.map((u) => `<li class="${ustatus(u) === 'solid' ? 'done' : ''}"><a href="#/unit/${u.id}"><span class="t">${T.esc(u.title)}</span><span class="m">${TIER[u.tier || 2]} · ${u.mins || 15} min</span><span class="s">${T.esc(u.goal || '')}</span></a></li>`).join('')}</ul>` : `<div class="empty-state"><h3>No lessons here yet</h3><p>The question bank still covers this domain.</p></div>`}
       </section>
@@ -182,7 +183,7 @@
     add('prereqs', 'Before this lesson', T.lessonPrereqs(u).length ? `<ul>${T.lessonPrereqs(u).map((id) => { const p = T.unit(id); return p ? `<li><a href="#/unit/${p.id}">${T.esc(p.title)}</a></li>` : `<li>${T.esc(id)}</li>`; }).join('')}</ul>` : '');
     add('model', 'The mental model', u.model ? `<div class="md">${T.md(u.model)}</div>` : '');
     add('eq', 'Equations that matter', u.eq && u.eq.length ? `<div class="eqs">${u.eq.map((e) => `<div class="eq-row"><div class="tex">${T.tex(e[0], true)}</div><div class="note">${T.md(e[1] || '', { inline: true })}</div></div>`).join('')}</div>` : '');
-    add('fig', 'Picture it', T.figures([...(u.figs || []), ...slides.slice(0, 2).map(T.lectureFigure)]));
+    add('fig', 'Picture it', T.figures([...slides.slice(0, 2).map(T.lectureFigure), ...(u.figs || [])]));
     const structured = !!(u.model || u.say);
     if (!structured) add('body', 'Go deeper', u.body ? `<div class="md">${T.md(u.body)}</div>` : '');
     add('worked', 'Worked example', u.worked ? `<div class="md"><div class="co co-key"><p class="co-t">Problem</p>${T.md(u.worked.q)}</div><details class="deeper"><summary>Try it first, then open the solution</summary><div class="md">${T.md(u.worked.a)}</div></details></div>` : '');
